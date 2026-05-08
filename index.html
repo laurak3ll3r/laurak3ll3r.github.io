@@ -648,7 +648,7 @@ function getMoodFromPace(pace) {
 // ── CLAUDE API ──
 async function askAI(prompt) {
   try {
-    const GEMINI_KEY = 'AIzaSyB0oau9wXW5ZfiVO2iD1UcwtAEhCvB-pH4';
+    const GEMINI_KEY = 'AIzaSyBO8gCO8qD7XPwVYkkM4mTWmUARe_AhNZA';
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
