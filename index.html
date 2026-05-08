@@ -13,598 +13,166 @@
   --light: #c8c0aa;
   --accent: #c5462a;
   --green: #3a6b32;
-  --green-light: #6ea85e;
   --card-bg: #ffffff;
   --border: #e8e0d0;
-  --soil: #8b6340;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  background: var(--cream);
-  font-family: 'DM Mono', monospace;
-  color: var(--dark);
-  min-height: 100vh;
-}
-
-/* SCREEN SYSTEM */
-.screen {
-  display: none;
-  min-height: 100vh;
-  animation: fadeIn 0.4s ease;
-}
+body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(--dark); min-height: 100vh; }
+.screen { display: none; min-height: 100vh; animation: fadeIn 0.4s ease; }
 .screen.active { display: block; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* SHARED LAYOUT */
-.page {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 48px 24px 80px;
-}
-
-.page-label {
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-bottom: 8px;
-}
-
-.page-title {
-  font-family: 'Fraunces', serif;
-  font-size: 2.2rem;
-  font-weight: 200;
-  line-height: 1.15;
-  color: var(--dark);
-  margin-bottom: 4px;
-}
-
-.page-sub {
-  font-size: 0.72rem;
-  color: var(--mid);
-  margin-bottom: 36px;
-}
-
-/* DIVIDER */
-.divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 28px 0;
-}
-
-/* ── SCREEN 1: MEAL SUMMARY ── */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.stat-box {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 12px;
-  text-align: center;
-}
-
-.stat-box .val {
-  font-family: 'Fraunces', serif;
-  font-size: 1.8rem;
-  font-weight: 200;
-  color: var(--dark);
-  line-height: 1;
-  display: block;
-}
-
-.stat-box .unit {
-  font-size: 0.6rem;
-  color: var(--mid);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top: 4px;
-  display: block;
-}
-
-/* PACE BAR */
-.pace-section {
-  margin-bottom: 24px;
-}
-
-.pace-label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
-}
-
-.pace-label {
-  font-size: 0.7rem;
-  color: var(--mid);
-}
-
-.pace-word {
-  font-family: 'Fraunces', serif;
-  font-size: 1rem;
-  font-style: italic;
-  font-weight: 200;
-  color: var(--accent);
-}
-
-.pace-track {
-  height: 6px;
-  background: var(--border);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 6px;
-}
-
-.pace-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: var(--accent);
-  transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.pace-markers {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.6rem;
-  color: var(--light);
-}
-
-/* AI ANALYSIS BOX */
-.analysis-box {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 10px 10px 0;
-  padding: 16px 18px;
-  margin-bottom: 32px;
-  min-height: 80px;
-}
-
-.analysis-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-bottom: 8px;
-}
-
-.analysis-text {
-  font-size: 0.8rem;
-  color: var(--dark);
-  line-height: 1.7;
-}
-
-.analysis-text.loading {
-  color: var(--light);
-  font-style: italic;
-}
-
-/* BIG BUTTON */
-.btn-primary {
-  width: 100%;
-  padding: 18px 24px;
-  background: var(--dark);
-  color: var(--cream);
-  border: none;
-  border-radius: 10px;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background 0.2s, transform 0.1s;
-}
-
-.btn-primary:hover {
-  background: #2c2c22;
-  transform: translateY(-1px);
-}
-
-.btn-primary:active { transform: translateY(0); }
-
-/* ── SCREEN 2: HOW DID IT FEEL ── */
-.feel-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.feel-btn {
-  background: var(--card-bg);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 16px;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-}
-
-.feel-btn:hover {
-  border-color: var(--dark);
-  transform: translateY(-2px);
-}
-
-.feel-btn.selected {
-  border-color: var(--dark);
-  background: var(--dark);
-  color: var(--cream);
-}
-
-.feel-btn.selected .feel-sub {
-  color: var(--light);
-}
-
-.feel-emoji {
-  font-size: 2rem;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.feel-title {
-  font-family: 'Fraunces', serif;
-  font-size: 0.9rem;
-  font-weight: 400;
-  display: block;
-  margin-bottom: 2px;
-}
-
-.feel-sub {
-  font-size: 0.65rem;
-  color: var(--mid);
-  display: block;
-}
-
-.feel-response {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--green);
-  border-radius: 0 10px 10px 0;
-  padding: 16px 18px;
-  margin-bottom: 32px;
-  min-height: 70px;
-  display: none;
-}
-
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.page { max-width: 480px; margin: 0 auto; padding: 48px 24px 80px; }
+.page-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+.page-title { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 200; line-height: 1.15; color: var(--dark); margin-bottom: 4px; }
+.page-sub { font-size: 0.72rem; color: var(--mid); margin-bottom: 36px; }
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+.stat-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px 12px; text-align: center; }
+.stat-box .val { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 200; color: var(--dark); line-height: 1; display: block; }
+.stat-box .unit { font-size: 0.6rem; color: var(--mid); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; display: block; }
+.pace-section { margin-bottom: 24px; }
+.pace-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.pace-label { font-size: 0.7rem; color: var(--mid); }
+.pace-word { font-family: 'Fraunces', serif; font-size: 1rem; font-style: italic; font-weight: 200; color: var(--accent); }
+.pace-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+.pace-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.pace-markers { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--light); }
+.analysis-box { background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 32px; min-height: 80px; }
+.analysis-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+.analysis-text { font-size: 0.8rem; color: var(--dark); line-height: 1.7; }
+.analysis-text.loading { color: var(--light); font-style: italic; }
+.btn-primary { width: 100%; padding: 18px 24px; background: var(--dark); color: var(--cream); border: none; border-radius: 10px; font-family: 'DM Mono', monospace; font-size: 0.85rem; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: background 0.2s, transform 0.1s; }
+.btn-primary:hover { background: #2c2c22; transform: translateY(-1px); }
+.feel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.feel-btn { background: var(--card-bg); border: 2px solid var(--border); border-radius: 12px; padding: 20px 16px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.feel-btn:hover { border-color: var(--dark); transform: translateY(-2px); }
+.feel-btn.selected { border-color: var(--dark); background: var(--dark); color: var(--cream); }
+.feel-btn.selected .feel-sub { color: var(--light); }
+.feel-emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+.feel-title { font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 400; display: block; margin-bottom: 2px; }
+.feel-sub { font-size: 0.65rem; color: var(--mid); display: block; }
+.feel-response { background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 32px; min-height: 70px; display: none; }
 .feel-response.visible { display: block; }
-
-.feel-response-text {
-  font-size: 0.78rem;
-  line-height: 1.7;
-  color: var(--dark);
-}
-
-.feel-response-text.loading {
-  color: var(--light);
-  font-style: italic;
-}
-
-/* ── SCREEN 3: GARDEN ── */
-.streak-bar {
-  background: var(--dark);
-  border-radius: 10px;
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.streak-num {
-  font-family: 'Fraunces', serif;
-  font-size: 2rem;
-  font-weight: 200;
-  color: var(--cream);
-  line-height: 1;
-}
-
-.streak-label {
-  font-size: 0.6rem;
-  color: var(--light);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 2px;
-}
-
-.health-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.health-tag {
-  background: rgba(255,255,255,0.1);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 0.62rem;
-  color: var(--cream);
-  letter-spacing: 0.05em;
-}
-
-/* PLANT GRID */
-.plant-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 28px;
-}
-
-.plant-cell {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
+.feel-response-text { font-size: 0.78rem; line-height: 1.7; color: var(--dark); }
+.feel-response-text.loading { color: var(--light); font-style: italic; }
+.streak-bar { background: var(--dark); border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.streak-num { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 200; color: var(--cream); line-height: 1; }
+.streak-label { font-size: 0.6rem; color: var(--light); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+.health-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.health-tag { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 4px 12px; font-size: 0.62rem; color: var(--cream); letter-spacing: 0.05em; }
+.plant-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
+.plant-cell { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 .plant-cell:hover { transform: scale(1.05); }
-
-.plant-cell.today {
-  border-color: var(--dark);
-  border-width: 2px;
-}
-
-.plant-cell .today-label {
-  position: absolute;
-  bottom: 3px;
-  left: 0; right: 0;
-  text-align: center;
-  font-size: 0.5rem;
-  color: var(--mid);
-  letter-spacing: 0.05em;
-}
-
-.plant-cell.dead {
-  background: #f5f0e8;
-  filter: grayscale(1);
-  opacity: 0.5;
-}
-
-@keyframes popIn {
-  from { transform: scale(0); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* EXPLANATION BOXES */
-.explanation-box {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 16px;
-}
-
-.explanation-box h3 {
-  font-family: 'Fraunces', serif;
-  font-size: 0.9rem;
-  font-weight: 400;
-  margin-bottom: 10px;
-  color: var(--dark);
-}
-
-.explanation-box p {
-  font-size: 0.75rem;
-  line-height: 1.7;
-  color: var(--mid);
-}
-
-.explanation-box p.loading {
-  color: var(--light);
-  font-style: italic;
-}
-
-.btn-secondary {
-  width: 100%;
-  padding: 18px 24px;
-  background: var(--card-bg);
-  color: var(--dark);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 12px;
-}
-
-.btn-secondary:hover {
-  border-color: var(--dark);
-}
-
-/* LOADING SCREEN */
-#loadingScreen {
-  position: fixed;
-  inset: 0;
-  background: var(--cream);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  z-index: 100;
-}
-
-#loadingScreen p {
-  font-size: 0.72rem;
-  color: var(--mid);
-  letter-spacing: 0.1em;
-}
-
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--border);
-  border-top-color: var(--dark);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
+.plant-cell.today { border-color: var(--dark); border-width: 2px; }
+.plant-cell .today-label { position: absolute; bottom: 3px; left: 0; right: 0; text-align: center; font-size: 0.5rem; color: var(--mid); }
+.plant-cell.dead { background: #f5f0e8; filter: grayscale(1); opacity: 0.5; }
+@keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.explanation-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.explanation-box h3 { font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 400; margin-bottom: 10px; color: var(--dark); }
+.explanation-box p { font-size: 0.75rem; line-height: 1.7; color: var(--mid); }
+.explanation-box p.loading { color: var(--light); font-style: italic; }
+.btn-secondary { width: 100%; padding: 18px 24px; background: var(--card-bg); color: var(--dark); border: 1px solid var(--border); border-radius: 10px; font-family: 'DM Mono', monospace; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
+.btn-secondary:hover { border-color: var(--dark); }
+#loadingScreen { position: fixed; inset: 0; background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
+#loadingScreen p { font-size: 0.72rem; color: var(--mid); letter-spacing: 0.1em; }
+.spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--dark); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div id="loadingScreen">
   <div class="spinner"></div>
   <p>loading your garden</p>
 </div>
 
-<!-- SCREEN 1: MEAL SUMMARY -->
 <div class="screen" id="screen1">
   <div class="page">
     <p class="page-label">Meal complete</p>
     <h1 class="page-title">Here's how<br>you ate</h1>
     <p class="page-sub" id="mealTime">Today</p>
-
     <div class="stat-grid">
-      <div class="stat-box">
-        <span class="val" id="s1-duration">—</span>
-        <span class="unit">meal duration</span>
-      </div>
-      <div class="stat-box">
-        <span class="val" id="s1-bites">—</span>
-        <span class="unit">bites taken</span>
-      </div>
-      <div class="stat-box">
-        <span class="val" id="s1-interval">—</span>
-        <span class="unit">avg between bites</span>
-      </div>
+      <div class="stat-box"><span class="val" id="s1-duration">—</span><span class="unit">meal duration</span></div>
+      <div class="stat-box"><span class="val" id="s1-bites">—</span><span class="unit">bites taken</span></div>
+      <div class="stat-box"><span class="val" id="s1-interval">—</span><span class="unit">avg between bites</span></div>
     </div>
-
     <div class="pace-section">
       <div class="pace-label-row">
-        <span class="pace-label">eating pace</span>
+        <span class="pace-label">eating pace —</span>
         <span class="pace-word" id="s1-paceWord">—</span>
       </div>
-      <div class="pace-track">
-        <div class="pace-fill" id="s1-paceBar" style="width:0%"></div>
-      </div>
-      <div class="pace-markers">
-        <span>slow</span>
-        <span>moderate</span>
-        <span>fast</span>
-      </div>
+      <div class="pace-track"><div class="pace-fill" id="s1-paceBar" style="width:0%"></div></div>
+      <div class="pace-markers"><span>slow</span><span>moderate</span><span>fast</span></div>
     </div>
-
     <div class="analysis-box">
       <div class="analysis-label">small meal analysis</div>
       <div class="analysis-text loading" id="s1-analysis">analysing your meal...</div>
     </div>
-
-    <button class="btn-primary" onclick="goTo(2)">
-      <span>How did this feel?</span>
-      <span>→</span>
-    </button>
+    <button class="btn-primary" onclick="goTo(2)"><span>How did this feel?</span><span>→</span></button>
   </div>
 </div>
 
-<!-- SCREEN 2: HOW DID IT FEEL -->
 <div class="screen" id="screen2">
   <div class="page">
     <p class="page-label">Your turn!</p>
     <h1 class="page-title">How did the<br>meal feel?</h1>
     <p class="page-sub">Helps us understand the full picture</p>
-
     <div class="feel-grid">
-      <button class="feel-btn" onclick="selectFeel('rushed')">
-        <span class="feel-emoji">🏃</span>
-        <span class="feel-title">I was rushed</span>
-        <span class="feel-sub">no choice</span>
-      </button>
-      <button class="feel-btn" onclick="selectFeel('distracted')">
-        <span class="feel-emoji">😝</span>
-        <span class="feel-title">Distracted</span>
-        <span class="feel-sub">phone / screen</span>
-      </button>
-      <button class="feel-btn" onclick="selectFeel('good')">
-        <span class="feel-emoji">😊</span>
-        <span class="feel-title">Felt good</span>
-        <span class="feel-sub">enjoyed the meal</span>
-      </button>
-      <button class="feel-btn" onclick="selectFeel('toofast')">
-        <span class="feel-emoji">😮</span>
-        <span class="feel-title">Too fast</span>
-        <span class="feel-sub">no reason</span>
-      </button>
+      <button class="feel-btn" onclick="selectFeel('rushed', this)"><span class="feel-emoji">🏃</span><span class="feel-title">I was rushed</span><span class="feel-sub">no choice</span></button>
+      <button class="feel-btn" onclick="selectFeel('distracted', this)"><span class="feel-emoji">😝</span><span class="feel-title">Distracted</span><span class="feel-sub">phone / screen</span></button>
+      <button class="feel-btn" onclick="selectFeel('good', this)"><span class="feel-emoji">😊</span><span class="feel-title">Felt good</span><span class="feel-sub">enjoyed the meal</span></button>
+      <button class="feel-btn" onclick="selectFeel('toofast', this)"><span class="feel-emoji">😮</span><span class="feel-title">Too fast</span><span class="feel-sub">no reason</span></button>
     </div>
-
     <div class="feel-response" id="feelResponse">
       <div class="feel-response-text loading" id="feelResponseText">thinking...</div>
     </div>
-
-    <button class="btn-primary" id="gardenBtn" onclick="goTo(3)" style="display:none">
-      <span>Update my garden</span>
-      <span>→</span>
-    </button>
+    <button class="btn-primary" id="gardenBtn" onclick="goTo(3)" style="display:none"><span>Update my garden</span><span>→</span></button>
   </div>
 </div>
 
-<!-- SCREEN 3: GARDEN -->
 <div class="screen" id="screen3">
   <div class="page">
     <p class="page-label">Your garden</p>
-    <h1 class="page-title" id="streakTitle">— day streak!</h1>
-
+    <h1 class="page-title" id="streakTitle">meals tracked!</h1>
     <div class="streak-bar">
-      <div>
-        <div class="streak-num" id="streakNum">0</div>
-        <div class="streak-label">day streak</div>
-      </div>
+      <div><div class="streak-num" id="streakNum">0</div><div class="streak-label">meals total</div></div>
       <div class="health-tags" id="healthTags"></div>
     </div>
-
     <div class="plant-grid" id="plantGrid"></div>
-
-    <div class="explanation-box">
-      <h3>Today's plant explanation</h3>
-      <p class="loading" id="plantExplanation">generating...</p>
-    </div>
-
-    <div class="explanation-box">
-      <h3>Whether you are improving</h3>
-      <p class="loading" id="improvementText">analysing your trend...</p>
-    </div>
-
+    <div class="explanation-box"><h3>Today's plant explanation</h3><p class="loading" id="plantExplanation">generating...</p></div>
+    <div class="explanation-box"><h3>Whether you are improving</h3><p class="loading" id="improvementText">analysing your trend...</p></div>
     <button class="btn-secondary" onclick="window.location.reload()">Done</button>
   </div>
 </div>
 
 <script>
-// ── CONFIG ──
-const GIST_ID = '534ae267964caa7772a5ae532a013841';
-const CLAUDE_API = 'https://api.anthropic.com/v1/messages';
-// Note: For production, proxy this through a backend. For prototype, use a CORS proxy.
-const CORS_PROXY = 'https://corsproxy.io/?';
+// ── PASTE YOUR GEMINI KEY HERE ──
+const GEMINI_KEY = 'AIzaSyBO8gCO8qD7XPwVYkkM4mTWmUARe_AhNZA';
+// ────────────────────────────────
 
-// ── STATE ──
+const GIST_ID = '534ae267964caa7772a5ae532a013841';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+
 let currentMeal = null;
-let selectedFeel = null;
 let allMeals = JSON.parse(localStorage.getItem('garden_meals') || '[]');
 
-// ── PLANT TYPES ──
-function getPlant(mood, health, isToday) {
+async function askAI(prompt) {
+  try {
+    const res = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 150, temperature: 0.8 }
+      })
+    });
+    const data = await res.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Analysis unavailable.';
+  } catch(e) {
+    return 'Analysis unavailable right now.';
+  }
+}
+
+function getPlant(mood, health) {
   const plants = {
     'GREAT':    health > 0.6 ? '🍅' : '🌱',
     'GOOD':     health > 0.6 ? '🌸' : '🌿',
@@ -618,13 +186,12 @@ function getPlant(mood, health, isToday) {
 function getHealthScore(meal) {
   const paceScores = { 'GREAT': 1, 'GOOD': 0.8, 'OK': 0.6, 'FAST-ISH': 0.3, 'TOO FAST': 0.1 };
   const feelScores = { 'good': 1, 'rushed': 0.4, 'distracted': 0.3, 'toofast': 0.2 };
-  const paceScore = paceScores[meal.mood] || 0.5;
-  const feelScore = feelScores[meal.feel] || 0.5;
-  const ratingScore = (meal.rating || 3) / 5;
-  return (paceScore + feelScore + ratingScore) / 3;
+  const p = paceScores[meal.mood] || 0.5;
+  const f = feelScores[meal.feel] || 0.5;
+  const r = (meal.rating || 3) / 5;
+  return (p + f + r) / 3;
 }
 
-// ── PACE HELPERS ──
 function getPaceWord(pace) {
   if (pace < 20) return 'quite slow';
   if (pace < 30) return 'moderate';
@@ -645,63 +212,32 @@ function getMoodFromPace(pace) {
   return 'TOO FAST';
 }
 
-// ── CLAUDE API ──
-async function askAI(prompt) {
-  try {
-    const GEMINI_KEY = 'AIzaSyBO8gCO8qD7XPwVYkkM4mTWmUARe_AhNZA';
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 150, temperature: 0.8 }
-      })
-    });
-    const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Analysis unavailable.';
-  } catch(e) {
-    return 'Analysis unavailable right now.';
-  }
-}
-
-// ── NAVIGATION ──
 function goTo(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen' + n).classList.add('active');
   if (n === 3) renderGarden();
 }
 
-// ── SCREEN 1 SETUP ──
 function setupScreen1(meal) {
-  const duration = Math.round(meal.duration / 60 * 10) / 10;
+  const duration = meal.duration < 60 ? meal.duration + 's' : (Math.round(meal.duration / 60 * 10) / 10) + 'm';
   const interval = meal.bites > 0 ? Math.round(meal.duration / meal.bites) : 0;
-
-  document.getElementById('s1-duration').textContent = duration < 1 
-    ? meal.duration + 's' 
-    : duration + 'm';
+  document.getElementById('s1-duration').textContent = duration;
   document.getElementById('s1-bites').textContent = meal.bites;
   document.getElementById('s1-interval').textContent = interval + 's';
   document.getElementById('s1-paceWord').textContent = getPaceWord(meal.pace);
-  document.getElementById('mealTime').textContent = 
-    'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  setTimeout(() => { document.getElementById('s1-paceBar').style.width = getPacePercent(meal.pace) + '%'; }, 300);
 
-  setTimeout(() => {
-    document.getElementById('s1-paceBar').style.width = getPacePercent(meal.pace) + '%';
-  }, 300);
-
-  // AI analysis
-  askClaude(`A person just finished a meal. Stats: ${meal.bites} bites, ${meal.duration} seconds total, ${Math.round(meal.pace)} bites per minute. In 2 short sentences, give a calm, non-judgmental reflection on their eating pace. No advice, just observation. Be warm and concise.`).then(text => {
+  askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute). Write 2 short warm non-judgmental sentences reflecting on their eating pace. No advice. Just calm observation.`).then(text => {
     const el = document.getElementById('s1-analysis');
     el.textContent = text;
     el.classList.remove('loading');
   });
 }
 
-// ── SCREEN 2: FEEL SELECTION ──
-function selectFeel(feel) {
-  selectedFeel = feel;
+function selectFeel(feel, btn) {
   document.querySelectorAll('.feel-btn').forEach(b => b.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
+  btn.classList.add('selected');
 
   const feelResponse = document.getElementById('feelResponse');
   const feelResponseText = document.getElementById('feelResponseText');
@@ -719,58 +255,51 @@ function selectFeel(feel) {
     toofast: 'too fast for no particular reason'
   };
 
-  askClaude(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds (${Math.round(currentMeal.pace)} bites/min). They said the meal felt: "${feelLabels[feel]}". In 2 sentences, explain what this means for the plant that will grow in their garden. Be poetic, warm, and food/nature themed. Don't be preachy.`).then(text => {
+  askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}". In 2 warm poetic sentences explain what plant will grow in their garden today and why. Be food and nature themed. Not preachy.`).then(text => {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
     gardenBtn.style.display = 'flex';
 
-    // save meal
-    if (currentMeal) {
-      currentMeal.feel = feel;
-      currentMeal.mood = getMoodFromPace(currentMeal.pace);
-      currentMeal.timestamp = Date.now();
-      allMeals.push(currentMeal);
-      localStorage.setItem('garden_meals', JSON.stringify(allMeals));
-    }
+    currentMeal.feel = feel;
+    currentMeal.mood = getMoodFromPace(currentMeal.pace);
+    currentMeal.timestamp = Date.now();
+    allMeals.push({...currentMeal});
+    localStorage.setItem('garden_meals', JSON.stringify(allMeals));
   });
 }
 
-// ── SCREEN 3: GARDEN ──
 function renderGarden() {
   const grid = document.getElementById('plantGrid');
-  const streakNum = document.getElementById('streakNum');
-  const streakTitle = document.getElementById('streakTitle');
-  const healthTags = document.getElementById('healthTags');
-
   grid.innerHTML = '';
 
   if (allMeals.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--light);font-size:0.75rem;">no meals yet</div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--light);font-size:0.75rem;font-style:italic;">no meals yet — eat something!</div>';
+    document.getElementById('plantExplanation').textContent = 'Your garden is waiting for its first plant.';
+    document.getElementById('plantExplanation').classList.remove('loading');
+    document.getElementById('improvementText').textContent = 'Eat a few meals to see your trend.';
+    document.getElementById('improvementText').classList.remove('loading');
+    document.getElementById('streakNum').textContent = '0';
     return;
   }
 
-  // streak
   const streak = allMeals.length;
-  streakNum.textContent = streak;
-  streakTitle.textContent = streak + ' day streak!';
+  document.getElementById('streakNum').textContent = streak;
+  document.getElementById('streakTitle').textContent = streak + ' meal' + (streak !== 1 ? 's' : '') + ' tracked!';
 
-  // health counts
   const healthy = allMeals.filter(m => getHealthScore(m) > 0.6).length;
   const droopy = allMeals.filter(m => getHealthScore(m) > 0.3 && getHealthScore(m) <= 0.6).length;
   const dead = allMeals.filter(m => getHealthScore(m) <= 0.3).length;
 
-  healthTags.innerHTML = `
+  document.getElementById('healthTags').innerHTML = `
     ${healthy > 0 ? `<div class="health-tag">${healthy} healthy</div>` : ''}
     ${droopy > 0 ? `<div class="health-tag">${droopy} droopy</div>` : ''}
     ${dead > 0 ? `<div class="health-tag">${dead} struggling</div>` : ''}
   `;
 
-  // plants
   allMeals.forEach((meal, i) => {
     const health = getHealthScore(meal);
     const isToday = i === allMeals.length - 1;
-    const plant = getPlant(meal.mood, health, isToday);
-
+    const plant = getPlant(meal.mood, health);
     const cell = document.createElement('div');
     cell.className = 'plant-cell' + (isToday ? ' today' : '') + (health <= 0.3 ? ' dead' : '');
     cell.style.animationDelay = `${i * 0.05}s`;
@@ -779,24 +308,20 @@ function renderGarden() {
     grid.appendChild(cell);
   });
 
-  // today's plant explanation
   const todayMeal = allMeals[allMeals.length - 1];
   if (todayMeal) {
     const health = getHealthScore(todayMeal);
-    const plant = getPlant(todayMeal.mood, health, true);
-    askAI(`A person's meal grew a ${plant} plant in their garden. Their pace was ${todayMeal.mood}, they felt ${todayMeal.feel || 'neutral'}, and their health score was ${Math.round(health * 100)}%. In 2 sentences, explain why this specific plant grew today. Be poetic and food/nature themed.`).then(text => {
+    const plant = getPlant(todayMeal.mood, health);
+    askAI(`Today's meal: ${todayMeal.bites} bites, pace: ${todayMeal.mood}, felt: ${todayMeal.feel || 'neutral'}, health: ${Math.round(health * 100)}%. A ${plant} grew in their garden. In 2 poetic sentences explain why. Food and nature themed.`).then(text => {
       const el = document.getElementById('plantExplanation');
       el.textContent = text;
       el.classList.remove('loading');
     });
 
-    // improvement
     if (allMeals.length >= 2) {
       const recent = allMeals.slice(-3);
       const avgHealth = recent.reduce((s, m) => s + getHealthScore(m), 0) / recent.length;
-      const trend = avgHealth > 0.6 ? 'improving' : avgHealth > 0.4 ? 'steady' : 'struggling';
-      
-      askAI(`A person has eaten ${allMeals.length} meals. Their recent average health score is ${Math.round(avgHealth * 100)}% (${trend}). Recent moods: ${recent.map(m => m.mood).join(', ')}. In 2 sentences, tell them whether they are improving their eating pace. Be warm, honest, and encouraging without being preachy.`).then(text => {
+      askAI(`Person has tracked ${allMeals.length} meals. Recent health average: ${Math.round(avgHealth * 100)}%. Recent paces: ${recent.map(m => m.mood).join(', ')}. In 2 warm honest sentences tell them if they are improving. Encouraging but not preachy.`).then(text => {
         const el = document.getElementById('improvementText');
         el.textContent = text;
         el.classList.remove('loading');
@@ -808,21 +333,17 @@ function renderGarden() {
   }
 }
 
-// ── INIT ──
 async function init() {
   try {
     const res = await fetch(`https://api.github.com/gists/${GIST_ID}?t=` + Date.now());
     const data = await res.json();
     const content = data.files['meal_data.json'].content;
     currentMeal = JSON.parse(content);
-
     document.getElementById('loadingScreen').style.display = 'none';
-
     if (currentMeal && currentMeal.bites > 0) {
       setupScreen1(currentMeal);
       goTo(1);
     } else {
-      // no new meal — go straight to garden
       goTo(3);
     }
   } catch(e) {
