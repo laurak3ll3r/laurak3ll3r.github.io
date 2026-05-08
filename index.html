@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Eating Garden</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --dark: #1a1a14;
+    --soil: #6b4c2a;
+    --soil-light: #8b6340;
+    --green-deep: #2d5a27;
+    --green-mid: #4a7c3f;
+    --green-light: #7ab648;
+    --flower-red: #d63c2f;
+    --flower-yellow: #f0b429;
+    --flower-pink: #e8728a;
+    --flower-purple: #8b5cf6;
+    --weed: #8b7355;
+    --chilli: #dc2626;
+    --tomato: #ef4444;
+    --window-frame: #c8a882;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* WINDOW FRAME */
+  .window-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: var(--dark);
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #888;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  /* WINDOW */
+  .window {
+    background: #d4eaf7;
+    border: 6px solid var(--window-frame);
+    border-radius: 4px;
+    box-shadow: 
+      inset 0 0 60px rgba(180,210,240,0.4),
+      0 20px 60px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+    min-height: 340px;
+  }
+
+  /* window cross */
+  .window::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 6px; height: 100%;
+    background: var(--window-frame);
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+  .window::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 6px;
+    background: var(--window-frame);
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+
+  /* sky background */
+  .sky {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #b8d9f0 0%, #daeef8 60%, #f0f8e8 100%);
+  }
+
+  /* windowsill */
+  .sill {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(180deg, var(--window-frame) 0%, #a08060 100%);
+    border-top: 3px solid #e8c89a;
+    z-index: 5;
+  }
+
+  /* plant row */
+  .plant-row {
+    position: absolute;
+    bottom: 40px;
+    left: 0; right: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 18px;
+    padding: 0 30px;
+    z-index: 6;
+    flex-wrap: wrap;
+  }
+
+  /* POT */
+  .pot-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: growIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .pot-wrapper:hover .plant-svg {
+    transform: translateY(-4px) scale(1.05);
+  }
+
+  .plant-svg {
+    transition: transform 0.3s ease;
+    display: block;
+  }
+
+  .pot {
+    width: 44px;
+    height: 36px;
+    background: linear-gradient(180deg, #c8703a 0%, #a05020 100%);
+    border-radius: 3px 3px 8px 8px;
+    border-top: 4px solid #d8804a;
+    position: relative;
+    z-index: 2;
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+  }
+
+  .pot::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: -4px; right: -4px;
+    height: 8px;
+    background: #d8804a;
+    border-radius: 3px 3px 0 0;
+  }
+
+  /* tooltip */
+  .pot-tooltip {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark);
+    color: var(--cream);
+    font-size: 0.65rem;
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 20;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .pot-wrapper:hover .pot-tooltip {
+    opacity: 1;
+  }
+
+  @keyframes growIn {
+    from { transform: scale(0) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  /* STATS PANEL */
+  .stats-panel {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid #e8e0d0;
+    border-radius: 8px;
+    padding: 20px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--dark);
+    line-height: 1;
+  }
+
+  .stat-sub {
+    font-size: 0.7rem;
+    color: #aaa;
+    margin-top: 4px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* LEGEND */
+  .legend {
+    margin-top: 32px;
+    background: white;
+    border: 1px solid #e8e0d0;
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+
+  .legend h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 1rem;
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: #666;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    gap: 8px;
+  }
+
+  .empty-state p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #8aab9a;
+    font-weight: 300;
+  }
+
+  .empty-state span {
+    font-size: 0.7rem;
+    color: #aac4b8;
+    letter-spacing: 0.05em;
+  }
+
+  /* LAST MEAL */
+  .last-meal {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.7rem;
+    color: #aaa;
+  }
+
+  .refresh-btn {
+    margin-top: 32px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .refresh-btn:hover {
+    border-color: var(--dark);
+    color: var(--dark);
+  }
+
+  .loading {
+    text-align: center;
+    padding: 60px;
+    font-size: 0.75rem;
+    color: #aaa;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="window-wrapper">
+  <h1>my eating garden</h1>
+  <p class="subtitle">each meal grows a plant</p>
+
+  <div class="window" id="window">
+    <div class="sky"></div>
+    <div class="sill"></div>
+    <div class="plant-row" id="plantRow"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <p>no meals yet</p>
+      <span>eat your first meal to grow something</span>
+    </div>
+  </div>
+
+  <div id="statsPanel" class="stats-panel" style="display:none"></div>
+
+  <div class="legend">
+    <h3>what grows</h3>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <circle cx="10" cy="6" r="5" fill="#ef4444"/>
+          <rect x="9" y="10" width="2" height="8" fill="#2d5a27"/>
+          <line x1="10" y1="14" x2="7" y2="11" stroke="#4a7c3f" stroke-width="1.5"/>
+          <line x1="10" y1="14" x2="13" y2="11" stroke="#4a7c3f" stroke-width="1.5"/>
+        </svg>
+        <span>great pace → tomato</span>
+      </div>
+      <div class="legend-item">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <circle cx="10" cy="8" r="4" fill="#f9a8d4"/>
+          <circle cx="10" cy="8" r="2" fill="#fde68a"/>
+          <rect x="9" y="11" width="2" height="7" fill="#2d5a27"/>
+        </svg>
+        <span>good pace → flower</span>
+      </div>
+      <div class="legend-item">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <ellipse cx="10" cy="8" rx="4" ry="6" fill="#7ab648"/>
+          <rect x="9" y="13" width="2" height="5" fill="#2d5a27"/>
+        </svg>
+        <span>ok pace → herb</span>
+      </div>
+      <div class="legend-item">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M10 14 Q6 10 7 6 Q10 4 13 6 Q14 10 10 14Z" fill="#dc2626"/>
+          <rect x="9" y="13" width="2" height="5" fill="#2d5a27"/>
+        </svg>
+        <span>fast-ish → chilli</span>
+      </div>
+      <div class="legend-item">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M10 4 Q13 8 12 12 Q10 14 8 12 Q7 8 10 4Z" fill="#8b7355"/>
+          <path d="M10 4 Q7 8 8 12" fill="none" stroke="#6b5535" stroke-width="1"/>
+          <rect x="9" y="12" width="2" height="6" fill="#6b5535"/>
+        </svg>
+        <span>too fast → weed</span>
+      </div>
+      <div class="legend-item">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="#ccc" stroke-dasharray="3"/>
+          <text x="10" y="14" text-anchor="middle" font-size="10" fill="#ccc">?</text>
+        </svg>
+        <span>health = pace + rating</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="last-meal" id="lastMeal"></div>
+  <button class="refresh-btn" onclick="loadGarden()">↻ refresh garden</button>
+</div>
+
+<script>
+const GIST_ID = '534ae267964caa7772a5ae532a013841';
+const GIST_URL = `https://api.github.com/gists/${GIST_ID}`;
+
+// store all meals locally in session so garden accumulates
+let allMeals = JSON.parse(localStorage.getItem('garden_meals') || '[]');
+
+async function loadGarden() {
+  try {
+    const res = await fetch(GIST_URL + '?t=' + Date.now());
+    const data = await res.json();
+    const content = data.files['meal_data.json'].content;
+    const meal = JSON.parse(content);
+
+    // add meal if it's new (check by combining key stats)
+    const mealKey = `${meal.bites}-${meal.duration}-${meal.pace}`;
+    const alreadyExists = allMeals.some(m => 
+      `${m.bites}-${m.duration}-${m.pace}` === mealKey
+    );
+
+    if (!alreadyExists && meal.bites > 0) {
+      meal.timestamp = Date.now();
+      allMeals.push(meal);
+      localStorage.setItem('garden_meals', JSON.stringify(allMeals));
+    }
+
+    renderGarden();
+  } catch(e) {
+    console.error(e);
+    renderGarden();
+  }
+}
+
+function getPlantType(mood) {
+  const map = {
+    'GREAT': 'tomato',
+    'GOOD': 'flower',
+    'OK': 'herb',
+    'FAST-ISH': 'chilli',
+    'TOO FAST': 'weed'
+  };
+  return map[mood] || 'herb';
+}
+
+function getHealthScore(meal) {
+  // combine pace score (0-1) and rating (1-5)
+  const paceScores = { 'GREAT': 1, 'GOOD': 0.8, 'OK': 0.6, 'FAST-ISH': 0.3, 'TOO FAST': 0.1 };
+  const paceScore = paceScores[meal.mood] || 0.5;
+  const ratingScore = (meal.rating || 3) / 5;
+  return (paceScore + ratingScore) / 2; // 0 to 1
+}
+
+function drawPlant(type, health) {
+  const h = Math.round(health * 100);
+  const size = 30 + health * 40; // 30px to 70px tall
+  const opacity = 0.4 + health * 0.6;
+
+  const svgs = {
+    tomato: `
+      <svg width="${size}" height="${size + 20}" viewBox="0 0 60 80" style="opacity:${opacity}">
+        <!-- stem -->
+        <rect x="28" y="35" width="4" height="30" fill="#2d5a27"/>
+        <line x1="30" y1="50" x2="20" y2="42" stroke="#4a7c3f" stroke-width="2"/>
+        <line x1="30" y1="50" x2="40" y2="42" stroke="#4a7c3f" stroke-width="2"/>
+        <!-- tomato -->
+        <circle cx="30" cy="${health > 0.5 ? 22 : 28}" r="${health > 0.5 ? 18 : 12}" fill="${health > 0.6 ? '#ef4444' : '#f87171'}"/>
+        <!-- highlight -->
+        <circle cx="24" cy="${health > 0.5 ? 16 : 22}" r="4" fill="rgba(255,255,255,0.3)"/>
+        <!-- leaves on top -->
+        <path d="M30 ${health > 0.5 ? 6 : 12} Q24 2 20 6 Q24 10 30 ${health > 0.5 ? 6 : 12}Z" fill="#2d5a27"/>
+        <path d="M30 ${health > 0.5 ? 6 : 12} Q36 2 40 6 Q36 10 30 ${health > 0.5 ? 6 : 12}Z" fill="#4a7c3f"/>
+      </svg>`,
+
+    flower: `
+      <svg width="${size}" height="${size + 20}" viewBox="0 0 60 80" style="opacity:${opacity}">
+        <!-- stem -->
+        <rect x="28" y="40" width="4" height="28" fill="#2d5a27"/>
+        <line x1="30" y1="55" x2="20" y2="47" stroke="#4a7c3f" stroke-width="2"/>
+        <!-- petals -->
+        ${health > 0.5 ? `
+        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#f9a8d4' : '#fca5a5'}" transform="rotate(0 30 32)"/>
+        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#fbcfe8' : '#fca5a5'}" transform="rotate(60 30 32)"/>
+        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#f9a8d4' : '#fca5a5'}" transform="rotate(120 30 32)"/>
+        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#fbcfe8' : '#fca5a5'}" transform="rotate(180 30 32)"/>
+        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#f9a8d4' : '#fca5a5'}" transform="rotate(240 30 32)"/>
+        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#fbcfe8' : '#fca5a5'}" transform="rotate(300 30 32)"/>
+        ` : `
+        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(0 30 33)"/>
+        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(90 30 33)"/>
+        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(180 30 33)"/>
+        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(270 30 33)"/>
+        `}
+        <!-- centre -->
+        <circle cx="30" cy="32" r="${health > 0.5 ? 7 : 5}" fill="#fde68a"/>
+        <circle cx="30" cy="32" r="${health > 0.5 ? 4 : 3}" fill="#f59e0b"/>
+      </svg>`,
+
+    herb: `
+      <svg width="${size}" height="${size + 10}" viewBox="0 0 60 70" style="opacity:${opacity}">
+        <!-- stem -->
+        <rect x="28" y="35" width="4" height="25" fill="#2d5a27"/>
+        <!-- leaves -->
+        <ellipse cx="20" cy="28" rx="10" ry="6" fill="#4a7c3f" transform="rotate(-30 20 28)"/>
+        <ellipse cx="40" cy="28" rx="10" ry="6" fill="#7ab648" transform="rotate(30 40 28)"/>
+        <ellipse cx="30" cy="18" rx="10" ry="6" fill="#4a7c3f"/>
+        ${health > 0.5 ? `<ellipse cx="18" cy="18" rx="8" ry="5" fill="#7ab648" transform="rotate(-40 18 18)"/>
+        <ellipse cx="42" cy="18" rx="8" ry="5" fill="#4a7c3f" transform="rotate(40 42 18)"/>` : ''}
+      </svg>`,
+
+    chilli: `
+      <svg width="${size * 0.7}" height="${size + 20}" viewBox="0 0 60 80" style="opacity:${opacity}">
+        <!-- stem -->
+        <rect x="28" y="20" width="4" height="16" fill="#2d5a27"/>
+        <!-- leaves -->
+        <ellipse cx="20" cy="22" rx="8" ry="4" fill="#4a7c3f" transform="rotate(-20 20 22)"/>
+        <ellipse cx="40" cy="22" rx="8" ry="4" fill="#4a7c3f" transform="rotate(20 40 22)"/>
+        <!-- chilli pepper -->
+        <path d="M30 34 Q${health > 0.4 ? 42 : 38} 40 ${health > 0.4 ? 40 : 36} 58 Q30 65 ${health > 0.4 ? 20 : 24} 58 Q${health > 0.4 ? 18 : 22} 40 30 34Z" 
+              fill="${health > 0.4 ? '#dc2626' : '#ef4444'}"/>
+        <path d="M30 34 Q30 48 30 60" stroke="#b91c1c" stroke-width="1" fill="none"/>
+        <!-- tip -->
+        <circle cx="${health > 0.4 ? 30 : 30}" cy="${health > 0.4 ? 64 : 60}" r="2" fill="#b91c1c"/>
+      </svg>`,
+
+    weed: `
+      <svg width="${size * 0.8}" height="${size}" viewBox="0 0 60 60" style="opacity:${opacity * 0.7}">
+        <!-- scraggly stem -->
+        <path d="M30 55 Q27 45 29 35 Q31 25 28 15" stroke="#8b7355" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- droopy leaves -->
+        <path d="M29 40 Q18 35 15 42 Q22 45 29 40Z" fill="#a0825a"/>
+        <path d="M29 30 Q40 25 42 32 Q36 36 29 30Z" fill="#8b7355"/>
+        <path d="M28 20 Q18 14 17 21 Q22 24 28 20Z" fill="#a0825a"/>
+        <!-- scraggly top -->
+        <path d="M28 15 Q24 8 22 4" stroke="#8b7355" stroke-width="2" fill="none"/>
+        <path d="M28 15 Q32 7 35 4" stroke="#a0825a" stroke-width="2" fill="none"/>
+        <path d="M28 15 Q28 8 28 4" stroke="#8b7355" stroke-width="2" fill="none"/>
+      </svg>`
+  };
+
+  return svgs[type] || svgs.herb;
+}
+
+function renderGarden() {
+  const plantRow = document.getElementById('plantRow');
+  const emptyState = document.getElementById('emptyState');
+  const statsPanel = document.getElementById('statsPanel');
+  const lastMeal = document.getElementById('lastMeal');
+
+  plantRow.innerHTML = '';
+
+  if (allMeals.length === 0) {
+    emptyState.style.display = 'flex';
+    statsPanel.style.display = 'none';
+    return;
+  }
+
+  emptyState.style.display = 'none';
+  statsPanel.style.display = 'grid';
+
+  // render plants
+  allMeals.forEach((meal, i) => {
+    const type = getPlantType(meal.mood);
+    const health = getHealthScore(meal);
+    const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'unknown';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'pot-wrapper';
+    wrapper.style.animationDelay = `${i * 0.08}s`;
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'pot-tooltip';
+    tooltip.innerHTML = `${date}<br>${meal.bites} bites · ${meal.duration}s<br>pace: ${meal.mood}<br>rating: ${meal.rating}/5`;
+
+    const plantSvg = document.createElement('div');
+    plantSvg.className = 'plant-svg';
+    plantSvg.innerHTML = drawPlant(type, health);
+
+    const pot = document.createElement('div');
+    pot.className = 'pot';
+
+    wrapper.appendChild(tooltip);
+    wrapper.appendChild(plantSvg);
+    wrapper.appendChild(pot);
+    plantRow.appendChild(wrapper);
+  });
+
+  // stats
+  const totalMeals = allMeals.length;
+  const avgBites = Math.round(allMeals.reduce((s, m) => s + m.bites, 0) / totalMeals);
+  const avgPace = (allMeals.reduce((s, m) => s + parseFloat(m.pace), 0) / totalMeals).toFixed(1);
+  const avgRating = (allMeals.reduce((s, m) => s + (m.rating || 3), 0) / totalMeals).toFixed(1);
+
+  statsPanel.innerHTML = `
+    <div class="stat-card" style="animation-delay:0.1s">
+      <div class="stat-label">total meals</div>
+      <div class="stat-value">${totalMeals}</div>
+      <div class="stat-sub">plants in garden</div>
+    </div>
+    <div class="stat-card" style="animation-delay:0.2s">
+      <div class="stat-label">avg bites</div>
+      <div class="stat-value">${avgBites}</div>
+      <div class="stat-sub">per meal</div>
+    </div>
+    <div class="stat-card" style="animation-delay:0.3s">
+      <div class="stat-label">avg pace</div>
+      <div class="stat-value">${avgPace}</div>
+      <div class="stat-sub">bites per minute</div>
+    </div>
+    <div class="stat-card" style="animation-delay:0.4s">
+      <div class="stat-label">avg enjoyment</div>
+      <div class="stat-value">${avgRating}</div>
+      <div class="stat-sub">out of 5</div>
+    </div>
+  `;
+
+  // last meal
+  const last = allMeals[allMeals.length - 1];
+  if (last) {
+    lastMeal.textContent = `last meal: ${last.bites} bites · ${last.duration}s · ${last.mood} · rated ${last.rating}/5`;
+  }
+}
+
+// load on start
+loadGarden();
+</script>
+</body>
+</html>
