@@ -646,23 +646,19 @@ function getMoodFromPace(pace) {
 }
 
 // ── CLAUDE API ──
-async function askClaude(prompt) {
+async function askAI(prompt) {
   try {
-    const res = await fetch(CORS_PROXY + encodeURIComponent(CLAUDE_API), {
+    const GEMINI_KEY = 'AIzaSyB0oau9wXW5ZfiVO2iD1UcwtAEhCvB-pH4';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': 'YOUR_CLAUDE_API_KEY',
-        'anthropic-version': '2023-06-01'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 150,
-        messages: [{ role: 'user', content: prompt }]
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 150, temperature: 0.8 }
       })
     });
     const data = await res.json();
-    return data.content?.[0]?.text || 'Unable to generate analysis.';
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Analysis unavailable.';
   } catch(e) {
     return 'Analysis unavailable right now.';
   }
@@ -788,7 +784,7 @@ function renderGarden() {
   if (todayMeal) {
     const health = getHealthScore(todayMeal);
     const plant = getPlant(todayMeal.mood, health, true);
-    askClaude(`A person's meal grew a ${plant} plant in their garden. Their pace was ${todayMeal.mood}, they felt ${todayMeal.feel || 'neutral'}, and their health score was ${Math.round(health * 100)}%. In 2 sentences, explain why this specific plant grew today. Be poetic and food/nature themed.`).then(text => {
+    askAI(`A person's meal grew a ${plant} plant in their garden. Their pace was ${todayMeal.mood}, they felt ${todayMeal.feel || 'neutral'}, and their health score was ${Math.round(health * 100)}%. In 2 sentences, explain why this specific plant grew today. Be poetic and food/nature themed.`).then(text => {
       const el = document.getElementById('plantExplanation');
       el.textContent = text;
       el.classList.remove('loading');
@@ -800,7 +796,7 @@ function renderGarden() {
       const avgHealth = recent.reduce((s, m) => s + getHealthScore(m), 0) / recent.length;
       const trend = avgHealth > 0.6 ? 'improving' : avgHealth > 0.4 ? 'steady' : 'struggling';
       
-      askClaude(`A person has eaten ${allMeals.length} meals. Their recent average health score is ${Math.round(avgHealth * 100)}% (${trend}). Recent moods: ${recent.map(m => m.mood).join(', ')}. In 2 sentences, tell them whether they are improving their eating pace. Be warm, honest, and encouraging without being preachy.`).then(text => {
+      askAI(`A person has eaten ${allMeals.length} meals. Their recent average health score is ${Math.round(avgHealth * 100)}% (${trend}). Recent moods: ${recent.map(m => m.mood).join(', ')}. In 2 sentences, tell them whether they are improving their eating pace. Be warm, honest, and encouraging without being preachy.`).then(text => {
         const el = document.getElementById('improvementText');
         el.textContent = text;
         el.classList.remove('loading');
