@@ -3,631 +3,839 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Eating Garden</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<title>Eating Pace Garden</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;1,9..144,200;1,9..144,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #f5f0e8;
-    --dark: #1a1a14;
-    --soil: #6b4c2a;
-    --soil-light: #8b6340;
-    --green-deep: #2d5a27;
-    --green-mid: #4a7c3f;
-    --green-light: #7ab648;
-    --flower-red: #d63c2f;
-    --flower-yellow: #f0b429;
-    --flower-pink: #e8728a;
-    --flower-purple: #8b5cf6;
-    --weed: #8b7355;
-    --chilli: #dc2626;
-    --tomato: #ef4444;
-    --window-frame: #c8a882;
-  }
+:root {
+  --cream: #f7f3ec;
+  --dark: #1c1c16;
+  --mid: #6b6b5a;
+  --light: #c8c0aa;
+  --accent: #c5462a;
+  --green: #3a6b32;
+  --green-light: #6ea85e;
+  --card-bg: #ffffff;
+  --border: #e8e0d0;
+  --soil: #8b6340;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background: var(--cream);
-    font-family: 'DM Mono', monospace;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  background: var(--cream);
+  font-family: 'DM Mono', monospace;
+  color: var(--dark);
+  min-height: 100vh;
+}
 
-  /* WINDOW FRAME */
-  .window-wrapper {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
-  }
+/* SCREEN SYSTEM */
+.screen {
+  display: none;
+  min-height: 100vh;
+  animation: fadeIn 0.4s ease;
+}
+.screen.active { display: block; }
 
-  h1 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 300;
-    color: var(--dark);
-    text-align: center;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-  .subtitle {
-    text-align: center;
-    font-size: 0.75rem;
-    color: #888;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 48px;
-  }
+/* SHARED LAYOUT */
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
 
-  /* WINDOW */
-  .window {
-    background: #d4eaf7;
-    border: 6px solid var(--window-frame);
-    border-radius: 4px;
-    box-shadow: 
-      inset 0 0 60px rgba(180,210,240,0.4),
-      0 20px 60px rgba(0,0,0,0.15);
-    position: relative;
-    overflow: hidden;
-    min-height: 340px;
-  }
+.page-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 8px;
+}
 
-  /* window cross */
-  .window::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%;
-    width: 6px; height: 100%;
-    background: var(--window-frame);
-    transform: translateX(-50%);
-    z-index: 10;
-  }
-  .window::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 0;
-    width: 100%; height: 6px;
-    background: var(--window-frame);
-    transform: translateY(-50%);
-    z-index: 10;
-  }
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 200;
+  line-height: 1.15;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
 
-  /* sky background */
-  .sky {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, #b8d9f0 0%, #daeef8 60%, #f0f8e8 100%);
-  }
+.page-sub {
+  font-size: 0.72rem;
+  color: var(--mid);
+  margin-bottom: 36px;
+}
 
-  /* windowsill */
-  .sill {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 60px;
-    background: linear-gradient(180deg, var(--window-frame) 0%, #a08060 100%);
-    border-top: 3px solid #e8c89a;
-    z-index: 5;
-  }
+/* DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
 
-  /* plant row */
-  .plant-row {
-    position: absolute;
-    bottom: 40px;
-    left: 0; right: 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 18px;
-    padding: 0 30px;
-    z-index: 6;
-    flex-wrap: wrap;
-  }
+/* ── SCREEN 1: MEAL SUMMARY ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
 
-  /* POT */
-  .pot-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: growIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    cursor: pointer;
-    position: relative;
-  }
+.stat-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+}
 
-  .pot-wrapper:hover .plant-svg {
-    transform: translateY(-4px) scale(1.05);
-  }
+.stat-box .val {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 200;
+  color: var(--dark);
+  line-height: 1;
+  display: block;
+}
 
-  .plant-svg {
-    transition: transform 0.3s ease;
-    display: block;
-  }
+.stat-box .unit {
+  font-size: 0.6rem;
+  color: var(--mid);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+  display: block;
+}
 
-  .pot {
-    width: 44px;
-    height: 36px;
-    background: linear-gradient(180deg, #c8703a 0%, #a05020 100%);
-    border-radius: 3px 3px 8px 8px;
-    border-top: 4px solid #d8804a;
-    position: relative;
-    z-index: 2;
-    box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
-  }
+/* PACE BAR */
+.pace-section {
+  margin-bottom: 24px;
+}
 
-  .pot::before {
-    content: '';
-    position: absolute;
-    top: -8px; left: -4px; right: -4px;
-    height: 8px;
-    background: #d8804a;
-    border-radius: 3px 3px 0 0;
-  }
+.pace-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
 
-  /* tooltip */
-  .pot-tooltip {
-    position: absolute;
-    bottom: 110%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--dark);
-    color: var(--cream);
-    font-size: 0.65rem;
-    padding: 6px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    z-index: 20;
-    line-height: 1.6;
-    text-align: center;
-  }
+.pace-label {
+  font-size: 0.7rem;
+  color: var(--mid);
+}
 
-  .pot-wrapper:hover .pot-tooltip {
-    opacity: 1;
-  }
+.pace-word {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 200;
+  color: var(--accent);
+}
 
-  @keyframes growIn {
-    from { transform: scale(0) translateY(20px); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
-  }
+.pace-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
 
-  /* STATS PANEL */
-  .stats-panel {
-    margin-top: 40px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-  }
+.pace-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-  .stat-card {
-    background: white;
-    border: 1px solid #e8e0d0;
-    border-radius: 8px;
-    padding: 20px;
-    animation: fadeUp 0.5s ease both;
-  }
+.pace-markers {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  color: var(--light);
+}
 
-  .stat-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #999;
-    margin-bottom: 6px;
-  }
+/* AI ANALYSIS BOX */
+.analysis-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 18px;
+  margin-bottom: 32px;
+  min-height: 80px;
+}
 
-  .stat-value {
-    font-family: 'Fraunces', serif;
-    font-size: 2rem;
-    font-weight: 300;
-    color: var(--dark);
-    line-height: 1;
-  }
+.analysis-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 8px;
+}
 
-  .stat-sub {
-    font-size: 0.7rem;
-    color: #aaa;
-    margin-top: 4px;
-  }
+.analysis-text {
+  font-size: 0.8rem;
+  color: var(--dark);
+  line-height: 1.7;
+}
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+.analysis-text.loading {
+  color: var(--light);
+  font-style: italic;
+}
 
-  /* LEGEND */
-  .legend {
-    margin-top: 32px;
-    background: white;
-    border: 1px solid #e8e0d0;
-    border-radius: 8px;
-    padding: 20px 24px;
-  }
+/* BIG BUTTON */
+.btn-primary {
+  width: 100%;
+  padding: 18px 24px;
+  background: var(--dark);
+  color: var(--cream);
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.2s, transform 0.1s;
+}
 
-  .legend h3 {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: 1rem;
-    color: var(--dark);
-    margin-bottom: 14px;
-  }
+.btn-primary:hover {
+  background: #2c2c22;
+  transform: translateY(-1px);
+}
 
-  .legend-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-  }
+.btn-primary:active { transform: translateY(0); }
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.72rem;
-    color: #666;
-  }
+/* ── SCREEN 2: HOW DID IT FEEL ── */
+.feel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
 
-  /* EMPTY STATE */
-  .empty-state {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 6;
-    gap: 8px;
-  }
+.feel-btn {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
 
-  .empty-state p {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1.1rem;
-    color: #8aab9a;
-    font-weight: 300;
-  }
+.feel-btn:hover {
+  border-color: var(--dark);
+  transform: translateY(-2px);
+}
 
-  .empty-state span {
-    font-size: 0.7rem;
-    color: #aac4b8;
-    letter-spacing: 0.05em;
-  }
+.feel-btn.selected {
+  border-color: var(--dark);
+  background: var(--dark);
+  color: var(--cream);
+}
 
-  /* LAST MEAL */
-  .last-meal {
-    margin-top: 16px;
-    text-align: center;
-    font-size: 0.7rem;
-    color: #aaa;
-  }
+.feel-btn.selected .feel-sub {
+  color: var(--light);
+}
 
-  .refresh-btn {
-    margin-top: 32px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    background: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    color: #888;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.05em;
-  }
+.feel-emoji {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 8px;
+}
 
-  .refresh-btn:hover {
-    border-color: var(--dark);
-    color: var(--dark);
-  }
+.feel-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  display: block;
+  margin-bottom: 2px;
+}
 
-  .loading {
-    text-align: center;
-    padding: 60px;
-    font-size: 0.75rem;
-    color: #aaa;
-    letter-spacing: 0.1em;
-  }
+.feel-sub {
+  font-size: 0.65rem;
+  color: var(--mid);
+  display: block;
+}
+
+.feel-response {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 18px;
+  margin-bottom: 32px;
+  min-height: 70px;
+  display: none;
+}
+
+.feel-response.visible { display: block; }
+
+.feel-response-text {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--dark);
+}
+
+.feel-response-text.loading {
+  color: var(--light);
+  font-style: italic;
+}
+
+/* ── SCREEN 3: GARDEN ── */
+.streak-bar {
+  background: var(--dark);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.streak-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 200;
+  color: var(--cream);
+  line-height: 1;
+}
+
+.streak-label {
+  font-size: 0.6rem;
+  color: var(--light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.health-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.health-tag {
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.62rem;
+  color: var(--cream);
+  letter-spacing: 0.05em;
+}
+
+/* PLANT GRID */
+.plant-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.plant-cell {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.plant-cell:hover { transform: scale(1.05); }
+
+.plant-cell.today {
+  border-color: var(--dark);
+  border-width: 2px;
+}
+
+.plant-cell .today-label {
+  position: absolute;
+  bottom: 3px;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 0.5rem;
+  color: var(--mid);
+  letter-spacing: 0.05em;
+}
+
+.plant-cell.dead {
+  background: #f5f0e8;
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* EXPLANATION BOXES */
+.explanation-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.explanation-box h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: var(--dark);
+}
+
+.explanation-box p {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--mid);
+}
+
+.explanation-box p.loading {
+  color: var(--light);
+  font-style: italic;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 18px 24px;
+  background: var(--card-bg);
+  color: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--dark);
+}
+
+/* LOADING SCREEN */
+#loadingScreen {
+  position: fixed;
+  inset: 0;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+#loadingScreen p {
+  font-size: 0.72rem;
+  color: var(--mid);
+  letter-spacing: 0.1em;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--dark);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<div class="window-wrapper">
-  <h1>my eating garden</h1>
-  <p class="subtitle">each meal grows a plant</p>
+<!-- LOADING -->
+<div id="loadingScreen">
+  <div class="spinner"></div>
+  <p>loading your garden</p>
+</div>
 
-  <div class="window" id="window">
-    <div class="sky"></div>
-    <div class="sill"></div>
-    <div class="plant-row" id="plantRow"></div>
-    <div class="empty-state" id="emptyState" style="display:none">
-      <p>no meals yet</p>
-      <span>eat your first meal to grow something</span>
-    </div>
-  </div>
+<!-- SCREEN 1: MEAL SUMMARY -->
+<div class="screen" id="screen1">
+  <div class="page">
+    <p class="page-label">Meal complete</p>
+    <h1 class="page-title">Here's how<br>you ate</h1>
+    <p class="page-sub" id="mealTime">Today</p>
 
-  <div id="statsPanel" class="stats-panel" style="display:none"></div>
-
-  <div class="legend">
-    <h3>what grows</h3>
-    <div class="legend-grid">
-      <div class="legend-item">
-        <svg width="20" height="20" viewBox="0 0 20 20">
-          <circle cx="10" cy="6" r="5" fill="#ef4444"/>
-          <rect x="9" y="10" width="2" height="8" fill="#2d5a27"/>
-          <line x1="10" y1="14" x2="7" y2="11" stroke="#4a7c3f" stroke-width="1.5"/>
-          <line x1="10" y1="14" x2="13" y2="11" stroke="#4a7c3f" stroke-width="1.5"/>
-        </svg>
-        <span>great pace → tomato</span>
+    <div class="stat-grid">
+      <div class="stat-box">
+        <span class="val" id="s1-duration">—</span>
+        <span class="unit">meal duration</span>
       </div>
-      <div class="legend-item">
-        <svg width="20" height="20" viewBox="0 0 20 20">
-          <circle cx="10" cy="8" r="4" fill="#f9a8d4"/>
-          <circle cx="10" cy="8" r="2" fill="#fde68a"/>
-          <rect x="9" y="11" width="2" height="7" fill="#2d5a27"/>
-        </svg>
-        <span>good pace → flower</span>
+      <div class="stat-box">
+        <span class="val" id="s1-bites">—</span>
+        <span class="unit">bites taken</span>
       </div>
-      <div class="legend-item">
-        <svg width="20" height="20" viewBox="0 0 20 20">
-          <ellipse cx="10" cy="8" rx="4" ry="6" fill="#7ab648"/>
-          <rect x="9" y="13" width="2" height="5" fill="#2d5a27"/>
-        </svg>
-        <span>ok pace → herb</span>
-      </div>
-      <div class="legend-item">
-        <svg width="20" height="20" viewBox="0 0 20 20">
-          <path d="M10 14 Q6 10 7 6 Q10 4 13 6 Q14 10 10 14Z" fill="#dc2626"/>
-          <rect x="9" y="13" width="2" height="5" fill="#2d5a27"/>
-        </svg>
-        <span>fast-ish → chilli</span>
-      </div>
-      <div class="legend-item">
-        <svg width="20" height="20" viewBox="0 0 20 20">
-          <path d="M10 4 Q13 8 12 12 Q10 14 8 12 Q7 8 10 4Z" fill="#8b7355"/>
-          <path d="M10 4 Q7 8 8 12" fill="none" stroke="#6b5535" stroke-width="1"/>
-          <rect x="9" y="12" width="2" height="6" fill="#6b5535"/>
-        </svg>
-        <span>too fast → weed</span>
-      </div>
-      <div class="legend-item">
-        <svg width="20" height="20" viewBox="0 0 20 20">
-          <circle cx="10" cy="10" r="8" fill="none" stroke="#ccc" stroke-dasharray="3"/>
-          <text x="10" y="14" text-anchor="middle" font-size="10" fill="#ccc">?</text>
-        </svg>
-        <span>health = pace + rating</span>
+      <div class="stat-box">
+        <span class="val" id="s1-interval">—</span>
+        <span class="unit">avg between bites</span>
       </div>
     </div>
-  </div>
 
-  <div class="last-meal" id="lastMeal"></div>
-  <button class="refresh-btn" onclick="loadGarden()">↻ refresh garden</button>
+    <div class="pace-section">
+      <div class="pace-label-row">
+        <span class="pace-label">eating pace</span>
+        <span class="pace-word" id="s1-paceWord">—</span>
+      </div>
+      <div class="pace-track">
+        <div class="pace-fill" id="s1-paceBar" style="width:0%"></div>
+      </div>
+      <div class="pace-markers">
+        <span>slow</span>
+        <span>moderate</span>
+        <span>fast</span>
+      </div>
+    </div>
+
+    <div class="analysis-box">
+      <div class="analysis-label">small meal analysis</div>
+      <div class="analysis-text loading" id="s1-analysis">analysing your meal...</div>
+    </div>
+
+    <button class="btn-primary" onclick="goTo(2)">
+      <span>How did this feel?</span>
+      <span>→</span>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 2: HOW DID IT FEEL -->
+<div class="screen" id="screen2">
+  <div class="page">
+    <p class="page-label">Your turn!</p>
+    <h1 class="page-title">How did the<br>meal feel?</h1>
+    <p class="page-sub">Helps us understand the full picture</p>
+
+    <div class="feel-grid">
+      <button class="feel-btn" onclick="selectFeel('rushed')">
+        <span class="feel-emoji">🏃</span>
+        <span class="feel-title">I was rushed</span>
+        <span class="feel-sub">no choice</span>
+      </button>
+      <button class="feel-btn" onclick="selectFeel('distracted')">
+        <span class="feel-emoji">😝</span>
+        <span class="feel-title">Distracted</span>
+        <span class="feel-sub">phone / screen</span>
+      </button>
+      <button class="feel-btn" onclick="selectFeel('good')">
+        <span class="feel-emoji">😊</span>
+        <span class="feel-title">Felt good</span>
+        <span class="feel-sub">enjoyed the meal</span>
+      </button>
+      <button class="feel-btn" onclick="selectFeel('toofast')">
+        <span class="feel-emoji">😮</span>
+        <span class="feel-title">Too fast</span>
+        <span class="feel-sub">no reason</span>
+      </button>
+    </div>
+
+    <div class="feel-response" id="feelResponse">
+      <div class="feel-response-text loading" id="feelResponseText">thinking...</div>
+    </div>
+
+    <button class="btn-primary" id="gardenBtn" onclick="goTo(3)" style="display:none">
+      <span>Update my garden</span>
+      <span>→</span>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 3: GARDEN -->
+<div class="screen" id="screen3">
+  <div class="page">
+    <p class="page-label">Your garden</p>
+    <h1 class="page-title" id="streakTitle">— day streak!</h1>
+
+    <div class="streak-bar">
+      <div>
+        <div class="streak-num" id="streakNum">0</div>
+        <div class="streak-label">day streak</div>
+      </div>
+      <div class="health-tags" id="healthTags"></div>
+    </div>
+
+    <div class="plant-grid" id="plantGrid"></div>
+
+    <div class="explanation-box">
+      <h3>Today's plant explanation</h3>
+      <p class="loading" id="plantExplanation">generating...</p>
+    </div>
+
+    <div class="explanation-box">
+      <h3>Whether you are improving</h3>
+      <p class="loading" id="improvementText">analysing your trend...</p>
+    </div>
+
+    <button class="btn-secondary" onclick="window.location.reload()">Done</button>
+  </div>
 </div>
 
 <script>
+// ── CONFIG ──
 const GIST_ID = '534ae267964caa7772a5ae532a013841';
-const GIST_URL = `https://api.github.com/gists/${GIST_ID}`;
+const CLAUDE_API = 'https://api.anthropic.com/v1/messages';
+// Note: For production, proxy this through a backend. For prototype, use a CORS proxy.
+const CORS_PROXY = 'https://corsproxy.io/?';
 
-// store all meals locally in session so garden accumulates
+// ── STATE ──
+let currentMeal = null;
+let selectedFeel = null;
 let allMeals = JSON.parse(localStorage.getItem('garden_meals') || '[]');
 
-async function loadGarden() {
-  try {
-    const res = await fetch(GIST_URL + '?t=' + Date.now());
-    const data = await res.json();
-    const content = data.files['meal_data.json'].content;
-    const meal = JSON.parse(content);
-
-    // add meal if it's new (check by combining key stats)
-    const mealKey = `${meal.bites}-${meal.duration}-${meal.pace}`;
-    const alreadyExists = allMeals.some(m => 
-      `${m.bites}-${m.duration}-${m.pace}` === mealKey
-    );
-
-    if (!alreadyExists && meal.bites > 0) {
-      meal.timestamp = Date.now();
-      allMeals.push(meal);
-      localStorage.setItem('garden_meals', JSON.stringify(allMeals));
-    }
-
-    renderGarden();
-  } catch(e) {
-    console.error(e);
-    renderGarden();
-  }
-}
-
-function getPlantType(mood) {
-  const map = {
-    'GREAT': 'tomato',
-    'GOOD': 'flower',
-    'OK': 'herb',
-    'FAST-ISH': 'chilli',
-    'TOO FAST': 'weed'
+// ── PLANT TYPES ──
+function getPlant(mood, health, isToday) {
+  const plants = {
+    'GREAT':    health > 0.6 ? '🍅' : '🌱',
+    'GOOD':     health > 0.6 ? '🌸' : '🌿',
+    'OK':       health > 0.5 ? '🌿' : '🪴',
+    'FAST-ISH': health > 0.5 ? '🌶️' : '🥀',
+    'TOO FAST': health > 0.4 ? '🌾' : '💀'
   };
-  return map[mood] || 'herb';
+  return plants[mood] || '🌱';
 }
 
 function getHealthScore(meal) {
-  // combine pace score (0-1) and rating (1-5)
   const paceScores = { 'GREAT': 1, 'GOOD': 0.8, 'OK': 0.6, 'FAST-ISH': 0.3, 'TOO FAST': 0.1 };
+  const feelScores = { 'good': 1, 'rushed': 0.4, 'distracted': 0.3, 'toofast': 0.2 };
   const paceScore = paceScores[meal.mood] || 0.5;
+  const feelScore = feelScores[meal.feel] || 0.5;
   const ratingScore = (meal.rating || 3) / 5;
-  return (paceScore + ratingScore) / 2; // 0 to 1
+  return (paceScore + feelScore + ratingScore) / 3;
 }
 
-function drawPlant(type, health) {
-  const h = Math.round(health * 100);
-  const size = 30 + health * 40; // 30px to 70px tall
-  const opacity = 0.4 + health * 0.6;
+// ── PACE HELPERS ──
+function getPaceWord(pace) {
+  if (pace < 20) return 'quite slow';
+  if (pace < 30) return 'moderate';
+  if (pace < 40) return 'quite fast';
+  if (pace < 50) return 'fast';
+  return 'very fast';
+}
 
-  const svgs = {
-    tomato: `
-      <svg width="${size}" height="${size + 20}" viewBox="0 0 60 80" style="opacity:${opacity}">
-        <!-- stem -->
-        <rect x="28" y="35" width="4" height="30" fill="#2d5a27"/>
-        <line x1="30" y1="50" x2="20" y2="42" stroke="#4a7c3f" stroke-width="2"/>
-        <line x1="30" y1="50" x2="40" y2="42" stroke="#4a7c3f" stroke-width="2"/>
-        <!-- tomato -->
-        <circle cx="30" cy="${health > 0.5 ? 22 : 28}" r="${health > 0.5 ? 18 : 12}" fill="${health > 0.6 ? '#ef4444' : '#f87171'}"/>
-        <!-- highlight -->
-        <circle cx="24" cy="${health > 0.5 ? 16 : 22}" r="4" fill="rgba(255,255,255,0.3)"/>
-        <!-- leaves on top -->
-        <path d="M30 ${health > 0.5 ? 6 : 12} Q24 2 20 6 Q24 10 30 ${health > 0.5 ? 6 : 12}Z" fill="#2d5a27"/>
-        <path d="M30 ${health > 0.5 ? 6 : 12} Q36 2 40 6 Q36 10 30 ${health > 0.5 ? 6 : 12}Z" fill="#4a7c3f"/>
-      </svg>`,
+function getPacePercent(pace) {
+  return Math.min(100, Math.max(5, (pace / 60) * 100));
+}
 
-    flower: `
-      <svg width="${size}" height="${size + 20}" viewBox="0 0 60 80" style="opacity:${opacity}">
-        <!-- stem -->
-        <rect x="28" y="40" width="4" height="28" fill="#2d5a27"/>
-        <line x1="30" y1="55" x2="20" y2="47" stroke="#4a7c3f" stroke-width="2"/>
-        <!-- petals -->
-        ${health > 0.5 ? `
-        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#f9a8d4' : '#fca5a5'}" transform="rotate(0 30 32)"/>
-        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#fbcfe8' : '#fca5a5'}" transform="rotate(60 30 32)"/>
-        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#f9a8d4' : '#fca5a5'}" transform="rotate(120 30 32)"/>
-        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#fbcfe8' : '#fca5a5'}" transform="rotate(180 30 32)"/>
-        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#f9a8d4' : '#fca5a5'}" transform="rotate(240 30 32)"/>
-        <ellipse cx="30" cy="20" rx="7" ry="12" fill="${health > 0.7 ? '#fbcfe8' : '#fca5a5'}" transform="rotate(300 30 32)"/>
-        ` : `
-        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(0 30 33)"/>
-        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(90 30 33)"/>
-        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(180 30 33)"/>
-        <ellipse cx="30" cy="25" rx="5" ry="8" fill="#fca5a5" transform="rotate(270 30 33)"/>
-        `}
-        <!-- centre -->
-        <circle cx="30" cy="32" r="${health > 0.5 ? 7 : 5}" fill="#fde68a"/>
-        <circle cx="30" cy="32" r="${health > 0.5 ? 4 : 3}" fill="#f59e0b"/>
-      </svg>`,
+function getMoodFromPace(pace) {
+  if (pace < 20) return 'GREAT';
+  if (pace < 30) return 'GOOD';
+  if (pace < 40) return 'OK';
+  if (pace < 50) return 'FAST-ISH';
+  return 'TOO FAST';
+}
 
-    herb: `
-      <svg width="${size}" height="${size + 10}" viewBox="0 0 60 70" style="opacity:${opacity}">
-        <!-- stem -->
-        <rect x="28" y="35" width="4" height="25" fill="#2d5a27"/>
-        <!-- leaves -->
-        <ellipse cx="20" cy="28" rx="10" ry="6" fill="#4a7c3f" transform="rotate(-30 20 28)"/>
-        <ellipse cx="40" cy="28" rx="10" ry="6" fill="#7ab648" transform="rotate(30 40 28)"/>
-        <ellipse cx="30" cy="18" rx="10" ry="6" fill="#4a7c3f"/>
-        ${health > 0.5 ? `<ellipse cx="18" cy="18" rx="8" ry="5" fill="#7ab648" transform="rotate(-40 18 18)"/>
-        <ellipse cx="42" cy="18" rx="8" ry="5" fill="#4a7c3f" transform="rotate(40 42 18)"/>` : ''}
-      </svg>`,
+// ── CLAUDE API ──
+async function askClaude(prompt) {
+  try {
+    const res = await fetch(CORS_PROXY + encodeURIComponent(CLAUDE_API), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'YOUR_CLAUDE_API_KEY',
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 150,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    return data.content?.[0]?.text || 'Unable to generate analysis.';
+  } catch(e) {
+    return 'Analysis unavailable right now.';
+  }
+}
 
-    chilli: `
-      <svg width="${size * 0.7}" height="${size + 20}" viewBox="0 0 60 80" style="opacity:${opacity}">
-        <!-- stem -->
-        <rect x="28" y="20" width="4" height="16" fill="#2d5a27"/>
-        <!-- leaves -->
-        <ellipse cx="20" cy="22" rx="8" ry="4" fill="#4a7c3f" transform="rotate(-20 20 22)"/>
-        <ellipse cx="40" cy="22" rx="8" ry="4" fill="#4a7c3f" transform="rotate(20 40 22)"/>
-        <!-- chilli pepper -->
-        <path d="M30 34 Q${health > 0.4 ? 42 : 38} 40 ${health > 0.4 ? 40 : 36} 58 Q30 65 ${health > 0.4 ? 20 : 24} 58 Q${health > 0.4 ? 18 : 22} 40 30 34Z" 
-              fill="${health > 0.4 ? '#dc2626' : '#ef4444'}"/>
-        <path d="M30 34 Q30 48 30 60" stroke="#b91c1c" stroke-width="1" fill="none"/>
-        <!-- tip -->
-        <circle cx="${health > 0.4 ? 30 : 30}" cy="${health > 0.4 ? 64 : 60}" r="2" fill="#b91c1c"/>
-      </svg>`,
+// ── NAVIGATION ──
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen' + n).classList.add('active');
+  if (n === 3) renderGarden();
+}
 
-    weed: `
-      <svg width="${size * 0.8}" height="${size}" viewBox="0 0 60 60" style="opacity:${opacity * 0.7}">
-        <!-- scraggly stem -->
-        <path d="M30 55 Q27 45 29 35 Q31 25 28 15" stroke="#8b7355" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <!-- droopy leaves -->
-        <path d="M29 40 Q18 35 15 42 Q22 45 29 40Z" fill="#a0825a"/>
-        <path d="M29 30 Q40 25 42 32 Q36 36 29 30Z" fill="#8b7355"/>
-        <path d="M28 20 Q18 14 17 21 Q22 24 28 20Z" fill="#a0825a"/>
-        <!-- scraggly top -->
-        <path d="M28 15 Q24 8 22 4" stroke="#8b7355" stroke-width="2" fill="none"/>
-        <path d="M28 15 Q32 7 35 4" stroke="#a0825a" stroke-width="2" fill="none"/>
-        <path d="M28 15 Q28 8 28 4" stroke="#8b7355" stroke-width="2" fill="none"/>
-      </svg>`
+// ── SCREEN 1 SETUP ──
+function setupScreen1(meal) {
+  const duration = Math.round(meal.duration / 60 * 10) / 10;
+  const interval = meal.bites > 0 ? Math.round(meal.duration / meal.bites) : 0;
+
+  document.getElementById('s1-duration').textContent = duration < 1 
+    ? meal.duration + 's' 
+    : duration + 'm';
+  document.getElementById('s1-bites').textContent = meal.bites;
+  document.getElementById('s1-interval').textContent = interval + 's';
+  document.getElementById('s1-paceWord').textContent = getPaceWord(meal.pace);
+  document.getElementById('mealTime').textContent = 
+    'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+  setTimeout(() => {
+    document.getElementById('s1-paceBar').style.width = getPacePercent(meal.pace) + '%';
+  }, 300);
+
+  // AI analysis
+  askClaude(`A person just finished a meal. Stats: ${meal.bites} bites, ${meal.duration} seconds total, ${Math.round(meal.pace)} bites per minute. In 2 short sentences, give a calm, non-judgmental reflection on their eating pace. No advice, just observation. Be warm and concise.`).then(text => {
+    const el = document.getElementById('s1-analysis');
+    el.textContent = text;
+    el.classList.remove('loading');
+  });
+}
+
+// ── SCREEN 2: FEEL SELECTION ──
+function selectFeel(feel) {
+  selectedFeel = feel;
+  document.querySelectorAll('.feel-btn').forEach(b => b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+
+  const feelResponse = document.getElementById('feelResponse');
+  const feelResponseText = document.getElementById('feelResponseText');
+  const gardenBtn = document.getElementById('gardenBtn');
+
+  feelResponse.classList.add('visible');
+  feelResponseText.classList.add('loading');
+  feelResponseText.textContent = 'thinking...';
+  gardenBtn.style.display = 'none';
+
+  const feelLabels = {
+    rushed: 'rushed with no choice',
+    distracted: 'distracted by phone or screen',
+    good: 'good and enjoyed the meal',
+    toofast: 'too fast for no particular reason'
   };
 
-  return svgs[type] || svgs.herb;
+  askClaude(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds (${Math.round(currentMeal.pace)} bites/min). They said the meal felt: "${feelLabels[feel]}". In 2 sentences, explain what this means for the plant that will grow in their garden. Be poetic, warm, and food/nature themed. Don't be preachy.`).then(text => {
+    feelResponseText.textContent = text;
+    feelResponseText.classList.remove('loading');
+    gardenBtn.style.display = 'flex';
+
+    // save meal
+    if (currentMeal) {
+      currentMeal.feel = feel;
+      currentMeal.mood = getMoodFromPace(currentMeal.pace);
+      currentMeal.timestamp = Date.now();
+      allMeals.push(currentMeal);
+      localStorage.setItem('garden_meals', JSON.stringify(allMeals));
+    }
+  });
 }
 
+// ── SCREEN 3: GARDEN ──
 function renderGarden() {
-  const plantRow = document.getElementById('plantRow');
-  const emptyState = document.getElementById('emptyState');
-  const statsPanel = document.getElementById('statsPanel');
-  const lastMeal = document.getElementById('lastMeal');
+  const grid = document.getElementById('plantGrid');
+  const streakNum = document.getElementById('streakNum');
+  const streakTitle = document.getElementById('streakTitle');
+  const healthTags = document.getElementById('healthTags');
 
-  plantRow.innerHTML = '';
+  grid.innerHTML = '';
 
   if (allMeals.length === 0) {
-    emptyState.style.display = 'flex';
-    statsPanel.style.display = 'none';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--light);font-size:0.75rem;">no meals yet</div>';
     return;
   }
 
-  emptyState.style.display = 'none';
-  statsPanel.style.display = 'grid';
+  // streak
+  const streak = allMeals.length;
+  streakNum.textContent = streak;
+  streakTitle.textContent = streak + ' day streak!';
 
-  // render plants
-  allMeals.forEach((meal, i) => {
-    const type = getPlantType(meal.mood);
-    const health = getHealthScore(meal);
-    const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'unknown';
+  // health counts
+  const healthy = allMeals.filter(m => getHealthScore(m) > 0.6).length;
+  const droopy = allMeals.filter(m => getHealthScore(m) > 0.3 && getHealthScore(m) <= 0.6).length;
+  const dead = allMeals.filter(m => getHealthScore(m) <= 0.3).length;
 
-    const wrapper = document.createElement('div');
-    wrapper.className = 'pot-wrapper';
-    wrapper.style.animationDelay = `${i * 0.08}s`;
-
-    const tooltip = document.createElement('div');
-    tooltip.className = 'pot-tooltip';
-    tooltip.innerHTML = `${date}<br>${meal.bites} bites · ${meal.duration}s<br>pace: ${meal.mood}<br>rating: ${meal.rating}/5`;
-
-    const plantSvg = document.createElement('div');
-    plantSvg.className = 'plant-svg';
-    plantSvg.innerHTML = drawPlant(type, health);
-
-    const pot = document.createElement('div');
-    pot.className = 'pot';
-
-    wrapper.appendChild(tooltip);
-    wrapper.appendChild(plantSvg);
-    wrapper.appendChild(pot);
-    plantRow.appendChild(wrapper);
-  });
-
-  // stats
-  const totalMeals = allMeals.length;
-  const avgBites = Math.round(allMeals.reduce((s, m) => s + m.bites, 0) / totalMeals);
-  const avgPace = (allMeals.reduce((s, m) => s + parseFloat(m.pace), 0) / totalMeals).toFixed(1);
-  const avgRating = (allMeals.reduce((s, m) => s + (m.rating || 3), 0) / totalMeals).toFixed(1);
-
-  statsPanel.innerHTML = `
-    <div class="stat-card" style="animation-delay:0.1s">
-      <div class="stat-label">total meals</div>
-      <div class="stat-value">${totalMeals}</div>
-      <div class="stat-sub">plants in garden</div>
-    </div>
-    <div class="stat-card" style="animation-delay:0.2s">
-      <div class="stat-label">avg bites</div>
-      <div class="stat-value">${avgBites}</div>
-      <div class="stat-sub">per meal</div>
-    </div>
-    <div class="stat-card" style="animation-delay:0.3s">
-      <div class="stat-label">avg pace</div>
-      <div class="stat-value">${avgPace}</div>
-      <div class="stat-sub">bites per minute</div>
-    </div>
-    <div class="stat-card" style="animation-delay:0.4s">
-      <div class="stat-label">avg enjoyment</div>
-      <div class="stat-value">${avgRating}</div>
-      <div class="stat-sub">out of 5</div>
-    </div>
+  healthTags.innerHTML = `
+    ${healthy > 0 ? `<div class="health-tag">${healthy} healthy</div>` : ''}
+    ${droopy > 0 ? `<div class="health-tag">${droopy} droopy</div>` : ''}
+    ${dead > 0 ? `<div class="health-tag">${dead} struggling</div>` : ''}
   `;
 
-  // last meal
-  const last = allMeals[allMeals.length - 1];
-  if (last) {
-    lastMeal.textContent = `last meal: ${last.bites} bites · ${last.duration}s · ${last.mood} · rated ${last.rating}/5`;
+  // plants
+  allMeals.forEach((meal, i) => {
+    const health = getHealthScore(meal);
+    const isToday = i === allMeals.length - 1;
+    const plant = getPlant(meal.mood, health, isToday);
+
+    const cell = document.createElement('div');
+    cell.className = 'plant-cell' + (isToday ? ' today' : '') + (health <= 0.3 ? ' dead' : '');
+    cell.style.animationDelay = `${i * 0.05}s`;
+    cell.innerHTML = plant + (isToday ? '<div class="today-label">today</div>' : '');
+    cell.title = `${meal.mood} · ${meal.bites} bites · felt: ${meal.feel || '?'}`;
+    grid.appendChild(cell);
+  });
+
+  // today's plant explanation
+  const todayMeal = allMeals[allMeals.length - 1];
+  if (todayMeal) {
+    const health = getHealthScore(todayMeal);
+    const plant = getPlant(todayMeal.mood, health, true);
+    askClaude(`A person's meal grew a ${plant} plant in their garden. Their pace was ${todayMeal.mood}, they felt ${todayMeal.feel || 'neutral'}, and their health score was ${Math.round(health * 100)}%. In 2 sentences, explain why this specific plant grew today. Be poetic and food/nature themed.`).then(text => {
+      const el = document.getElementById('plantExplanation');
+      el.textContent = text;
+      el.classList.remove('loading');
+    });
+
+    // improvement
+    if (allMeals.length >= 2) {
+      const recent = allMeals.slice(-3);
+      const avgHealth = recent.reduce((s, m) => s + getHealthScore(m), 0) / recent.length;
+      const trend = avgHealth > 0.6 ? 'improving' : avgHealth > 0.4 ? 'steady' : 'struggling';
+      
+      askClaude(`A person has eaten ${allMeals.length} meals. Their recent average health score is ${Math.round(avgHealth * 100)}% (${trend}). Recent moods: ${recent.map(m => m.mood).join(', ')}. In 2 sentences, tell them whether they are improving their eating pace. Be warm, honest, and encouraging without being preachy.`).then(text => {
+        const el = document.getElementById('improvementText');
+        el.textContent = text;
+        el.classList.remove('loading');
+      });
+    } else {
+      document.getElementById('improvementText').textContent = 'Eat a few more meals to see your trend.';
+      document.getElementById('improvementText').classList.remove('loading');
+    }
   }
 }
 
-// load on start
-loadGarden();
+// ── INIT ──
+async function init() {
+  try {
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}?t=` + Date.now());
+    const data = await res.json();
+    const content = data.files['meal_data.json'].content;
+    currentMeal = JSON.parse(content);
+
+    document.getElementById('loadingScreen').style.display = 'none';
+
+    if (currentMeal && currentMeal.bites > 0) {
+      setupScreen1(currentMeal);
+      goTo(1);
+    } else {
+      // no new meal — go straight to garden
+      goTo(3);
+    }
+  } catch(e) {
+    document.getElementById('loadingScreen').style.display = 'none';
+    goTo(3);
+  }
+}
+
+init();
 </script>
 </body>
 </html>
