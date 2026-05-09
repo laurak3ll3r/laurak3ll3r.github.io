@@ -146,7 +146,7 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
 
 <script>
 // ── PASTE YOUR GEMINI KEY HERE ──
-const OPENROUTER_KEY = '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';
+const GEMINI_KEY = 'AIzaSyCKMdtyiMC94Cw6Mp4Usls_By56Zn623vU';
 // ────────────────────────────────
 
 const GIST_ID = '534ae267964caa7772a5ae532a013841';
@@ -157,25 +157,19 @@ let allMeals = JSON.parse(localStorage.getItem('garden_meals') || '[]');
 
 async function askAI(prompt) {
   try {
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const res = await fetch(GEMINI_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + OPENROUTER_KEY,
-        'HTTP-Referer': 'https://laurak3ll3r.github.io',
-        'X-Title': 'Eating Garden'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'mistralai/mistral-7b-instruct:free',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 150
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 150, temperature: 0.8 }
       })
     });
     const data = await res.json();
-    if (data.error) return 'Error: ' + data.error.message;
-    return data.choices?.[0]?.message?.content?.trim() || 'No response.';
+    if (data.error) return 'API Error: ' + data.error.message;
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'No text in response.';
   } catch(e) {
-    return 'Error: ' + e.message;
+    return 'Fetch failed: ' + e.message;
   }
 }
 
