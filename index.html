@@ -166,9 +166,10 @@ async function askAI(prompt) {
       })
     });
     const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Analysis unavailable.';
+    if (data.error) return 'API Error: ' + data.error.message;
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'No text in response.';
   } catch(e) {
-    return 'Analysis unavailable right now.';
+    return 'Fetch failed: ' + e.message;
   }
 }
 
