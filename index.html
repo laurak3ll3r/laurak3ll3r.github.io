@@ -150,7 +150,7 @@ const GEMINI_KEY = 'AIzaSyCKMdtyiMC94Cw6Mp4Usls_By56Zn623vU';
 // ────────────────────────────────
 
 const GIST_ID = '534ae267964caa7772a5ae532a013841';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+const GEMINI_URL = `https://corsproxy.io/?https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
 
 let currentMeal = null;
 let allMeals = JSON.parse(localStorage.getItem('garden_meals') || '[]');
