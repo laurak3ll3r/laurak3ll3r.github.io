@@ -236,7 +236,7 @@ function setupScreen1(meal) {
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   setTimeout(() => {
   const bar = document.getElementById('s1-paceBar');
-  bar.style.width = getPacePercent(meal.pace) + '%';
+  bar.style.width = '75%';
   if (meal.pace < 3) bar.style.background = '#3a6b32';
   else if (meal.pace < 5) bar.style.background = '#6ea85e';
   else if (meal.pace < 7) bar.style.background = '#f0b429';
