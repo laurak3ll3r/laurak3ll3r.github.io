@@ -141,6 +141,7 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
     <div class="explanation-box"><h3>Today's plant explanation</h3><p class="loading" id="plantExplanation">generating...</p></div>
     <div class="explanation-box"><h3>Whether you are improving</h3><p class="loading" id="improvementText">analysing your trend...</p></div>
     <button class="btn-secondary" onclick="window.location.reload()">Done</button>
+<button class="btn-secondary" style="margin-top:8px;color:#c5462a;border-color:#c5462a;" onclick="clearGarden()">Clear garden</button>
   </div>
 </div>
 
@@ -344,6 +345,14 @@ async function init() {
     goTo(3);
   }
 }
+function clearGarden() {
+  if (confirm('Clear all meal history? This cannot be undone.')) {
+    localStorage.removeItem('garden_meals');
+    allMeals = [];
+    renderGarden();
+  }
+}
+  
 
 init();
 </script>
