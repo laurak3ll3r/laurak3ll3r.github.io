@@ -297,7 +297,7 @@ function renderGarden() {
     cell.className = 'plant-cell' + (isToday ? ' today' : '') + (health <= 0.3 ? ' dead' : '');
     cell.style.animationDelay = `${i * 0.05}s`;
     cell.innerHTML = plant + (isToday ? '<div class="today-label">today</div>' : '');
-    cell.title = `${meal.mood} · ${meal.bites} bites · felt: ${meal.feel || '?'}`;
+    cell.title = `${meal.mood} · ${meal.bites} bites · ${meal.duration}s · ${Math.round(meal.pace * 10) / 10} bites/min · felt: ${meal.feel || '?'} · rated: ${meal.rating || '?'}/5`;
     grid.appendChild(cell);
   });
 
