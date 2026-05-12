@@ -34,7 +34,12 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
 .pace-label { font-size: 0.7rem; color: var(--mid); }
 .pace-word { font-family: 'Fraunces', serif; font-size: 1rem; font-style: italic; font-weight: 200; color: var(--accent); }
 .pace-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
-.pace-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.pace-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1), background 1s ease;
+}
 .pace-markers { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--light); }
 .analysis-box { background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 32px; min-height: 80px; }
 .analysis-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
@@ -228,7 +233,15 @@ function setupScreen1(meal) {
   document.getElementById('s1-interval').textContent = interval + 's';
   document.getElementById('s1-paceWord').textContent = getPaceWord(meal.pace);
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  setTimeout(() => { document.getElementById('s1-paceBar').style.width = getPacePercent(meal.pace) + '%'; }, 300);
+  setTimeout(() => {
+  const bar = document.getElementById('s1-paceBar');
+  bar.style.width = getPacePercent(meal.pace) + '%';
+  if (meal.pace < 3) bar.style.background = '#3a6b32';
+  else if (meal.pace < 5) bar.style.background = '#6ea85e';
+  else if (meal.pace < 7) bar.style.background = '#f0b429';
+  else if (meal.pace < 10) bar.style.background = '#e8722a';
+  else bar.style.background = '#c5462a';
+}, 300);
 
   askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute). Write 2 short warm non-judgmental sentences reflecting on their eating pace. No advice. Just calm observation.`).then(text => {
     const el = document.getElementById('s1-analysis');
