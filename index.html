@@ -306,7 +306,7 @@ function renderGarden() {
   if (todayMeal) {
     const health = getHealthScore(todayMeal);
     const plant = getPlant(todayMeal.mood, health);
-    askAI(`Today's meal: ${todayMeal.bites} bites, pace: ${todayMeal.mood}, felt: ${todayMeal.feel || 'neutral'}, health: ${Math.round(health * 100)}%. A ${plant} grew in their garden. In 2 poetic sentences explain why. Food and nature themed.`).then(text => {
+    askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist. First choose ONE food/plant/vegetable/fruit emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence give practical advice about what this eating pattern means for digestion. No poetry, just clear warm advice.`).then(text => {
       const el = document.getElementById('plantExplanation');
       el.textContent = text;
       el.classList.remove('loading');
