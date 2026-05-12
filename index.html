@@ -153,23 +153,14 @@ let allMeals = JSON.parse(localStorage.getItem('garden_meals') || '[]');
 
 async function askAI(prompt) {
   try {
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const res = await fetch('https://black-dream-a9af.laurak3ller.workers.dev', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + OPENROUTER_KEY,
-        'HTTP-Referer': 'https://laurak3ll3r.github.io',
-        'X-Title': 'Eating Garden'
-      },
-      body: JSON.stringify({
-        model: 'google/gemma-3-1b-it:free',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 150
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: prompt })
     });
     const data = await res.json();
-    if (data.error) return 'Error: ' + data.error.message;
-    return data.choices?.[0]?.message?.content?.trim() || 'No response.';
+    if (data.error) return 'Error: ' + data.error;
+    return data.text || 'No response.';
   } catch(e) {
     return 'Error: ' + e.message;
   }
