@@ -161,7 +161,8 @@ async function askAI(prompt) {
     });
     const data = await res.json();
     if (data.error) return 'Error: ' + data.error;
-    return data.text || 'No response.';
+    const raw = data.text || 'No response.';
+return raw.replace(/^#+\s*/gm, '').replace(/\*\*(.*?)\*\*/g, '$1').trim();
   } catch(e) {
     return 'Error: ' + e.message;
   }
