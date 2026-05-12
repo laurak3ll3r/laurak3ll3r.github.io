@@ -208,7 +208,8 @@ function getPaceWord(pace) {
 }
 
 function getPacePercent(pace) {
-  return Math.min(100, Math.max(5, (pace / 60) * 100));
+  // pace range: 0 (slow) to 15+ (very fast)
+  return Math.min(100, Math.max(5, (pace / 15) * 100));
 }
 
 function getMoodFromPace(pace) {
