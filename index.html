@@ -187,10 +187,10 @@ function getHealthScore(meal) {
 }
 
 function getPaceWord(pace) {
-  if (pace < 20) return 'quite slow';
-  if (pace < 30) return 'moderate';
-  if (pace < 40) return 'quite fast';
-  if (pace < 50) return 'fast';
+  if (pace < 3) return 'quite slow';
+  if (pace < 5) return 'moderate';
+  if (pace < 7) return 'quite fast';
+  if (pace < 10) return 'fast';
   return 'very fast';
 }
 
@@ -199,10 +199,10 @@ function getPacePercent(pace) {
 }
 
 function getMoodFromPace(pace) {
-  if (pace < 20) return 'GREAT';
-  if (pace < 30) return 'GOOD';
-  if (pace < 40) return 'OK';
-  if (pace < 50) return 'FAST-ISH';
+  if (pace < 3) return 'GREAT';
+  if (pace < 5) return 'GOOD';
+  if (pace < 7) return 'OK';
+  if (pace < 10) return 'FAST-ISH';
   return 'TOO FAST';
 }
 
