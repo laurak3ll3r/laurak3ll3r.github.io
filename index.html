@@ -249,11 +249,10 @@ function selectFeel(feel, btn) {
     toofast: 'too fast for no particular reason'
   };
 
-  askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}". In 2 warm poetic sentences explain what plant will grow in their garden today and why. Be food and nature themed. Not preachy.`).then(text => {
+ askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}". You are a nutritionist. In 2 sentences explain how this context affects digestion and what small habit they could try next time. Practical and warm, not preachy.`).then(text => {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
     gardenBtn.style.display = 'flex';
-
     currentMeal.feel = feel;
     currentMeal.mood = getMoodFromPace(currentMeal.pace);
     currentMeal.timestamp = Date.now();
