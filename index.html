@@ -225,7 +225,7 @@ function setupScreen1(meal) {
   document.getElementById('s1-duration').textContent = duration;
   document.getElementById('s1-bites').textContent = meal.bites;
   document.getElementById('s1-interval').textContent = interval + 's';
-  
+  document.getElementById('s1-paceWord').textContent = getPaceWord(meal.pace);
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   setTimeout(() => {
   const bar = document.getElementById('s1-paceBar');
