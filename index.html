@@ -272,7 +272,7 @@ function selectFeel(feel, btn) {
     toofast: 'too fast for no particular reason'
   };
 
- askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}". You are a nutritionist. In 2 sentences explain how this context affects digestion and what small habit they could try next time. Practical and warm, not preachy.`).then(text => {
+ askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}". You are a nutritionist - no need to say it though. In 2 sentences explain how this context affects digestion and what if needed suggest a small habit they could try next time. Practical and warm, not preachy.`).then(text => {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
     gardenBtn.style.display = 'flex';
@@ -328,7 +328,7 @@ function renderGarden() {
   if (todayMeal) {
     const health = getHealthScore(todayMeal);
     const plant = getPlant(todayMeal.mood, health);
-    askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist. First choose ONE food/plant/vegetable/fruit emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence give practical advice about what this eating pattern means for digestion. No poetry, just clear advice meant for university students.`).then(text => {
+    askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist - no need to say it. First choose ONE garden related emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence (especially if meal did not go well) give practical advice about what this eating pattern means for digestion and feeling after the meal. No poetry, just clear advice meant for university students.`).then(text => {
       const el = document.getElementById('plantExplanation');
       el.textContent = text;
       el.classList.remove('loading');
