@@ -364,16 +364,16 @@ function closeStatCard() {
 }
 
 function getMoodEmoji(mood) {
-  return { 'GREAT': '🍅', 'GOOD': '🍓', 'OK': '🥦', 'FAST-ISH': '🌶️', 'TOO FAST': '🥬' }[mood] || '🌱';
+  return { 'GREAT': '🍅', 'GOOD': '🍓', 'OK': '🥦', 'FAST-ISH': '🌶️', 'TOO FAST': '🌱' }[mood] || '🌱';
 }
 
 function getMoodEmojiExplain(mood, emoji) {
   const explains = {
     'GREAT': `${emoji} You ate at a calm, mindful pace — like a tomato that grew slowly in the sun.`,
-    'GOOD': `${emoji} A good steady rhythm — sweet and nourishing like a strawberry.`,
-    'OK': `${emoji} A decent pace but room to slow down — solid like broccoli.`,
-    'FAST-ISH': `${emoji} A little rushed — spicy and sharp like a chilli.`,
-    'TOO FAST': `${emoji} Eaten very quickly — light and fleeting like lettuce leaves.`
+    'GOOD': `${emoji} A good steady rhythm — sweet and nourishing, like a strawberry ripened at the right moment.`,
+    'OK': `${emoji} A decent pace but with room to slow down — solid and dependable, like broccoli.`,
+    'FAST-ISH': `${emoji} A little rushed — sharp and intense, like a chilli that hits before you're ready.`,
+    'TOO FAST': `${emoji} Eaten very quickly — light and fleeting, like a sprout that barely had time to grow.`
   };
   return explains[mood] || `${emoji} A meal in your garden.`;
 }
@@ -440,10 +440,17 @@ function selectFeel(feel, btn) {
     askAI(`A person's meal pace was ${currentMeal.mood}, they felt ${feel}. Choose exactly ONE food, vegetable or fruit emoji that best represents this meal. Reply with just the emoji, nothing else.`).then(emojiText => {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji(currentMeal.mood);
-      currentMeal.emojiExplain = `${currentMeal.emoji} chosen because your pace was ${currentMeal.mood.toLowerCase()} and you felt ${feel}.`;
+      const e = currentMeal.emoji;
+      const moodPhrases = {
+        'GREAT': `${e} You ate at a calm, mindful pace — like this grew slowly in the sun.`,
+        'GOOD': `${e} A good steady rhythm — sweet and nourishing, ripened at the right moment.`,
+        'OK': `${e} A decent pace but with room to slow down — solid and dependable.`,
+        'FAST-ISH': `${e} A little rushed — sharp and intense, hitting before you're quite ready.`,
+        'TOO FAST': `${e} Eaten very quickly — light and fleeting, barely time to grow.`
+      };
+      currentMeal.emojiExplain = moodPhrases[currentMeal.mood] || `${e} A meal in your garden.`;
       allMeals.push({...currentMeal});
       localStorage.setItem('garden_meals', JSON.stringify(allMeals));
-      // show garden button only after emoji is saved
       gardenBtn.innerHTML = `<span>Your ${currentMeal.emoji} is ready — see your garden</span><span>→</span>`;
       gardenBtn.style.display = 'flex';
     });
