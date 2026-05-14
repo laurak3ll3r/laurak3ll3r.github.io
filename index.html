@@ -512,7 +512,7 @@ function renderGarden() {
 
   const todayMeal = allMeals[allMeals.length - 1];
   if (todayMeal) {
-    askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist. First choose ONE food plant vegetable or fruit emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence give practical advice about what this eating pattern means for digestion. No poetry, just clear warm advice.`).then(text => {
+    askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist. First choose ONE plant, vegetable or fruit emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence give practical advice about what this eating pattern means for digestion. No poetry, just clear warm advice.`).then(text => {
       const el = document.getElementById('plantExplanation');
       const emojiEl = document.getElementById('plantEmoji');
       const emojiMatch = text.match(/\p{Emoji_Presentation}/u);
