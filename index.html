@@ -93,8 +93,8 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
   display: flex;
   align-items: flex-end;
   gap: 0;
-  padding: 12px 20px 0;
-  height: 130px;
+  padding: 8px 20px 0;
+  height: 80px;
   width: max-content;
   min-width: 100%;
 }
@@ -433,17 +433,19 @@ function selectFeel(feel, btn) {
   askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}". You are a nutritionist. In 2 sentences explain how this context affects digestion and what small habit they could try next time. Practical and warm, not preachy.`).then(text => {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
-    gardenBtn.style.display = 'flex';
     currentMeal.feel = feel;
     currentMeal.mood = getMoodFromPace(currentMeal.pace);
     currentMeal.timestamp = Date.now();
-    // ask AI to choose emoji for this meal
+    // fetch emoji first, then show garden button
     askAI(`A person's meal pace was ${currentMeal.mood}, they felt ${feel}. Choose exactly ONE food, vegetable or fruit emoji that best represents this meal. Reply with just the emoji, nothing else.`).then(emojiText => {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji(currentMeal.mood);
       currentMeal.emojiExplain = `${currentMeal.emoji} chosen because your pace was ${currentMeal.mood.toLowerCase()} and you felt ${feel}.`;
       allMeals.push({...currentMeal});
       localStorage.setItem('garden_meals', JSON.stringify(allMeals));
+      // show garden button only after emoji is saved
+      gardenBtn.innerHTML = `<span>Your ${currentMeal.emoji} is ready — see your garden</span><span>→</span>`;
+      gardenBtn.style.display = 'flex';
     });
   });
 }
