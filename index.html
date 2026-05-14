@@ -369,11 +369,11 @@ function getMoodEmoji(mood) {
 
 function getMoodEmojiExplain(mood, emoji) {
   const explains = {
-    'GREAT': `${emoji} You ate at a calm, mindful pace — like a tomato that grew slowly in the sun.`,
-    'GOOD': `${emoji} A good steady rhythm — sweet and nourishing, like a strawberry ripened at the right moment.`,
-    'OK': `${emoji} A decent pace but with room to slow down — solid and dependable, like broccoli.`,
-    'FAST-ISH': `${emoji} A little rushed — sharp and intense, like a chilli that hits before you're ready.`,
-    'TOO FAST': `${emoji} Eaten very quickly — light and fleeting, like a sprout that barely had time to grow.`
+    'GREAT': `${emoji} Like a tomato that spends weeks ripening on the vine, you gave your meal the time it deserved.`,
+    'GOOD': `${emoji} Sweet and steady — like a strawberry that needs just the right amount of time to reach its full flavour.`,
+    'OK': `${emoji} Solid and nourishing, like broccoli — reliable, but benefits from a little more time to fully develop.`,
+    'FAST-ISH': `${emoji} Like a chilli that hits fast and sharp — your meal moved quickly, leaving little time to savour.`,
+    'TOO FAST': `${emoji} Like a sprout that barely had time to push through the soil — your meal was over before it began.`
   };
   return explains[mood] || `${emoji} A meal in your garden.`;
 }
@@ -442,11 +442,11 @@ function selectFeel(feel, btn) {
       currentMeal.emoji = match ? match[0] : getMoodEmoji(currentMeal.mood);
       const e = currentMeal.emoji;
       const moodPhrases = {
-        'GREAT': `${e} You ate at a calm, mindful pace — like this grew slowly in the sun.`,
-        'GOOD': `${e} A good steady rhythm — sweet and nourishing, ripened at the right moment.`,
-        'OK': `${e} A decent pace but with room to slow down — solid and dependable.`,
-        'FAST-ISH': `${e} A little rushed — sharp and intense, hitting before you're quite ready.`,
-        'TOO FAST': `${e} Eaten very quickly — light and fleeting, barely time to grow.`
+        'GREAT': `${e} Like a tomato that spends weeks ripening on the vine, you gave your meal the time it deserved.`,
+        'GOOD': `${e} Sweet and steady — like a strawberry that needs just the right amount of time to reach its full flavour.`,
+        'OK': `${e} Solid and nourishing, like broccoli — reliable, but benefits from a little more time to fully develop.`,
+        'FAST-ISH': `${e} Like a chilli that hits fast and sharp — your meal moved quickly, leaving little time to savour.`,
+        'TOO FAST': `${e} Like a sprout that barely had time to push through the soil — your meal was over before it began.`
       };
       currentMeal.emojiExplain = moodPhrases[currentMeal.mood] || `${e} A meal in your garden.`;
       allMeals.push({...currentMeal});
@@ -512,19 +512,27 @@ function renderGarden() {
 
   const todayMeal = allMeals[allMeals.length - 1];
   if (todayMeal) {
-    askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist. First choose ONE plant, vegetable or fruit emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence give practical advice about what this eating pattern means for digestion. No poetry, just clear warm advice.`).then(text => {
-      const el = document.getElementById('plantExplanation');
-      const emojiEl = document.getElementById('plantEmoji');
-      const emojiMatch = text.match(/\p{Emoji_Presentation}/u);
-      if (emojiMatch) {
-        emojiEl.textContent = emojiMatch[0];
-        emojiEl.style.display = 'block';
-        el.textContent = text.replace(emojiMatch[0], '').trim();
-      } else {
-        el.textContent = text;
-      }
+    const emojiEl = document.getElementById('plantEmoji');
+    const el = document.getElementById('plantExplanation');
+
+    // use saved emoji if available, otherwise fall back to mood default
+    const savedEmoji = todayMeal.emoji || getMoodEmoji(todayMeal.mood);
+    emojiEl.textContent = savedEmoji;
+    emojiEl.style.display = 'block';
+
+    // also update the garden slot emoji to match
+    const lastSlot = inner.querySelector('.plant-emoji:last-of-type');
+
+    // get explanation — use saved one or ask AI
+    if (todayMeal.emojiExplain) {
+      el.textContent = todayMeal.emojiExplain.replace(/^[^\s]+\s/, ''); // strip leading emoji from text
       el.classList.remove('loading');
-    });
+    } else {
+      askAI(`A ${savedEmoji} emoji was chosen to represent a meal where someone ate ${todayMeal.bites} bites in ${todayMeal.duration} seconds and felt ${todayMeal.feel || 'neutral'}. In 1 warm sentence explain why this specific food — referring to its natural qualities like how it grows, its texture, or its taste — fits this eating experience. Then in 1 sentence give a practical digestion tip. No mention of pace labels like GREAT or TOO FAST.`).then(text => {
+        el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
+        el.classList.remove('loading');
+      });
+    }
     if (allMeals.length >= 2) {
       const recent = allMeals.slice(-3);
       const avgHealth = recent.reduce((s, m) => s + getHealthScore(m), 0) / recent.length;
