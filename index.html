@@ -273,7 +273,11 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
       </div>
     </div>
 
-    <div class="explanation-box"><h3>Today's plant</h3><p class="loading" id="plantExplanation">generating...</p></div>
+    <div class="explanation-box">
+      <h3>Today's plant</h3>
+      <div id="plantEmoji" style="font-size:2.4rem;line-height:1;margin-bottom:10px;display:none"></div>
+      <p class="loading" id="plantExplanation">generating...</p>
+    </div>
     <div class="explanation-box"><h3>Your progress</h3><p class="loading" id="improvementText">analysing your trend...</p></div>
     <button class="btn-secondary" onclick="window.location.reload()">Done</button>
     <button class="btn-secondary btn-danger" onclick="clearGarden()">Clear garden</button>
@@ -439,18 +443,18 @@ function drawPlant(mood, seed) {
     'OK': [
       // broccoli
       `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
-        <rect x="24" y="72" width="12" height="28" rx="4" fill="#7ab040"/>
-        <path d="M24 82 Q12 74 10 60" stroke="#6a9a32" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M36 82 Q48 74 50 60" stroke="#6a9a32" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <circle cx="30" cy="42" r="24" fill="#3a6b2a"/>
-        <circle cx="10" cy="52" r="12" fill="#3a6b2a"/>
-        <circle cx="50" cy="52" r="12" fill="#3a6b2a"/>
-        <circle cx="18" cy="24" r="9" fill="#4a8a3a"/>
-        <circle cx="34" cy="20" r="8" fill="#4a8a3a"/>
-        <circle cx="10" cy="44" r="7" fill="#4a8a3a"/>
-        <circle cx="50" cy="44" r="7" fill="#4a8a3a"/>
-        <circle cx="20" cy="24" r="5" fill="#5a9a4a"/>
-        <circle cx="34" cy="20" r="4" fill="#5a9a4a"/>
+        <rect x="26" y="75" width="8" height="25" rx="3" fill="#7ab040"/>
+        <path d="M26 82 Q16 76 14 64" stroke="#6a9a32" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M34 82 Q44 76 46 64" stroke="#6a9a32" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle cx="30" cy="46" r="22" fill="#3a6b2a"/>
+        <circle cx="12" cy="56" r="11" fill="#3a6b2a"/>
+        <circle cx="48" cy="56" r="11" fill="#3a6b2a"/>
+        <circle cx="18" cy="28" r="9" fill="#4a8a3a"/>
+        <circle cx="34" cy="24" r="8" fill="#4a8a3a"/>
+        <circle cx="12" cy="48" r="7" fill="#4a8a3a"/>
+        <circle cx="48" cy="48" r="7" fill="#4a8a3a"/>
+        <circle cx="20" cy="28" r="5" fill="#5a9a4a"/>
+        <circle cx="34" cy="24" r="4" fill="#5a9a4a"/>
       </svg>`,
       // bell pepper
       `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
@@ -627,7 +631,15 @@ function renderGarden() {
   if (todayMeal) {
     askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist. First choose ONE food plant vegetable or fruit emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence give practical advice about what this eating pattern means for digestion. No poetry, just clear warm advice.`).then(text => {
       const el = document.getElementById('plantExplanation');
-      el.textContent = text;
+      const emojiEl = document.getElementById('plantEmoji');
+      const emojiMatch = text.match(/\p{Emoji_Presentation}/u);
+      if (emojiMatch) {
+        emojiEl.textContent = emojiMatch[0];
+        emojiEl.style.display = 'block';
+        el.textContent = text.replace(emojiMatch[0], '').trim();
+      } else {
+        el.textContent = text;
+      }
       el.classList.remove('loading');
     });
     if (allMeals.length >= 2) {
