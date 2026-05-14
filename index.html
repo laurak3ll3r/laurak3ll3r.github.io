@@ -53,24 +53,117 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
 .health-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .health-tag { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 4px 12px; font-size: 0.62rem; color: var(--cream); }
 
-/* Garden bed */
-.garden-bed { border-radius: 14px; margin-bottom: 0; position: relative; overflow: hidden; border: 2px solid #8b5e32; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
-.garden-sky { height: 50px; background: linear-gradient(180deg, #c8e8f8 0%, #ddf0f8 60%, #eef8ee 100%); position: relative; }
-.garden-sky::after { content: ''; position: absolute; bottom: -6px; left: 0; right: 0; height: 12px; background: #7ab84a; }
-.plants-row { display: flex; align-items: flex-end; gap: 8px; padding: 8px 14px 0; position: relative; z-index: 2; flex-wrap: wrap; background: #b8864a; min-height: 120px; }
-.garden-soil { height: 18px; background: linear-gradient(180deg, #8b5e32 0%, #6b3e18 100%); }
-.empty-garden { text-align: center; padding: 40px 20px 20px; font-style: italic; font-size: 0.75rem; color: rgba(255,255,255,0.6); background: #b8864a; }
+/* ── GARDEN BED ── */
+.garden-bed {
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #8b5e32;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  margin-bottom: 0;
+}
+.garden-sky {
+  height: 44px;
+  background: linear-gradient(180deg, #c8e8f8 0%, #ddf0f8 60%, #eef8ee 100%);
+  position: relative;
+}
+.garden-sky::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; left: 0; right: 0;
+  height: 10px;
+  background: #7ab84a;
+}
+.garden-soil { height: 16px; background: linear-gradient(180deg, #8b5e32 0%, #6b3e18 100%); }
 
-/* Plant wrapper */
-.plant-wrapper { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; animation: growUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; margin-bottom: -2px; transition: transform 0.15s; }
-.plant-wrapper:hover { transform: translateY(-4px); }
-.plant-wrapper:active { transform: scale(0.95); }
-.plant-svg-wrap { display: block; }
-.today-marker { font-size: 0.42rem; color: #fff; letter-spacing: 0.05em; background: rgba(0,0,0,0.35); padding: 1px 5px; border-radius: 3px; margin-top: 1px; margin-bottom: 3px; }
-@keyframes growUp { from { transform: scaleY(0); opacity: 0; transform-origin: bottom; } to { transform: scaleY(1); opacity: 1; transform-origin: bottom; } }
+/* scrollable plant row */
+.plants-scroll {
+  background: #b8864a;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+}
+.plants-scroll::-webkit-scrollbar { display: none; }
+.plants-scroll.grabbing { cursor: grabbing; }
 
-/* Stat card */
-.stat-card-wrap { margin-top: 16px; margin-bottom: 16px; }
+.plants-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  padding: 12px 20px 0;
+  height: 130px;
+  width: max-content;
+  min-width: 100%;
+}
+
+/* each plant slot is exactly 68px wide */
+.plant-slot {
+  width: 68px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s;
+}
+.plant-slot:hover { transform: translateY(-4px); }
+.plant-slot:active { transform: scale(0.95); }
+
+/* every SVG plant renders at exactly 56×96 */
+.plant-slot svg {
+  width: 56px;
+  height: 96px;
+  display: block;
+}
+
+.today-marker {
+  font-size: 0.4rem;
+  color: #fff;
+  background: rgba(0,0,0,0.35);
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-top: 2px;
+  margin-bottom: 3px;
+  letter-spacing: 0.05em;
+}
+
+.empty-garden {
+  text-align: center;
+  padding: 36px 20px;
+  font-style: italic;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.6);
+  background: #b8864a;
+}
+
+/* plant tooltip */
+.plant-slot .tip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dark);
+  color: var(--cream);
+  font-size: 0.58rem;
+  padding: 5px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 20;
+  line-height: 1.6;
+  text-align: center;
+}
+.plant-slot:hover .tip { opacity: 1; }
+
+/* stat card */
+.stat-card-wrap { margin-top: 14px; margin-bottom: 16px; }
 .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; display: none; animation: fadeIn 0.3s ease; }
 .stat-card.visible { display: block; }
 .stat-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
@@ -83,11 +176,11 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
 .stat-card-label { font-size: 0.55rem; color: var(--mid); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; display: block; }
 .stat-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .stat-card-tag { background: var(--cream); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 0.62rem; color: var(--mid); }
-.stat-card-tag.mood-great { border-color: #3a6b32; color: #3a6b32; background: #f0f8ec; }
-.stat-card-tag.mood-good { border-color: #5a8a3a; color: #5a8a3a; background: #f4f8f0; }
-.stat-card-tag.mood-ok { border-color: #8a8a3a; color: #6a6a2a; background: #f8f8ec; }
-.stat-card-tag.mood-fastish { border-color: #c87a2a; color: #a05a10; background: #fdf4ec; }
-.stat-card-tag.mood-toofast { border-color: #c5462a; color: #a02810; background: #fdf0ec; }
+.mood-GREAT { border-color: #3a6b32 !important; color: #3a6b32 !important; background: #f0f8ec !important; }
+.mood-GOOD  { border-color: #5a8a3a !important; color: #5a8a3a !important; background: #f4f8f0 !important; }
+.mood-OK    { border-color: #8a8a3a !important; color: #6a6a2a !important; background: #f8f8ec !important; }
+.mood-FASTISH { border-color: #c87a2a !important; color: #a05a10 !important; background: #fdf4ec !important; }
+.mood-TOOFAST { border-color: #c5462a !important; color: #a02810 !important; background: #fdf0ec !important; }
 
 .explanation-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
 .explanation-box h3 { font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 400; margin-bottom: 10px; color: var(--dark); }
@@ -154,12 +247,17 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
       <div><div class="streak-num" id="streakNum">0</div><div class="streak-label">meals total</div></div>
       <div class="health-tags" id="healthTags"></div>
     </div>
+
     <div class="garden-bed">
       <div class="garden-sky"></div>
-      <div class="plants-row" id="plantsRow"><div class="empty-garden">no meals yet — eat something!</div></div>
+      <div class="plants-scroll" id="plantsScroll">
+        <div class="plants-inner" id="plantsInner">
+          <div class="empty-garden">no meals yet — eat something!</div>
+        </div>
+      </div>
       <div class="garden-soil"></div>
     </div>
-    <!-- stat card appears here -->
+
     <div class="stat-card-wrap">
       <div class="stat-card" id="statCard">
         <div class="stat-card-header">
@@ -174,6 +272,7 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
         <div class="stat-card-tags" id="scTags"></div>
       </div>
     </div>
+
     <div class="explanation-box"><h3>Today's plant</h3><p class="loading" id="plantExplanation">generating...</p></div>
     <div class="explanation-box"><h3>Your progress</h3><p class="loading" id="improvementText">analysing your trend...</p></div>
     <button class="btn-secondary" onclick="window.location.reload()">Done</button>
@@ -189,13 +288,18 @@ let currentMeal = null;
 let allMeals = JSON.parse(localStorage.getItem('garden_meals') || '[]');
 let selectedPlantIndex = null;
 
+// ── drag to scroll ──
+function initDragScroll(el) {
+  let isDown = false, startX, scrollLeft;
+  el.addEventListener('mousedown', e => { isDown = true; el.classList.add('grabbing'); startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; });
+  el.addEventListener('mouseleave', () => { isDown = false; el.classList.remove('grabbing'); });
+  el.addEventListener('mouseup', () => { isDown = false; el.classList.remove('grabbing'); });
+  el.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - el.offsetLeft; el.scrollLeft = scrollLeft - (x - startX); });
+}
+
 async function askAI(prompt) {
   try {
-    const res = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt })
-    });
+    const res = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
     const data = await res.json();
     if (data.error) return 'Error: ' + data.error;
     const raw = data.text || 'No response.';
@@ -204,9 +308,9 @@ async function askAI(prompt) {
 }
 
 function getHealthScore(meal) {
-  const paceScores = { 'GREAT': 1, 'GOOD': 0.8, 'OK': 0.6, 'FAST-ISH': 0.3, 'TOO FAST': 0.1 };
-  const feelScores = { 'good': 1, 'rushed': 0.4, 'distracted': 0.3, 'toofast': 0.2 };
-  return ((paceScores[meal.mood] || 0.5) + (feelScores[meal.feel] || 0.5) + ((meal.rating || 3) / 5)) / 3;
+  const p = ({ 'GREAT': 1, 'GOOD': 0.8, 'OK': 0.6, 'FAST-ISH': 0.3, 'TOO FAST': 0.1 })[meal.mood] || 0.5;
+  const f = ({ 'good': 1, 'rushed': 0.4, 'distracted': 0.3, 'toofast': 0.2 })[meal.feel] || 0.5;
+  return (p + f + ((meal.rating || 3) / 5)) / 3;
 }
 
 function getMoodFromPace(pace) {
@@ -249,183 +353,183 @@ function openStatCard(meal, index) {
   selectedPlantIndex = index;
   const duration = meal.duration < 60 ? meal.duration + 's' : (Math.round(meal.duration / 60 * 10) / 10) + 'm';
   const interval = meal.bites > 0 ? Math.round(meal.duration / meal.bites) + 's' : '—';
-  const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Unknown date';
-
+  const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Unknown';
+  const moodKey = (meal.mood || '').replace('-', '').replace(' ', '');
   document.getElementById('scTitle').textContent = date;
   document.getElementById('scBites').textContent = meal.bites;
   document.getElementById('scDuration').textContent = duration;
   document.getElementById('scInterval').textContent = interval;
-
-  const moodClass = { 'GREAT': 'great', 'GOOD': 'good', 'OK': 'ok', 'FAST-ISH': 'fastish', 'TOO FAST': 'toofast' }[meal.mood] || 'ok';
   document.getElementById('scTags').innerHTML = `
-    <div class="stat-card-tag mood-${moodClass}">${meal.mood}</div>
+    <div class="stat-card-tag mood-${moodKey}">${meal.mood}</div>
     ${meal.feel ? `<div class="stat-card-tag">felt: ${meal.feel}</div>` : ''}
     ${meal.rating ? `<div class="stat-card-tag">rated ${meal.rating}/5</div>` : ''}
   `;
-
   document.getElementById('statCard').classList.add('visible');
   document.getElementById('statCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// ── SVG PLANTS ──
-function drawPlant(mood, health) {
-  const variant = Math.random() > 0.5 ? 'a' : 'b';
+// ── PLANTS — all use viewBox="0 0 60 100", drawn to fill that box ──
+function drawPlant(mood, seed) {
+  const r = seed % 2; // 0 or 1 for variant, deterministic per meal
 
-  const plants = {
-    'GREAT': {
-      a: `<svg width="64" height="130" viewBox="0 0 64 130">
-        <circle cx="32" cy="80" r="30" fill="#ef4444"/>
-        <circle cx="22" cy="68" r="7" fill="rgba(255,255,255,0.22)"/>
-        <path d="M32 50 Q26 40 32 34 Q38 40 32 50Z" fill="#3a6b28"/>
-        <path d="M32 50 Q18 40 12 46 Q18 56 32 50Z" fill="#3a6b28"/>
-        <path d="M32 50 Q46 40 52 46 Q46 56 32 50Z" fill="#4a7c38"/>
-        <path d="M32 50 Q10 46 6 54" stroke="#3a6b28" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M32 50 Q54 46 58 54" stroke="#4a7c38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M32 50 Q36 30 32 50" stroke="#dc2626" stroke-width="1" fill="none" opacity="0.3"/>
+  const svg = {
+    'GREAT': [
+      // tomato
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="62" r="28" fill="#ef4444"/>
+        <circle cx="20" cy="50" r="7" fill="rgba(255,255,255,0.22)"/>
+        <path d="M30 34 Q24 24 30 18 Q36 24 30 34Z" fill="#3a6b28"/>
+        <path d="M30 34 Q16 22 10 28 Q16 38 30 34Z" fill="#3a6b28"/>
+        <path d="M30 34 Q44 22 50 28 Q44 38 30 34Z" fill="#4a7c38"/>
+        <path d="M30 34 Q8 30 4 38" stroke="#3a6b28" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M30 34 Q52 30 56 38" stroke="#4a7c38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M30 34 Q34 54 34 62" stroke="#dc2626" stroke-width="1" fill="none" opacity="0.3"/>
+        <path d="M30 34 Q26 54 26 62" stroke="#dc2626" stroke-width="1" fill="none" opacity="0.3"/>
       </svg>`,
-      b: `<svg width="68" height="130" viewBox="0 0 68 130">
-        <path d="M0 128 Q0 78 34 66 Q68 78 68 128Z" fill="#5a9a2a"/>
-        <path d="M4 128 Q4 82 34 72 Q64 82 64 128Z" fill="#d4f0a0"/>
-        <path d="M8 128 Q8 84 34 76 Q60 84 60 128Z" fill="#f95f5f"/>
-        <ellipse cx="22" cy="98" rx="3" ry="4" fill="#2a1a08" transform="rotate(-10 22 98)"/>
-        <ellipse cx="40" cy="94" rx="3" ry="4" fill="#2a1a08" transform="rotate(8 40 94)"/>
-        <ellipse cx="34" cy="110" rx="3" ry="4" fill="#2a1a08"/>
-        <ellipse cx="18" cy="108" rx="2.5" ry="3.5" fill="#2a1a08" transform="rotate(-15 18 108)"/>
-        <ellipse cx="46" cy="112" rx="2.5" ry="3.5" fill="#2a1a08" transform="rotate(12 46 112)"/>
-        <ellipse cx="22" cy="86" rx="4" ry="8" fill="rgba(255,255,255,0.2)" transform="rotate(-15 22 86)"/>
+      // watermelon slice
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 96 Q4 48 30 32 Q56 48 56 96Z" fill="#5a9a2a"/>
+        <path d="M7 96 Q7 52 30 38 Q53 52 53 96Z" fill="#d4f0a0"/>
+        <path d="M11 96 Q11 56 30 44 Q49 56 49 96Z" fill="#f95f5f"/>
+        <ellipse cx="22" cy="68" rx="3" ry="4" fill="#2a1a08" transform="rotate(-10 22 68)"/>
+        <ellipse cx="36" cy="64" rx="3" ry="4" fill="#2a1a08" transform="rotate(8 36 64)"/>
+        <ellipse cx="30" cy="78" rx="3" ry="4" fill="#2a1a08"/>
+        <ellipse cx="18" cy="80" rx="2.5" ry="3.5" fill="#2a1a08" transform="rotate(-12 18 80)"/>
+        <ellipse cx="42" cy="82" rx="2.5" ry="3.5" fill="#2a1a08" transform="rotate(10 42 82)"/>
+        <ellipse cx="20" cy="56" rx="4" ry="8" fill="rgba(255,255,255,0.2)" transform="rotate(-15 20 56)"/>
       </svg>`
-    },
-    'GOOD': {
-      a: `<svg width="76" height="130" viewBox="0 0 76 130">
-        <path d="M14 40 Q28 34 30 58 Q28 78 14 86 Q0 78 -2 58 Q0 34 14 40Z" fill="#dc2626" opacity="0.82"/>
-        <ellipse cx="6" cy="54" rx="2.5" ry="3.5" fill="#fde68a" opacity="0.7"/>
-        <ellipse cx="18" cy="50" rx="2.5" ry="3.5" fill="#fde68a" opacity="0.7"/>
-        <ellipse cx="10" cy="68" rx="2.5" ry="3" fill="#fde68a" opacity="0.7"/>
-        <path d="M14 40 Q4 30 0 36 Q4 44 14 40Z" fill="#3a6b28" opacity="0.85"/>
-        <path d="M14 40 Q24 30 28 36 Q24 44 14 40Z" fill="#4a7c38" opacity="0.85"/>
-        <path d="M14 40 Q14 28 14 24 Q18 28 14 40Z" fill="#3a6b28" opacity="0.85"/>
-        <path d="M60 40 Q74 34 76 58 Q74 78 60 86 Q46 78 44 58 Q46 34 60 40Z" fill="#dc2626" opacity="0.82"/>
-        <ellipse cx="52" cy="54" rx="2.5" ry="3.5" fill="#fde68a" opacity="0.7"/>
-        <ellipse cx="64" cy="50" rx="2.5" ry="3.5" fill="#fde68a" opacity="0.7"/>
-        <ellipse cx="56" cy="68" rx="2.5" ry="3" fill="#fde68a" opacity="0.7"/>
-        <path d="M60 40 Q50 30 46 36 Q50 44 60 40Z" fill="#3a6b28" opacity="0.85"/>
-        <path d="M60 40 Q70 30 74 36 Q70 44 60 40Z" fill="#4a7c38" opacity="0.85"/>
-        <path d="M60 40 Q60 28 60 24 Q64 28 60 40Z" fill="#3a6b28" opacity="0.85"/>
-        <path d="M37 50 Q51 44 53 68 Q51 88 37 96 Q23 88 21 68 Q23 44 37 50Z" fill="#ef4444"/>
-        <ellipse cx="27" cy="62" rx="2.5" ry="3.5" fill="#fde68a"/>
-        <ellipse cx="41" cy="58" rx="2.5" ry="3.5" fill="#fde68a"/>
-        <ellipse cx="33" cy="76" rx="2.5" ry="3" fill="#fde68a"/>
-        <ellipse cx="27" cy="46" rx="4" ry="10" fill="rgba(255,255,255,0.2)" transform="rotate(-15 27 46)"/>
-        <path d="M37 50 Q27 40 23 46 Q27 54 37 50Z" fill="#3a6b28"/>
-        <path d="M37 50 Q47 40 51 46 Q47 54 37 50Z" fill="#4a7c38"/>
-        <path d="M37 50 Q31 36 37 32 Q43 36 37 50Z" fill="#3a6b28"/>
-        <path d="M37 50 Q17 46 13 54" stroke="#3a6b28" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M37 50 Q57 46 61 54" stroke="#4a7c38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    ],
+    'GOOD': [
+      // strawberry cluster
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 44 Q22 40 24 56 Q22 70 12 76 Q2 70 0 56 Q2 40 12 44Z" fill="#dc2626" opacity="0.82"/>
+        <ellipse cx="5" cy="56" rx="2" ry="3" fill="#fde68a" opacity="0.7"/>
+        <ellipse cx="15" cy="52" rx="2" ry="3" fill="#fde68a" opacity="0.7"/>
+        <path d="M12 44 Q4 34 0 38 Q4 46 12 44Z" fill="#3a6b28" opacity="0.85"/>
+        <path d="M12 44 Q20 34 24 38 Q20 46 12 44Z" fill="#4a7c38" opacity="0.85"/>
+        <path d="M12 44 Q12 32 12 28 Q15 32 12 44Z" fill="#3a6b28" opacity="0.85"/>
+        <path d="M48 44 Q58 40 60 56 Q58 70 48 76 Q38 70 36 56 Q38 40 48 44Z" fill="#dc2626" opacity="0.82"/>
+        <ellipse cx="41" cy="56" rx="2" ry="3" fill="#fde68a" opacity="0.7"/>
+        <ellipse cx="51" cy="52" rx="2" ry="3" fill="#fde68a" opacity="0.7"/>
+        <path d="M48 44 Q40 34 36 38 Q40 46 48 44Z" fill="#3a6b28" opacity="0.85"/>
+        <path d="M48 44 Q56 34 60 38 Q56 46 48 44Z" fill="#4a7c38" opacity="0.85"/>
+        <path d="M48 44 Q48 32 48 28 Q51 32 48 44Z" fill="#3a6b28" opacity="0.85"/>
+        <path d="M30 34 Q42 30 44 50 Q42 68 30 76 Q18 68 16 50 Q18 30 30 34Z" fill="#ef4444"/>
+        <ellipse cx="22" cy="46" rx="2.5" ry="3" fill="#fde68a"/>
+        <ellipse cx="34" cy="42" rx="2.5" ry="3" fill="#fde68a"/>
+        <ellipse cx="26" cy="58" rx="2" ry="3" fill="#fde68a"/>
+        <ellipse cx="36" cy="60" rx="2" ry="3" fill="#fde68a"/>
+        <ellipse cx="20" cy="30" rx="3" ry="8" fill="rgba(255,255,255,0.2)" transform="rotate(-15 20 30)"/>
+        <path d="M30 34 Q22 24 18 28 Q22 36 30 34Z" fill="#3a6b28"/>
+        <path d="M30 34 Q38 24 42 28 Q38 36 30 34Z" fill="#4a7c38"/>
+        <path d="M30 34 Q26 20 30 16 Q34 20 30 34Z" fill="#3a6b28"/>
       </svg>`,
-      b: `<svg width="60" height="130" viewBox="0 0 60 130">
-        <path d="M30 10 Q16 20 12 38" stroke="#5a8a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M30 10 Q44 20 48 38" stroke="#5a8a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M30 10 Q30 0 32 -6" stroke="#5a8a2a" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M32 2 Q40 -4 42 4 Q36 8 32 2Z" fill="#4a7a22"/>
-        <circle cx="12" cy="58" r="22" fill="#c0152a"/>
-        <circle cx="6" cy="48" r="6" fill="rgba(255,255,255,0.25)"/>
-        <circle cx="48" cy="58" r="22" fill="#dc1f35"/>
-        <circle cx="42" cy="48" r="6" fill="rgba(255,255,255,0.25)"/>
+      // cherries
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 14 Q18 24 14 40" stroke="#5a8a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M30 14 Q42 24 46 40" stroke="#5a8a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M30 14 Q30 4 32 -2" stroke="#5a8a2a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M32 6 Q40 0 42 8 Q36 12 32 6Z" fill="#4a7a22"/>
+        <circle cx="14" cy="62" r="22" fill="#c0152a"/>
+        <circle cx="8" cy="50" r="6" fill="rgba(255,255,255,0.25)"/>
+        <circle cx="46" cy="62" r="22" fill="#dc1f35"/>
+        <circle cx="40" cy="50" r="6" fill="rgba(255,255,255,0.25)"/>
       </svg>`
-    },
-    'OK': {
-      a: `<svg width="68" height="130" viewBox="0 0 68 130">
-        <rect x="27" y="70" width="14" height="52" rx="4" fill="#7ab040"/>
-        <path d="M27 86 Q9 76 8 58" stroke="#6a9a32" stroke-width="6" fill="none" stroke-linecap="round"/>
-        <path d="M41 86 Q59 76 60 58" stroke="#6a9a32" stroke-width="6" fill="none" stroke-linecap="round"/>
-        <circle cx="34" cy="44" r="28" fill="#3a6b2a"/>
-        <circle cx="8" cy="52" r="14" fill="#3a6b2a"/>
-        <circle cx="60" cy="52" r="14" fill="#3a6b2a"/>
-        <circle cx="22" cy="28" r="10" fill="#4a8a3a"/>
-        <circle cx="40" cy="24" r="9" fill="#4a8a3a"/>
-        <circle cx="14" cy="44" r="8" fill="#4a8a3a"/>
-        <circle cx="54" cy="44" r="8" fill="#4a8a3a"/>
-        <circle cx="24" cy="28" r="6" fill="#5a9a4a"/>
-        <circle cx="40" cy="24" r="5" fill="#5a9a4a"/>
+    ],
+    'OK': [
+      // broccoli
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="24" y="66" width="12" height="34" rx="4" fill="#7ab040"/>
+        <path d="M24 78 Q10 70 8 54" stroke="#6a9a32" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M36 78 Q50 70 52 54" stroke="#6a9a32" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <circle cx="30" cy="40" r="26" fill="#3a6b2a"/>
+        <circle cx="6" cy="50" r="14" fill="#3a6b2a"/>
+        <circle cx="54" cy="50" r="14" fill="#3a6b2a"/>
+        <circle cx="16" cy="22" r="10" fill="#4a8a3a"/>
+        <circle cx="36" cy="18" r="9" fill="#4a8a3a"/>
+        <circle cx="8" cy="42" r="8" fill="#4a8a3a"/>
+        <circle cx="52" cy="42" r="8" fill="#4a8a3a"/>
+        <circle cx="18" cy="22" r="6" fill="#5a9a4a"/>
+        <circle cx="36" cy="18" r="5" fill="#5a9a4a"/>
       </svg>`,
-      b: `<svg width="60" height="130" viewBox="0 0 60 130">
-        <rect x="27" y="20" width="6" height="22" rx="2" fill="#5a8a2a"/>
-        <path d="M27 32 Q14 26 12 36 Q20 40 27 32Z" fill="#4a7a22"/>
-        <path d="M33 32 Q46 26 48 36 Q40 40 33 32Z" fill="#4a7a22"/>
-        <path d="M30 42 Q52 40 58 66 Q60 94 52 112 Q44 126 30 130 Q16 126 8 112 Q0 94 2 66 Q8 40 30 42Z" fill="#f59e0b"/>
-        <path d="M30 42 Q30 86 30 130" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.4"/>
-        <path d="M30 42 Q48 66 52 112" stroke="#d97706" stroke-width="1" fill="none" opacity="0.25"/>
-        <path d="M30 42 Q12 66 8 112" stroke="#d97706" stroke-width="1" fill="none" opacity="0.25"/>
-        <ellipse cx="18" cy="66" rx="5" ry="16" fill="rgba(255,255,255,0.2)" transform="rotate(-15 18 66)"/>
+      // bell pepper
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="27" y="2" width="6" height="16" rx="2" fill="#5a8a2a"/>
+        <path d="M27 12 Q16 6 14 16 Q22 20 27 12Z" fill="#4a7a22"/>
+        <path d="M33 12 Q44 6 46 16 Q38 20 33 12Z" fill="#4a7a22"/>
+        <path d="M30 18 Q52 16 54 44 Q56 72 48 88 Q40 100 30 100 Q20 100 12 88 Q4 72 6 44 Q8 16 30 18Z" fill="#f59e0b"/>
+        <path d="M30 18 Q30 60 30 100" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.35"/>
+        <path d="M30 18 Q50 44 48 88" stroke="#d97706" stroke-width="1" fill="none" opacity="0.2"/>
+        <path d="M30 18 Q10 44 12 88" stroke="#d97706" stroke-width="1" fill="none" opacity="0.2"/>
+        <ellipse cx="18" cy="46" rx="5" ry="14" fill="rgba(255,255,255,0.2)" transform="rotate(-15 18 46)"/>
       </svg>`
-    },
-    'FAST-ISH': {
-      a: `<svg width="68" height="130" viewBox="0 0 68 130">
-        <path d="M8 10 Q34 2 60 10" stroke="#5a8a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <line x1="14" y1="10" x2="14" y2="24" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="27" y1="6" x2="27" y2="20" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="41" y1="6" x2="41" y2="20" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="54" y1="10" x2="54" y2="24" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M6 18 Q-2 22 -2 14 Q4 12 6 18Z" fill="#4a7a22"/>
-        <path d="M62 18 Q70 22 70 14 Q64 12 62 18Z" fill="#4a7a22"/>
-        <path d="M14 24 Q26 14 26 42 Q24 64 14 74 Q4 64 2 42 Q2 14 14 24Z" fill="#dc2626"/>
-        <ellipse cx="8" cy="46" rx="3" ry="11" fill="rgba(255,255,255,0.15)" transform="rotate(-8 8 46)"/>
-        <path d="M14 74 Q14 86 16 94" stroke="#b91c1c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M27 20 Q39 10 39 38 Q37 60 27 70 Q17 60 15 38 Q15 10 27 20Z" fill="#ef4444"/>
-        <ellipse cx="21" cy="42" rx="3" ry="11" fill="rgba(255,255,255,0.18)" transform="rotate(-5 21 42)"/>
-        <path d="M27 70 Q27 82 29 90" stroke="#dc2626" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M41 20 Q53 10 53 38 Q51 60 41 70 Q31 60 29 38 Q29 10 41 20Z" fill="#dc2626"/>
-        <ellipse cx="35" cy="42" rx="3" ry="11" fill="rgba(255,255,255,0.15)" transform="rotate(5 35 42)"/>
-        <path d="M41 70 Q41 82 43 90" stroke="#b91c1c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M54 24 Q66 14 66 42 Q64 64 54 74 Q44 64 42 42 Q42 14 54 24Z" fill="#ef4444"/>
-        <ellipse cx="48" cy="46" rx="3" ry="11" fill="rgba(255,255,255,0.18)" transform="rotate(8 48 46)"/>
-        <path d="M54 74 Q54 86 56 94" stroke="#dc2626" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    ],
+    'FAST-ISH': [
+      // chillies — 4 hanging from clean branch
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 14 Q30 6 56 14" stroke="#5a8a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <line x1="10" y1="14" x2="10" y2="26" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="23" y1="10" x2="23" y2="22" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="37" y1="10" x2="37" y2="22" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="50" y1="14" x2="50" y2="26" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M4 20 Q-2 24 -2 16 Q2 14 4 20Z" fill="#4a7a22"/>
+        <path d="M56 20 Q62 24 62 16 Q58 14 56 20Z" fill="#4a7a22"/>
+        <path d="M10 26 Q20 18 20 44 Q18 64 10 74 Q2 64 0 44 Q0 18 10 26Z" fill="#dc2626"/>
+        <ellipse cx="4" cy="46" rx="3" ry="10" fill="rgba(255,255,255,0.15)" transform="rotate(-8 4 46)"/>
+        <path d="M10 74 Q10 84 12 90" stroke="#b91c1c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M23 22 Q33 14 33 40 Q31 60 23 70 Q15 60 13 40 Q13 14 23 22Z" fill="#ef4444"/>
+        <ellipse cx="17" cy="42" rx="3" ry="10" fill="rgba(255,255,255,0.18)" transform="rotate(-5 17 42)"/>
+        <path d="M23 70 Q23 80 25 86" stroke="#dc2626" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M37 22 Q47 14 47 40 Q45 60 37 70 Q29 60 27 40 Q27 14 37 22Z" fill="#dc2626"/>
+        <path d="M37 70 Q37 80 39 86" stroke="#b91c1c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M50 26 Q60 18 60 44 Q58 64 50 74 Q42 64 40 44 Q40 18 50 26Z" fill="#ef4444"/>
+        <path d="M50 74 Q50 84 52 90" stroke="#dc2626" stroke-width="1.5" fill="none" stroke-linecap="round"/>
       </svg>`,
-      b: `<svg width="52" height="130" viewBox="0 0 52 130">
-        <path d="M26 0 Q12 8 10 22" stroke="#3a7a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M26 0 Q40 8 42 22" stroke="#4a8a22" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M20 6 Q8 0 6 8 Q12 12 20 6Z" fill="#3a7a1a"/>
-        <path d="M32 6 Q44 0 46 8 Q40 12 32 6Z" fill="#4a8a22"/>
-        <path d="M26 0 Q22 -12 26 -16 Q30 -12 26 0Z" fill="#3a7a1a"/>
-        <path d="M18 22 Q28 14 36 22 Q42 46 36 72 Q30 92 26 100 Q22 92 16 72 Q10 46 18 22Z" fill="#f97316"/>
-        <path d="M16 40 Q26 36 36 40" stroke="#ea6010" stroke-width="1" fill="none" opacity="0.4"/>
-        <path d="M14 60 Q26 56 38 60" stroke="#ea6010" stroke-width="1" fill="none" opacity="0.4"/>
-        <path d="M16 80 Q26 76 36 80" stroke="#ea6010" stroke-width="1" fill="none" opacity="0.4"/>
-        <ellipse cx="18" cy="44" rx="4" ry="14" fill="rgba(255,255,255,0.2)" transform="rotate(-10 18 44)"/>
-        <path d="M26 100 Q24 112 24 120" stroke="#c2600a" stroke-width="2" fill="none" stroke-linecap="round"/>
+      // carrot
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 8 Q8 16 6 28" stroke="#3a7a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M30 4 Q30 -6 32 -12" stroke="#4a8a22" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M40 8 Q52 16 54 28" stroke="#3a7a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M30 4 Q18 -2 14 -10" stroke="#3a7a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M30 4 Q42 -2 46 -10" stroke="#4a8a22" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M30 4 Q24 -8 30 -14 Q36 -8 30 4Z" fill="#3a7a1a"/>
+        <path d="M12 26 Q16 22 44 22 Q48 24 30 100Z" fill="#f97316"/>
+        <path d="M14 42 Q30 36 46 42" stroke="#ea6010" stroke-width="1" fill="none" opacity="0.4"/>
+        <path d="M16 60 Q30 54 44 60" stroke="#ea6010" stroke-width="1" fill="none" opacity="0.4"/>
+        <path d="M20 78 Q30 72 40 78" stroke="#ea6010" stroke-width="1" fill="none" opacity="0.4"/>
+        <ellipse cx="18" cy="46" rx="4" ry="14" fill="rgba(255,255,255,0.2)" transform="rotate(-10 18 46)"/>
       </svg>`
-    },
-    'TOO FAST': {
-      a: `<svg width="76" height="130" viewBox="0 0 76 130">
-        <path d="M38 0 Q2 10 4 52 Q6 82 20 98 Q38 112 56 98 Q70 82 72 52 Q74 10 38 0Z" fill="#8aca50"/>
-        <path d="M38 4 Q8 14 10 52 Q12 78 24 94 Q38 106 52 94 Q64 78 66 52 Q68 14 38 4Z" fill="#6aaa38"/>
-        <path d="M38 8 Q12 20 14 52 Q16 76 28 90 Q38 100 48 90 Q60 76 62 52 Q64 20 38 8Z" fill="#5a9a28"/>
-        <path d="M38 12 Q18 24 20 52 Q22 72 32 84 Q38 92 44 84 Q54 72 56 52 Q58 24 38 12Z" fill="#4a8a22"/>
-        <path d="M38 16 Q24 28 26 52 Q28 68 34 78 Q38 84 42 78 Q48 68 50 52 Q52 28 38 16Z" fill="#3a7a18"/>
-        <circle cx="38" cy="52" r="12" fill="#2a6010"/>
-        <circle cx="38" cy="52" r="6" fill="#1a5008"/>
-        <path d="M4 52 Q6 40 0 30" fill="none" stroke="#9ade60" stroke-width="2" stroke-linecap="round"/>
-        <path d="M72 52 Q70 40 76 30" fill="none" stroke="#9ade60" stroke-width="2" stroke-linecap="round"/>
+    ],
+    'TOO FAST': [
+      // lettuce rosette
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 100 Q2 90 0 58 Q-2 30 14 18 Q22 10 30 12 Q38 10 46 18 Q62 30 60 58 Q58 90 30 100Z" fill="#8aca50"/>
+        <path d="M30 100 Q8 88 8 58 Q8 34 20 22 Q26 16 30 18 Q34 16 40 22 Q52 34 52 58 Q52 88 30 100Z" fill="#6aaa38"/>
+        <path d="M30 100 Q14 86 16 58 Q18 38 26 28 Q28 24 30 24 Q32 24 34 28 Q42 38 44 58 Q46 86 30 100Z" fill="#5a9a28"/>
+        <path d="M30 100 Q20 84 22 58 Q24 42 28 34 Q30 30 32 34 Q36 42 38 58 Q40 84 30 100Z" fill="#4a8a22"/>
+        <circle cx="30" cy="64" r="10" fill="#3a7a1a"/>
+        <circle cx="30" cy="64" r="5" fill="#2a6010"/>
+        <path d="M0 58 Q-2 44 2 32" fill="none" stroke="#9ade60" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M60 58 Q62 44 58 32" fill="none" stroke="#9ade60" stroke-width="1.5" stroke-linecap="round"/>
       </svg>`,
-      b: `<svg width="56" height="130" viewBox="0 0 56 130">
-        <rect x="25" y="0" width="6" height="22" rx="2" fill="#5a8a2a"/>
-        <path d="M25 12 Q12 6 10 16 Q18 20 25 12Z" fill="#4a7a22"/>
-        <path d="M31 12 Q44 6 46 16 Q38 20 31 12Z" fill="#3a7a1a"/>
-        <path d="M25 8 Q20 -2 24 -8" stroke="#3a7a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M31 8 Q36 -2 32 -8" stroke="#4a7a22" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M14 22 Q28 18 42 22 Q38 32 28 34 Q18 32 14 22Z" fill="#4a8a2a"/>
-        <path d="M28 34 Q56 30 58 66 Q56 102 28 114 Q0 102 -2 66 Q0 30 28 34Z" fill="#6b21a8"/>
-        <ellipse cx="16" cy="66" rx="5" ry="18" fill="rgba(255,255,255,0.18)" transform="rotate(-15 16 66)"/>
-        <ellipse cx="28" cy="108" rx="12" ry="6" fill="rgba(255,255,255,0.08)"/>
+      // aubergine
+      `<svg viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="27" y="2" width="6" height="18" rx="2" fill="#5a8a2a"/>
+        <path d="M27 12 Q16 6 14 16 Q22 20 27 12Z" fill="#4a7a22"/>
+        <path d="M33 12 Q44 6 46 16 Q38 20 33 12Z" fill="#3a7a1a"/>
+        <path d="M27 8 Q22 -2 26 -8" stroke="#3a7a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M33 8 Q38 -2 34 -8" stroke="#4a7a22" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M14 20 Q30 16 46 20 Q42 30 30 32 Q18 30 14 20Z" fill="#4a8a2a"/>
+        <path d="M30 32 Q56 28 58 58 Q56 84 38 94 Q30 98 22 94 Q4 84 2 58 Q4 28 30 32Z" fill="#7c3aed"/>
+        <ellipse cx="16" cy="56" rx="5" ry="18" fill="rgba(255,255,255,0.2)" transform="rotate(-15 16 56)"/>
+        <ellipse cx="30" cy="92" rx="12" ry="6" fill="rgba(255,255,255,0.08)"/>
       </svg>`
-    }
+    ]
   };
 
-  const plant = plants[mood];
-  if (!plant) return plants['OK'].a;
-  return plant[variant] || plant.a;
+  const variants = svg[mood] || svg['OK'];
+  return variants[r] || variants[0];
 }
-
 
 function setupScreen1(meal) {
   const duration = meal.duration < 60 ? meal.duration + 's' : (Math.round(meal.duration / 60 * 10) / 10) + 'm';
@@ -459,18 +563,19 @@ function selectFeel(feel, btn) {
     currentMeal.feel = feel;
     currentMeal.mood = getMoodFromPace(currentMeal.pace);
     currentMeal.timestamp = Date.now();
+    currentMeal.seed = Math.floor(Math.random() * 100);
     allMeals.push({...currentMeal});
     localStorage.setItem('garden_meals', JSON.stringify(allMeals));
   });
 }
 
 function renderGarden() {
-  const row = document.getElementById('plantsRow');
-  row.innerHTML = '';
+  const inner = document.getElementById('plantsInner');
+  inner.innerHTML = '';
   closeStatCard();
 
   if (allMeals.length === 0) {
-    row.innerHTML = '<div class="empty-garden">no meals yet — eat something!</div>';
+    inner.innerHTML = '<div class="empty-garden">no meals yet — eat something!</div>';
     document.getElementById('streakNum').textContent = '0';
     document.getElementById('streakTitle').textContent = 'meals tracked!';
     document.getElementById('healthTags').innerHTML = '';
@@ -494,19 +599,32 @@ function renderGarden() {
   `;
 
   allMeals.forEach((meal, i) => {
-    const health = getHealthScore(meal);
     const isToday = i === allMeals.length - 1;
-    const wrapper = document.createElement('div');
-    wrapper.className = 'plant-wrapper';
-    wrapper.style.animationDelay = `${i * 0.06}s`;
-    wrapper.innerHTML = `<div class="plant-svg-wrap">${drawPlant(meal.mood, health)}</div>${isToday ? '<div class="today-marker">today</div>' : ''}`;
-    wrapper.addEventListener('click', () => openStatCard(meal, i));
-    row.appendChild(wrapper);
+    const seed = meal.seed || i;
+    const slot = document.createElement('div');
+    slot.className = 'plant-slot';
+    slot.style.animationDelay = `${i * 0.05}s`;
+    const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
+    const duration = meal.duration < 60 ? meal.duration + 's' : (Math.round(meal.duration / 60 * 10) / 10) + 'm';
+    const interval = meal.bites > 0 ? Math.round(meal.duration / meal.bites) + 's' : '—';
+    slot.innerHTML = `
+      <div class="tip">${date}<br>${meal.bites} bites · ${duration}<br>${meal.mood} · felt: ${meal.feel || '?'}</div>
+      ${drawPlant(meal.mood, seed)}
+      ${isToday ? '<div class="today-marker">today</div>' : ''}
+    `;
+    slot.addEventListener('click', () => openStatCard(meal, i));
+    inner.appendChild(slot);
   });
+
+  // scroll to the latest plant
+  setTimeout(() => {
+    const scroll = document.getElementById('plantsScroll');
+    scroll.scrollLeft = scroll.scrollWidth;
+    initDragScroll(scroll);
+  }, 100);
 
   const todayMeal = allMeals[allMeals.length - 1];
   if (todayMeal) {
-    const health = getHealthScore(todayMeal);
     askAI(`A person's meal: ${todayMeal.bites} bites in ${todayMeal.duration} seconds, pace: ${todayMeal.mood} (${Math.round(todayMeal.pace * 10) / 10} bites/min), felt: ${todayMeal.feel || 'neutral'}. You are a nutritionist. First choose ONE food plant vegetable or fruit emoji that best represents this meal's pace and feel, and in one sentence explain why. Then in one more sentence give practical advice about what this eating pattern means for digestion. No poetry, just clear warm advice.`).then(text => {
       const el = document.getElementById('plantExplanation');
       el.textContent = text;
