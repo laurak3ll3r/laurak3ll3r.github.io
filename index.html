@@ -296,7 +296,7 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
 </div>
 
 <script>
-const WORKER_URL = 'https://black-dream-a9af.laurak3ller.workers.dev';
+const WORKER_URL = 'YOUR_WORKER_URL_HERE';
 const GIST_ID = '534ae267964caa7772a5ae532a013841';
 
 let currentMeal = null;
@@ -437,9 +437,11 @@ function selectFeel(feel, btn) {
     currentMeal.mood = getMoodFromPace(currentMeal.pace);
     currentMeal.timestamp = Date.now();
     // fetch emoji first, then show garden button
-    askAI(`A person's meal pace was ${currentMeal.mood}, they felt ${feel}. Choose exactly ONE food, vegetable or fruit emoji that best represents this meal. Reply with just the emoji, nothing else.`).then(emojiText => {
-      const match = emojiText.match(/\p{Emoji_Presentation}/u);
-      currentMeal.emoji = match ? match[0] : getMoodEmoji(currentMeal.mood);
+    const foodEmojis = '🍅🍓🥦🌶️🥕🍆🌽🥑🍇🍋🍊🍎🍐🍌🫐🍒🥝🍑🥭🍍🫒🧅🧄🥬🥒🫑🌿🌱';
+    askAI(`A person's meal pace was ${currentMeal.mood}, they felt ${feel}. Choose exactly ONE emoji from this list only: ${foodEmojis}. Pick the one that best represents this meal. Reply with just the single emoji, nothing else.`).then(emojiText => {
+      const validEmojis = [...foodEmojis];
+      const match = [...(emojiText.match(/\p{Emoji_Presentation}/gu) || [])].find(e => validEmojis.includes(e));
+      currentMeal.emoji = match || getMoodEmoji(currentMeal.mood);
       const e = currentMeal.emoji;
       const moodPhrases = {
         'GREAT': `${e} Like a tomato that spends weeks ripening on the vine, you gave your meal the time it deserved.`,
@@ -520,8 +522,9 @@ function renderGarden() {
     emojiEl.textContent = savedEmoji;
     emojiEl.style.display = 'block';
 
-    // also update the garden slot emoji to match
-    const lastSlot = inner.querySelector('.plant-emoji:last-of-type');
+    // sync the most recent garden slot to use the same emoji
+    const lastPlantEmoji = inner.querySelector('.plant-slot:last-child .plant-emoji');
+    if (lastPlantEmoji) lastPlantEmoji.textContent = savedEmoji;
 
     // get explanation — use saved one or ask AI
     if (todayMeal.emojiExplain) {
