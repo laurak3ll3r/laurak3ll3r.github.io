@@ -534,7 +534,7 @@ function renderGarden() {
     if (allMeals.length >= 2) {
       const recent = allMeals.slice(-3);
       const avgHealth = recent.reduce((s, m) => s + getHealthScore(m), 0) / recent.length;
-      askAI(`Person has tracked ${allMeals.length} meals. Recent paces: ${recent.map(m => m.mood).join(', ')}. You are a nutritionist reviewing their eating habits. In 2 practical sentences describe the pattern you see and give one actionable suggestion to improve. Warm and direct.`).then(text => {
+      askAI(`Person has tracked ${allMeals.length} meals. Recent paces: ${recent.map(m => m.mood).join(', ')}. You are a nutritionist reviewing their eating habits. In 2 practical sentences describe the pattern you see and give one actionable suggestion to improve (always focused on eating pace). Warm and direct.`).then(text => {
         const el = document.getElementById('improvementText');
         el.textContent = text;
         el.classList.remove('loading');
