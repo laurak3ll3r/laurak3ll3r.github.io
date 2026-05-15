@@ -255,9 +255,9 @@ function getHealthScore(meal) {
 }
 
 function getMoodFromPace(pace) {
-  if (pace < 3) return 'GREAT';
-  if (pace < 5) return 'GOOD';
-  if (pace < 7) return 'OK';
+  if (pace < 2) return 'GREAT';
+  if (pace < 3.5) return 'GOOD';
+  if (pace < 6) return 'OK';
   if (pace < 10) return 'FAST-ISH';
   return 'TOO FAST';
 }
@@ -486,4 +486,5 @@ async function init() {
 init();
 </script>
 </body>
+</html>
 </html>
