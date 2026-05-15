@@ -167,6 +167,7 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
       <span class="context-label">anything else? (optional)</span>
       <textarea class="context-input" id="contextInput" rows="2" placeholder="e.g. eating at my desk, first meal of the day, really hungry..."></textarea>
     </div>
+    <button class="btn-primary" id="analyseBtn" onclick="analyseFeel()" style="display:none;margin-bottom:24px;"><span>Analyse my meal</span><span>→</span></button>
     <div class="feel-response" id="feelResponse">
       <div class="feel-response-text loading" id="feelResponseText">thinking...</div>
     </div>
@@ -334,19 +335,36 @@ function setupScreen1(meal) {
   });
 }
 
+let selectedFeel = null;
+
 function selectFeel(feel, btn) {
+  selectedFeel = feel;
   document.querySelectorAll('.feel-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  document.getElementById('analyseBtn').style.display = 'flex';
+  // hide previous response if switching
+  document.getElementById('feelResponse').classList.remove('visible');
+  document.getElementById('gardenBtn').style.display = 'none';
+}
+
+function analyseFeel() {
+  if (!selectedFeel) return;
+  const feel = selectedFeel;
   const feelResponse = document.getElementById('feelResponse');
   const feelResponseText = document.getElementById('feelResponseText');
   const gardenBtn = document.getElementById('gardenBtn');
+  const analyseBtn = document.getElementById('analyseBtn');
   const context = document.getElementById('contextInput').value.trim();
+
   feelResponse.classList.add('visible');
   feelResponseText.classList.add('loading');
   feelResponseText.textContent = 'thinking...';
+  analyseBtn.style.display = 'none';
   gardenBtn.style.display = 'none';
+
   const feelLabels = { rushed: 'rushed with no choice', distracted: 'distracted by phone or screen', good: 'good and enjoyed the meal', toofast: 'too fast for no particular reason' };
   const contextNote = context ? ` Additional context: "${context}".` : '';
+
   askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}".${contextNote} You are a nutritionist. In 2 sentences explain how this context affects digestion and what small habit they could try next time. Practical and warm, not preachy.`).then(text => {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
