@@ -437,13 +437,13 @@ function selectFeel(feel, btn) {
     currentMeal.mood = getMoodFromPace(currentMeal.pace);
     currentMeal.timestamp = Date.now();
     const foodEmojis = '🍅🍓🥦🌶️🥕🍆🌽🥑🍇🍋🍊🍎🍐🍌🫐🍒🥝🍑🥭🍍🫒🧅🧄🥬🥒🫑🌿🌱';
-    askAI(`A person's meal pace was ${currentMeal.mood}, they felt ${feel}. Choose exactly ONE emoji from this list only: ${foodEmojis}. Pick the one that best represents this meal. Reply with just the single emoji, nothing else.`).then(emojiText => {
+    askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. Their meal pace was ${currentMeal.mood}, they felt ${feel}. Choose exactly ONE emoji from this list only: ${foodEmojis} that best represents this meal. Reply with just the single emoji, nothing else.`).then(emojiText => {
       const validEmojis = [...foodEmojis];
       const match = [...(emojiText.match(/\p{Emoji_Presentation}/gu) || [])].find(e => validEmojis.includes(e));
       currentMeal.emoji = match || getMoodEmoji(currentMeal.mood);
       const e = currentMeal.emoji;
       // ask AI to explain why that specific food was chosen
-      askAI(`You chose ${e} to represent a meal eaten at a ${currentMeal.mood} pace where the person felt ${feel}. In one warm sentence, explain why this specific food fits — talk about the food itself, its natural qualities like how it grows, its texture or taste. Do not mention pace labels like GREAT or TOO FAST. Start with the food name.`).then(explanation => {
+      askAI(`You chose ${e} to represent a meal eaten at a ${currentMeal.mood} pace where the person felt ${feel}. In one warm sentence, explain why this specific food fits — talk about the food itself, its natural qualities like how it grows, its texture or taste. Mention how it fits the pace at which they ate.`).then(explanation => {
         currentMeal.emojiExplain = `${e} ${explanation.replace(/\p{Emoji_Presentation}/gu, '').trim()}`;
         allMeals.push({...currentMeal});
         localStorage.setItem('garden_meals', JSON.stringify(allMeals));
@@ -526,7 +526,7 @@ function renderGarden() {
       el.textContent = todayMeal.emojiExplain.replace(/^[^\s]+\s/, ''); // strip leading emoji from text
       el.classList.remove('loading');
     } else {
-      askAI(`A ${savedEmoji} emoji was chosen to represent a meal where someone ate ${todayMeal.bites} bites in ${todayMeal.duration} seconds and felt ${todayMeal.feel || 'neutral'}. In 1 warm sentence explain why this specific food — referring to its natural qualities like how it grows, its texture, or its taste — fits this eating experience. Then in 1 sentence give a practical digestion tip. No mention of pace labels like GREAT or TOO FAST.`).then(text => {
+      askAI(`A ${savedEmoji} emoji was chosen to represent a meal where someone ate ${todayMeal.bites} bites in ${todayMeal.duration} seconds and felt ${todayMeal.feel || 'neutral'}. In 1 warm sentence explain why this specific food — referring to its natural qualities like how it grows, its texture, or its taste — fits this eating experience. Then in 1 sentence give a practical tip unless it was a great meal. Focus on eating pace.`).then(text => {
         el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
         el.classList.remove('loading');
       });
