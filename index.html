@@ -358,7 +358,7 @@ function analyseFeel() {
         currentMeal.emojiExplain = `${e} ${explanation.replace(/\p{Emoji_Presentation}/gu, '').trim()}`;
         allMeals.push({...currentMeal});
         localStorage.setItem('table_meals', JSON.stringify(allMeals));
-        tableBtn.innerHTML = `<span>Your ${e} is ready — see your table</span><span>→</span>`;
+        tableBtn.innerHTML = `<span>Your ${e} is ready </span><span>→</span>`;
         tableBtn.style.display = 'flex';
       });
     });
@@ -385,7 +385,7 @@ function renderTable() {
 
   const streak = allMeals.length;
   document.getElementById('streakNum').textContent = streak;
-  document.getElementById('streakTitle').textContent = streak + ' meal' + (streak !== 1 ? 's' : '') + ' at the table!';
+  document.getElementById('streakTitle').textContent = streak + ' meal' + (streak !== 1 ? 's' : '') + ' eaten!';
 
   const healthy = allMeals.filter(m => getHealthScore(m) > 0.6).length;
   const droopy = allMeals.filter(m => getHealthScore(m) > 0.3 && getHealthScore(m) <= 0.6).length;
