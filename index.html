@@ -361,9 +361,7 @@ function getMoodFromPace(pace) {
 }
 
 // fallback emoji used when AI fails or meal has no saved emoji
-function getMoodEmoji(mood) {
-  return { 'GREAT': '🍅', 'GOOD': '🍓', 'OK': '🥦', 'FAST-ISH': '🌶️', 'TOO FAST': '🌱' }[mood] || '🍽️';
-}
+function getMoodEmoji() { return '🍽️'; }
 
 // hides all screens and shows the requested one; triggers render/load functions as needed
 function goTo(n) {
