@@ -242,18 +242,8 @@ function getMoodFromPace(pace) {
   return 'TOO FAST';
 }
 
-function getMoodEmoji(mood) {
-  return { 'GREAT': '🍅', 'GOOD': '🍓', 'OK': '🥦', 'FAST-ISH': '🌶️', 'TOO FAST': '🌱' }[mood] || '🌱';
-}
+function getMoodEmoji() { return '🍽️'; }
 
-function getMoodEmojiExplain(mood, emoji) {
-  const explains = {
-    'GREAT': `${emoji} Like a tomato that spends weeks ripening on the vine, you gave your meal the time it deserved.`,
-    'GOOD': `${emoji} Sweet and steady — like a strawberry that needs just the right amount of time to reach its full flavour.`,
-    'OK': `${emoji} Solid and nourishing, like broccoli — reliable, but benefits from a little more time to fully develop.`,
-    'FAST-ISH': `${emoji} Like a chilli that hits fast and sharp — your meal moved quickly, leaving little time to savour.`,
-    'TOO FAST': `${emoji} Like a sprout that barely had time to push through the soil — your meal was over before it began.`
-  };
   return explains[mood] || `${emoji} A meal at your table.`;
 }
 
@@ -284,7 +274,6 @@ function openStatCard(meal, index) {
   const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Unknown date';
   const moodKey = (meal.mood || '').replace(/[-\s]/g, '');
   const emoji = meal.emoji || getMoodEmoji(meal.mood);
-  const explain = meal.emojiExplain || getMoodEmojiExplain(meal.mood, emoji);
   document.getElementById('scTitle').textContent = date;
   document.getElementById('scEmoji').textContent = emoji;
   document.getElementById('scEmojiExplain').textContent = explain;
