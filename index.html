@@ -59,8 +59,8 @@ body { background: var(--cream); font-family: 'DM Mono', monospace; color: var(-
 .streak-label { font-size: 0.6rem; color: var(--light); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
 .health-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .health-tag { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 4px 12px; font-size: 0.62rem; color: var(--cream); }
-.table-bed { border-radius: 16px; overflow: hidden; border: 1px solid var(--placemat-edge); box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 0; background: var(--placemat); }
-.meals-scroll { background: var(--placemat); overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab; user-select: none; border-radius: 16px; }
+.table-bed { border-radius: 16px; overflow: visible; border: 1px solid var(--placemat-edge); box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 0; background: var(--placemat); }
+.meals-scroll { background: var(--placemat); overflow-x: auto; overflow-y: visible; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab; user-select: none; border-radius: 16px; }
 .meals-scroll::-webkit-scrollbar { display: none; }
 .meals-scroll.grabbing { cursor: grabbing; }
 .meals-inner { display: flex; align-items: center; gap: 0; padding: 16px 20px; height: 120px; width: max-content; min-width: 100%; }
