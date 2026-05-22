@@ -371,8 +371,7 @@ function analyseFeel() {
     currentMeal.context = context || null;
     currentMeal.mood = getMoodFromPace(currentMeal.pace);
     currentMeal.timestamp = Date.now();
-    const foodEmojis = '🍅🍓🥦🌶️🥕🍆🌽🥑🍇🍋🍊🍎🍐🍌🫐🍒🥝🍑🥭🍍🫒🧅🧄🥬🥒🫑🌿🌱';
-    askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. Their meal pace was ${currentMeal.mood}, they felt ${feel}.${contextNote} Choose exactly ONE emoji from this list only: ${foodEmojis} that best represents this meal. Reply with just the single emoji, nothing else.`).then(emojiText => {
+    askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. Their meal pace was ${currentMeal.mood}, they felt ${feel}.${contextNote} Choose exactly ONE food or drink emoji that best represents their meal. Reply with just the single emoji, nothing else.`).then(emojiText => {
       const validEmojis = [...foodEmojis];
       const match = [...(emojiText.match(/\p{Emoji_Presentation}/gu) || [])].find(e => validEmojis.includes(e));
       currentMeal.emoji = match || getMoodEmoji(currentMeal.mood);
