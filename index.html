@@ -436,7 +436,7 @@ function renderTable() {
       el.textContent = recentMeal.emojiExplain.replace(/^\S+\s/, '');
       el.classList.remove('loading');
     } else {
-      askAI(`A ${savedEmoji} emoji represents a meal: ${recentMeal.bites} bites in ${recentMeal.duration} seconds, felt ${recentMeal.feel || 'neutral'}. In 1 warm sentence explain why this food or drink fits this eating experience based on its natural qualities. Then in 1 sentence give a practical digestion tip.`).then(text => {
+      askAI(`A ${savedEmoji} emoji represents a meal: ${recentMeal.bites} bites in ${recentMeal.duration} seconds, felt ${recentMeal.feel || 'neutral'}. In 1 sentence explain why this food or drink fits this eating experience based on its qualities. It should be written in a way that is kinda satire to how AI can make up anything on the spot`).then(text => {
         el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
         el.classList.remove('loading');
       });
