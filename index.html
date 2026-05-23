@@ -576,7 +576,7 @@ document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
     if (allMeals.length >= 2) {
       const recent = allMeals.slice(-3);
       const profileCtx = buildProfileContext();
-      askAI(`Person has tracked ${allMeals.length} meals. Recent paces: ${recent.map(m => m.mood).join(', ')}.${profileCtx} You are a nutritionist. In 2 practical sentences describe the pattern and give one actionable suggestion focused on eating pace. Warm and direct.`).then(text => {
+      askAI(`Person has tracked ${allMeals.length} meals. Recent paces: ${recent.map(m => m.mood).join(', ')}.${profileCtx} You are a nutritionist. In 2 practical sentences describe the pattern and give one actionable suggestion focused on eating pace. Warm and direct. Do not add any title or header, just write the sentences directly.`).then(text => {
         document.getElementById('improvementText').textContent = text;
         document.getElementById('improvementText').classList.remove('loading');
       });
