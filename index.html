@@ -197,10 +197,11 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
           <span class="stat-card-title" id="scTitle">Meal details</span>
           <button class="stat-card-close" onclick="closeStatCard()">✕</button>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-          <span id="scEmoji" style="font-size:2rem;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.15))"></span>
-          <p id="scEmojiExplain" style="font-size:0.72rem;color:var(--mid);line-height:1.6;font-style:italic;"></p>
-        </div>
+        <p id="scMealSummary" style="font-size:0.78rem;line-height:1.7;color:var(--dark);margin-bottom:14px;"></p>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+  <span id="scEmoji" ...></span>
+  <p id="scEmojiExplain" ...></p>
+</div>
         <div class="stat-card-grid">
           <div class="stat-card-item"><span class="stat-card-val" id="scBites">—</span><span class="stat-card-label">bites</span></div>
           <div class="stat-card-item"><span class="stat-card-val" id="scDuration">—</span><span class="stat-card-label">duration</span></div>
@@ -409,6 +410,7 @@ function openStatCard(meal, index) {
   document.getElementById('scPaceBar').innerHTML = renderPaceBar(meal.mood);
   document.getElementById('statCard').classList.add('visible');
   document.getElementById('statCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('scMealSummary').textContent = meal.mealSummary || '';
 }
 
 // populates screen 1 with meal stats from the hardware and fires the first AI analysis
@@ -478,7 +480,9 @@ function analyseFeel() {
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
 
-      askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware. Dont always pick a pizza... it should actually be thought out and make a bit of sense').then(function(explanation) {
+      askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + contextNote + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
+  currentMeal.mealSummary = summary.trim();
+        askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware. Dont always pick a pizza... it should actually be thought out and make a bit of sense').then(function(explanation) {
         currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
         allMeals.push(Object.assign({}, currentMeal));
         localStorage.setItem('table_meals', JSON.stringify(allMeals));
@@ -486,6 +490,7 @@ function analyseFeel() {
         tableBtn.style.display = 'flex';
       });
     });
+  });
   });
 }
 
