@@ -479,7 +479,7 @@ function analyseFeel() {
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
 
-      askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware.').then(function(explanation) {
+      askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware. Dont always pick a pizza... it should actually be thought out and make a bit of sense').then(function(explanation) {
         currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
         allMeals.push(Object.assign({}, currentMeal));
         localStorage.setItem('table_meals', JSON.stringify(allMeals));
