@@ -206,7 +206,8 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
           <div class="stat-card-item"><span class="stat-card-val" id="scDuration">—</span><span class="stat-card-label">duration</span></div>
           <div class="stat-card-item"><span class="stat-card-val" id="scInterval">—</span><span class="stat-card-label">avg between</span></div>
         </div>
-        <div class="stat-card-tags" id="scTags"></div> <div id="scPaceBar"></div>
+        <div class="stat-card-tags" id="scTags"></div> 
+        <div id="scPaceBar"></div>
       </div>
     </div>
     <div class="explanation-box">
@@ -354,6 +355,12 @@ function getMoodFromPace() { return 'OK'; }                 // under 6 sec/bite 
 // fallback emoji used when AI fails or meal has no saved emoji
 function getMoodEmoji() { return '🍽️'; }
 
+function renderPaceBar(mood) {
+  const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
+  const level = levels[mood] || { pct: 50, color: '#8a8a3a' };
+  return '<div class="pace-bar-wrap"><div class="pace-bar-label"><span>slow</span><span>fast</span></div><div class="pace-bar-track"><div class="pace-bar-fill" style="width:' + level.pct + '%;background:' + level.color + '"></div></div></div>';
+}
+
 // hides all screens and shows the requested one; triggers render/load functions as needed
 function goTo(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -399,9 +406,9 @@ function openStatCard(meal, index) {
     ${meal.food ? `<div class="stat-card-tag">ate: ${meal.food}</div>` : ''}
     ${meal.context ? `<div class="stat-card-tag">${meal.context}</div>` : ''}
   `;
+  document.getElementById('scPaceBar').innerHTML = renderPaceBar(meal.mood);
   document.getElementById('statCard').classList.add('visible');
   document.getElementById('statCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  document.getElementById('scPaceBar').innerHTML = renderPaceBar(meal.mood);
 }
 
 // populates screen 1 with meal stats from the hardware and fires the first AI analysis
@@ -481,12 +488,6 @@ function analyseFeel() {
       });
     });
   });
-}
-
-function renderPaceBar(mood) {
-  const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
-  const level = levels[mood] || { pct: 50, color: '#8a8a3a' };
-  return '<div class="pace-bar-wrap"><div class="pace-bar-label"><span>slow</span><span>fast</span></div><div class="pace-bar-track"><div class="pace-bar-fill" style="width:' + level.pct + '%;background:' + level.color + '"></div></div></div>';
 }
 
 // builds the scrollable placemat with all saved meal emojis and fires the explanation/progress AI calls
