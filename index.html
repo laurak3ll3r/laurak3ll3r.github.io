@@ -344,13 +344,6 @@ function buildProfileContext() {
   return parts.length > 0 ? ` User profile: ${parts.join(', ')}.` : '';
 }
 
-// scores a meal 0-1 based on pace, feel, and rating — used for the mindful/moderate/rushed tags
-function getHealthScore(meal) {
-  const p = ({ 'GREAT': 1, 'GOOD': 0.8, 'OK': 0.6, 'FAST-ISH': 0.3, 'TOO FAST': 0.1 })[meal.mood] || 0.5;
-  const f = ({ 'good': 1, 'rushed': 0.4, 'distracted': 0.3, 'toofast': 0.2 })[meal.feel] || 0.5;
-  return (p + f + ((meal.rating || 3) / 5)) / 3;
-}
-
 // converts bites per minute (pace) into a mood label based on research thresholds
 function getMoodFromPace() { return 'OK'; }                 // under 6 sec/bite — very fast
 
@@ -511,14 +504,13 @@ function renderTable() {
   document.getElementById('streakTitle').textContent = streak + ' meal' + (streak !== 1 ? 's' : '') + ' at the table!';
 
   // count mindful/moderate/rushed meals for the summary tags
-  const mindful = allMeals.filter(m => getHealthScore(m) > 0.6).length;
-  const moderate = allMeals.filter(m => getHealthScore(m) > 0.3 && getHealthScore(m) <= 0.6).length;
-  const rushed = allMeals.filter(m => getHealthScore(m) <= 0.3).length;
-  document.getElementById('healthTags').innerHTML = `
-    ${mindful > 0 ? `<div class="health-tag">${mindful} mindful</div>` : ''}
-    ${moderate > 0 ? `<div class="health-tag">${moderate} moderate</div>` : ''}
-    ${rushed > 0 ? `<div class="health-tag">${rushed} rushed</div>` : ''}
-  `;
+  const moodCounts = {};
+allMeals.forEach(m => {
+  if (m.mood) moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1;
+});
+document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
+  .map(([mood, count]) => '<div class="health-tag">' + count + ' ' + mood.toLowerCase() + '</div>')
+  .join('');
 
   // create one emoji slot per saved meal
   allMeals.forEach((meal, i) => {
