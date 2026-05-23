@@ -420,7 +420,7 @@ function setupScreen1(meal) {
   document.getElementById('s1-interval').textContent = interval + 's';
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   const profileCtx = buildProfileContext();
-  askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute).${profileCtx} You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion, taking their profile into account if provided. Warm and factual, no mention of weight or overeating. No need to write "Eating Pace & Digestion" at the start`).then(text => {
+  askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute).${profileCtx} You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Be specific about the type of food if known, since soup digests differently to steak. And consider their profile Warm and factual, no mention of weight or overeating. No need to write "Eating Pace & Digestion" at the start`).then(text => {
     document.getElementById('s1-analysis').textContent = text;
     document.getElementById('s1-analysis').classList.remove('loading');
   });
@@ -457,7 +457,7 @@ function analyseFeel() {
   const foodNote = food ? ' They ate: ' + food + '.' : '';
   const contextNote = context ? ' Additional context: "' + context + '".' : '';
   const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. take into account their profile, the actual numerical eating data, what they ate, and the context. Put the label on the very first line. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. take into account their profile, the actual numerical eating data, what they ate (since that can impact pace), and the context. Put the label on the very first line. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
     const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
     const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
@@ -574,9 +574,12 @@ document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
 
     // progress section: only show after 2+ meals
     if (allMeals.length >= 2) {
-      const recent = allMeals.slice(-3);
+      const recent = allMeals.slice(-10);
       const profileCtx = buildProfileContext();
-      askAI(`Person has tracked ${allMeals.length} meals. Recent paces: ${recent.map(m => m.mood).join(', ')}.${profileCtx} You are a nutritionist. In 2 practical sentences describe the pattern and give one actionable suggestion focused on eating pace. Warm and direct. Do not add any title or header, just write the sentences directly.`).then(text => {
+      const last10 = allMeals.slice(-10);
+  const contexts = last10.filter(m => m.context).map(m => m.context).join(', ');
+  const foods = last10.filter(m => m.food).map(m => m.food).join(', ');
+  askAI('Person has tracked ' + allMeals.length + ' meals. Their last ' + last10.length + ' meal paces: ' + last10.map(m => m.mood).join(', ') + '.' + (contexts ? ' Contexts noted: ' + contexts + '.' : '') + (foods ? ' Foods eaten: ' + foods + '.' : '') + profileCtx + ' You are a nutritionist. In 2 sentences identify a specific pattern you notice — reference the actual contexts or foods if they correlate with faster or slower eating. Then give one small actionable suggestion. Warm and direct, no header.').then(text => {
         document.getElementById('improvementText').textContent = text;
         document.getElementById('improvementText').classList.remove('loading');
       });
