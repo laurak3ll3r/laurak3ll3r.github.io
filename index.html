@@ -413,7 +413,7 @@ function setupScreen1(meal) {
   document.getElementById('s1-interval').textContent = interval + 's';
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   const profileCtx = buildProfileContext();
-  askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute).${profileCtx} You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion, taking their profile into account if provided. Warm and factual, no mention of weight or overeating.`).then(text => {
+  askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute).${profileCtx} You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion, taking their profile into account if provided. Warm and factual, no mention of weight or overeating. No need to write "Eating Pace & Digestion" at the start`).then(text => {
     document.getElementById('s1-analysis').textContent = text;
     document.getElementById('s1-analysis').classList.remove('loading');
   });
