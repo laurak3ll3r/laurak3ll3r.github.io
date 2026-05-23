@@ -198,10 +198,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
           <button class="stat-card-close" onclick="closeStatCard()">✕</button>
         </div>
         <p id="scMealSummary" style="font-size:0.78rem;line-height:1.7;color:var(--dark);margin-bottom:14px;"></p>
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-  <span id="scEmoji" ...></span>
-  <p id="scEmojiExplain" ...></p>
-</div>
         <div class="stat-card-grid">
           <div class="stat-card-item"><span class="stat-card-val" id="scBites">—</span><span class="stat-card-label">bites</span></div>
           <div class="stat-card-item"><span class="stat-card-val" id="scDuration">—</span><span class="stat-card-label">duration</span></div>
@@ -396,8 +392,6 @@ function openStatCard(meal, index) {
   const emoji = meal.emoji || getMoodEmoji(meal.mood);
   const explain = meal.emojiExplain || 'No explanation saved for this meal.';
   document.getElementById('scTitle').textContent = date;
-  document.getElementById('scEmoji').textContent = emoji;
-  document.getElementById('scEmojiExplain').textContent = explain;
   document.getElementById('scBites').textContent = meal.bites;
   document.getElementById('scDuration').textContent = duration;
   document.getElementById('scInterval').textContent = interval;
