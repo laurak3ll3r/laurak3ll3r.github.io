@@ -113,7 +113,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 #loadingScreen p { font-size: 0.72rem; color: var(--mid); letter-spacing: 0.1em; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--dark); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.response-bold { font-weight: 700; color: var(--dark); }
 .pace-bar-wrap { margin-top: 14px; margin-bottom: 4px; }
 .pace-bar-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); margin-bottom: 6px; display: flex; justify-content: space-between; }
 .pace-bar-track { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
@@ -207,7 +206,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
           <div class="stat-card-item"><span class="stat-card-val" id="scDuration">—</span><span class="stat-card-label">duration</span></div>
           <div class="stat-card-item"><span class="stat-card-val" id="scInterval">—</span><span class="stat-card-label">avg between</span></div>
         </div>
-        <div class="stat-card-tags" id="scTags"></div>
+        <div class="stat-card-tags" id="scTags"></div> <div id="scPaceBar"></div>
       </div>
     </div>
     <div class="explanation-box">
@@ -323,12 +322,6 @@ function initDragScroll(el) {
   el.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - el.offsetLeft; el.scrollLeft = scrollLeft - (x - startX); });
 }
 
-function formatResponse(text) {
-  const sentences = text.match(/[^.!?]+[.!?]+/g);
-  if (!sentences || sentences.length === 0) return text;
-  return '<span class="response-bold">' + sentences[0].trim() + '</span> ' + sentences.slice(1).join(' ');
-}
-
 // sends a prompt to the Cloudflare Worker which calls the Anthropic API and returns the text
 async function askAI(prompt) {
   try {
@@ -408,7 +401,7 @@ function openStatCard(meal, index) {
   `;
   document.getElementById('statCard').classList.add('visible');
   document.getElementById('statCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  document.getElementById('scTags').insertAdjacentHTML('afterend', renderPaceBar(meal.mood));
+  document.getElementById('scPaceBar').innerHTML = renderPaceBar(meal.mood);
 }
 
 // populates screen 1 with meal stats from the hardware and fires the first AI analysis
@@ -421,7 +414,7 @@ function setupScreen1(meal) {
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   const profileCtx = buildProfileContext();
   askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute).${profileCtx} You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion, taking their profile into account if provided. Warm and factual, no mention of weight or overeating.`).then(text => {
-    document.getElementById('s1-analysis').innerHTML = formatResponse(text);
+    document.getElementById('s1-analysis').textContent = text;
     document.getElementById('s1-analysis').classList.remove('loading');
   });
 }
@@ -574,7 +567,7 @@ document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
       el.classList.remove('loading');
     } else {
       askAI(`A ${savedEmoji} emoji represents a meal: ${recentMeal.bites} bites in ${recentMeal.duration} seconds, felt ${recentMeal.feel || 'neutral'}. In 1 sentence explain why this food or drink fits — make it satirical, like AI confidently inventing a ridiculous reason.`).then(text => {
-        el.innerHTML = formatResponse(text).replace(/\p{Emoji_Presentation}/gu, '').trim();
+        el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
         el.classList.remove('loading');
       });
     }
@@ -584,7 +577,7 @@ document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
       const recent = allMeals.slice(-3);
       const profileCtx = buildProfileContext();
       askAI(`Person has tracked ${allMeals.length} meals. Recent paces: ${recent.map(m => m.mood).join(', ')}.${profileCtx} You are a nutritionist. In 2 practical sentences describe the pattern and give one actionable suggestion focused on eating pace. Warm and direct.`).then(text => {
-        document.getElementById('improvementText').innerHTML = formatResponse(text);
+        document.getElementById('improvementText').textContent = text;
         document.getElementById('improvementText').classList.remove('loading');
       });
     } else {
