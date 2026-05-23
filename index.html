@@ -450,16 +450,17 @@ function analyseFeel() {
   tableBtn.style.display = 'none';
 
   const feelLabels = { rushed: 'rushed with no choice', distracted: 'distracted by phone or screen', good: 'good and enjoyed the meal', toofast: 'too fast for no particular reason' };
-  const foodNote = food ? ` They ate: ${food}.` : '';
-  const contextNote = context ? ` Additional context: "${context}".` : '';
+  const foodNote = food ? ' They ate: ' + food + '.' : '';
+  const contextNote = context ? ' Additional context: "' + context + '".' : '';
+  const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
 
-// AI call 1: feedback + pace classification based on all context
-  askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds (${(currentMeal.duration / currentMeal.bites).toFixed(1)} seconds per bite). They felt: "${feelLabels[feel]}".${foodNote}${contextNote}${profileCtx} You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST — taking into account their profile, what they ate, and the context (e.g. soup is eaten faster than steak, an athlete may need more calories quickly, etc). Put the label on the very first line alone. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm, focused on feeling good after a meal rather than overeating.`).then(text => {
-    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST — taking into account their profile, what they ate, and the context. Put the label on the very first line alone. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
+    const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
-    const moodLine = lines.find(l => validMoods.includes(l.toUpperCase()));
+    const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
     const mood = moodLine ? moodLine.toUpperCase() : 'OK';
-    const feedback = lines.filter(l => !validMoods.includes(l.toUpperCase())).join(' ');
+    const feedback = lines.filter(function(l) { return !validMoods.includes(l.toUpperCase()); }).join(' ');
+
     feelResponseText.textContent = feedback;
     feelResponseText.classList.remove('loading');
 
@@ -469,18 +470,16 @@ function analyseFeel() {
     currentMeal.mood = mood;
     currentMeal.timestamp = Date.now();
 
-    // AI call 2: pick one food/drink emoji to represent this meal
-    askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. Pace: ${currentMeal.mood}, felt: ${feel}.${foodNote}${contextNote} Choose exactly ONE food or drink emoji that best represents this meal. Reply with just the single emoji, nothing else.`).then(emojiText => {
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + contextNote + ' Choose exactly ONE food or drink emoji that best represents this meal. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
-      currentMeal.emoji = match ? match[0] : getMoodEmoji(currentMeal.mood);
+      currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
 
-      // AI call 3: funny overexaggerated explanation for why that emoji was chosen
-      askAI(`You chose ${e} to represent a meal eaten at a ${currentMeal.mood} pace where the person felt ${feel}.${foodNote}${contextNote} In one funny, overexaggerated sentence explain why this food fits. make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware.`).then(explanation => {
-        currentMeal.emojiExplain = `${e} ${explanation.replace(/\p{Emoji_Presentation}/gu, '').trim()}`;
-        allMeals.push({...currentMeal});
+      askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware.').then(function(explanation) {
+        currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
+        allMeals.push(Object.assign({}, currentMeal));
         localStorage.setItem('table_meals', JSON.stringify(allMeals));
-        tableBtn.innerHTML = `<span>Your ${e} is ready — see your table</span><span>→</span>`;
+        tableBtn.innerHTML = '<span>Your ' + e + ' is ready — see your table</span><span>→</span>';
         tableBtn.style.display = 'flex';
       });
     });
