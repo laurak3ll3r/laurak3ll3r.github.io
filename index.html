@@ -457,8 +457,7 @@ function analyseFeel() {
   const foodNote = food ? ' They ate: ' + food + '.' : '';
   const contextNote = context ? ' Additional context: "' + context + '".' : '';
   const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
-
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST — taking into account their profile, the actual raw data, what they ate, and the context. Put the label on the very first line alone in bold. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. take into account their profile, the actual numerical eating data, what they ate, and the context. Put the label on the very first line. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
     const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
     const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
