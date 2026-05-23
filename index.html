@@ -352,12 +352,7 @@ function getHealthScore(meal) {
 }
 
 // converts bites per minute (pace) into a mood label based on research thresholds
-function getMoodFromPace(pace) {
-  if (pace < 2) return 'GREAT';       // 30+ sec/bite — very healthy
-  if (pace < 3.5) return 'GOOD';      // 17-30 sec/bite — healthy
-  if (pace < 6) return 'OK';          // 10-17 sec/bite — moderate
-  if (pace < 10) return 'FAST-ISH';   // 6-10 sec/bite — fast
-  return 'TOO FAST';                   // under 6 sec/bite — very fast
+function getMoodFromPace() { return 'OK'; }                 // under 6 sec/bite — very fast
 }
 
 // fallback emoji used when AI fails or meal has no saved emoji
@@ -458,15 +453,20 @@ function analyseFeel() {
   const foodNote = food ? ` They ate: ${food}.` : '';
   const contextNote = context ? ` Additional context: "${context}".` : '';
 
-  // AI call 1: 2-sentence digestion feedback personalised by profile, food, and context
-  askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}".${foodNote}${contextNote}${profileCtx} You are a nutritionist. In 2 sentences explain how this context affects digestion and what small habit they could try next time. Practical and warm, focused on feeling good after a meal rather than overeating`).then(text => {
-    feelResponseText.textContent = text;
+// AI call 1: feedback + pace classification based on all context
+  askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds (${(currentMeal.duration / currentMeal.bites).toFixed(1)} seconds per bite). They felt: "${feelLabels[feel]}".${foodNote}${contextNote}${profileCtx} You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST — taking into account their profile, what they ate, and the context (e.g. soup is eaten faster than steak, an athlete may need more calories quickly, etc). Put the label on the very first line alone. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm, focused on feeling good after a meal rather than overeating.`).then(text => {
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
+    const moodLine = lines.find(l => validMoods.includes(l.toUpperCase()));
+    const mood = moodLine ? moodLine.toUpperCase() : 'OK';
+    const feedback = lines.filter(l => !validMoods.includes(l.toUpperCase())).join(' ');
+    feelResponseText.textContent = feedback;
     feelResponseText.classList.remove('loading');
 
     currentMeal.feel = feel;
     currentMeal.food = food || null;
     currentMeal.context = context || null;
-    currentMeal.mood = getMoodFromPace(currentMeal.pace);
+    currentMeal.mood = mood;
     currentMeal.timestamp = Date.now();
 
     // AI call 2: pick one food/drink emoji to represent this meal
