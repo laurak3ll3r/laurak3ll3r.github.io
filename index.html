@@ -459,7 +459,7 @@ function analyseFeel() {
   const contextNote = context ? ` Additional context: "${context}".` : '';
 
   // AI call 1: 2-sentence digestion feedback personalised by profile, food, and context
-  askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}".${foodNote}${contextNote}${profileCtx} You are a nutritionist. In 2 sentences explain how this context affects digestion and what small habit they could try next time. Practical and warm, not preachy.`).then(text => {
+  askAI(`A person ate ${currentMeal.bites} bites in ${currentMeal.duration} seconds. They felt: "${feelLabels[feel]}".${foodNote}${contextNote}${profileCtx} You are a nutritionist. In 2 sentences explain how this context affects digestion and what small habit they could try next time. Practical and warm, focused on feeling good after a meal rather than overeating`).then(text => {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
 
@@ -476,7 +476,7 @@ function analyseFeel() {
       const e = currentMeal.emoji;
 
       // AI call 3: funny overexaggerated explanation for why that emoji was chosen
-      askAI(`You chose ${e} to represent a meal eaten at a ${currentMeal.mood} pace where the person felt ${feel}.${foodNote}${contextNote} In one funny, overexaggerated sentence explain why this food fits — make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware.`).then(explanation => {
+      askAI(`You chose ${e} to represent a meal eaten at a ${currentMeal.mood} pace where the person felt ${feel}.${foodNote}${contextNote} In one funny, overexaggerated sentence explain why this food fits. make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware.`).then(explanation => {
         currentMeal.emojiExplain = `${e} ${explanation.replace(/\p{Emoji_Presentation}/gu, '').trim()}`;
         allMeals.push({...currentMeal});
         localStorage.setItem('table_meals', JSON.stringify(allMeals));
