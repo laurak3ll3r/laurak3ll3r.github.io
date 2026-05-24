@@ -453,7 +453,7 @@ function analyseFeel() {
   const foodNote = food ? ' They ate: ' + food + '.' : '';
   const contextNote = context ? ' Additional context: "' + context + '".' : '';
   const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. take into account their profile, the actual numerical eating data, what they ate (since that can impact pace), and the context. Put the label on the very first line. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. take into account their profile (but stay kind), the actual numerical eating data, what they ate (since that can impact pace), and the context. Put the label on the very first line. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
     const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
     const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
@@ -469,14 +469,14 @@ function analyseFeel() {
     currentMeal.mood = mood;
     currentMeal.timestamp = Date.now();
 
-    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + contextNote + ' Choose exactly ONE food or drink emoji that best represents this meal. Reply with just the single emoji, nothing else.').then(function(emojiText) {
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + contextNote + ' Choose exactly ONE food or drink emoji that best represents this meal. Reply with just the single emoji, nothing else. Actually think about it dont always pick pizza it should actually be thought out and make sense').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
 
       askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + contextNote + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
   currentMeal.mealSummary = summary.trim();
-        askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware. Dont always pick a pizza... it should actually be thought out and make a bit of sense').then(function(explanation) {
+        askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware.').then(function(explanation) {
         currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
         allMeals.push(Object.assign({}, currentMeal));
         localStorage.setItem('table_meals', JSON.stringify(allMeals));
@@ -565,7 +565,7 @@ document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
       el.textContent = recentMeal.emojiExplain.replace(/^\S+\s/, '');
       el.classList.remove('loading');
     } else {
-      askAI(`A ${savedEmoji} emoji represents a meal: ${recentMeal.bites} bites in ${recentMeal.duration} seconds, felt ${recentMeal.feel || 'neutral'}. In 1 sentence explain why this food or drink fits — make it satirical, like AI confidently inventing a ridiculous reason.`).then(text => {
+      askAI(`A ${savedEmoji} emoji represents a meal: ${recentMeal.bites} bites in ${recentMeal.duration} seconds, felt ${recentMeal.feel || 'neutral'}. In 1 sentence explain why this food or drink fits. make it satirical, like AI confidently inventing a ridiculous reason.`).then(text => {
         el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
         el.classList.remove('loading');
       });
@@ -578,7 +578,7 @@ document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
       const last10 = allMeals.slice(-10);
   const contexts = last10.filter(m => m.context).map(m => m.context).join(', ');
   const foods = last10.filter(m => m.food).map(m => m.food).join(', ');
-  askAI('Person has tracked ' + allMeals.length + ' meals. Their last ' + last10.length + ' meal paces: ' + last10.map(m => m.mood).join(', ') + '.' + (contexts ? ' Contexts noted: ' + contexts + '.' : '') + (foods ? ' Foods eaten: ' + foods + '.' : '') + profileCtx + ' You are a nutritionist. In 2 sentences identify a specific pattern you notice — reference the actual contexts or foods if they correlate with faster or slower eating. Then give one small actionable suggestion. Warm and direct, no header.').then(text => {
+  askAI('Person has tracked ' + allMeals.length + ' meals. Their last ' + last10.length + ' meal paces: ' + last10.map(m => m.mood).join(', ') + '.' + (contexts ? ' Contexts noted: ' + contexts + '.' : '') + (foods ? ' Foods eaten: ' + foods + '.' : '') + profileCtx + ' You are a nutritionist. In 2 sentences identify a specific pattern you notice. reference the actual contexts or foods if they correlate with faster or slower eating. Then give one small actionable suggestion. Warm and direct, no header.').then(text => {
         document.getElementById('improvementText').textContent = text;
         document.getElementById('improvementText').classList.remove('loading');
       });
