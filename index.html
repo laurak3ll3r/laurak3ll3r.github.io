@@ -127,7 +127,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 <div class="screen" id="screen1">
   <div class="page">
     <p class="page-label">Meal complete</p>
-    <h1 class="page-title">Here's how<br>you ate</h1>
+    <h1 class="page-title">Meal<br>recap:</h1>
     <p class="page-sub" id="mealTime">Today</p>
     <div class="stat-grid">
       <div class="stat-box"><span class="val" id="s1-duration">—</span><span class="unit">meal duration</span></div>
@@ -138,16 +138,15 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
       <div class="analysis-label">small meal analysis</div>
       <div class="analysis-text loading" id="s1-analysis">analysing your meal...</div>
     </div>
-    <button class="btn-primary" onclick="goTo(2)"><span>How did this feel?</span><span>→</span></button>
+    <button class="btn-primary" onclick="goTo(2)"><span>How did your meal feel?</span><span>→</span></button>
   </div>
 </div>
 
 <!-- SCREEN 2: HOW DID IT FEEL -->
 <div class="screen" id="screen2">
   <div class="page">
-    <p class="page-label">Your turn!</p>
     <h1 class="page-title">How did the<br>meal feel?</h1>
-    <p class="page-sub">Helps us understand the full picture</p>
+    <p class="page-sub">This provides the context we need.</p>
     <div class="feel-grid">
       <button class="feel-btn" onclick="selectFeel('rushed', this)"><span class="feel-emoji">🏃</span><span class="feel-title">I was rushed</span><span class="feel-sub">no choice</span></button>
       <button class="feel-btn" onclick="selectFeel('distracted', this)"><span class="feel-emoji">😝</span><span class="feel-title">Distracted</span><span class="feel-sub">phone / screen</span></button>
@@ -480,7 +479,7 @@ function analyseFeel() {
         currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
         allMeals.push(Object.assign({}, currentMeal));
         localStorage.setItem('table_meals', JSON.stringify(allMeals));
-        tableBtn.innerHTML = '<span>Your ' + e + ' is ready — see your table</span><span>→</span>';
+        tableBtn.innerHTML = '<span>Your ' + e + ' is ready! click to see your table</span><span>→</span>';
         tableBtn.style.display = 'flex';
       });
     });
@@ -496,7 +495,7 @@ function renderTable() {
 
   // empty state
   if (allMeals.length === 0) {
-    inner.innerHTML = '<div class="empty-table">no meals yet — start eating</div>';
+    inner.innerHTML = '<div class="empty-table">no meals yet... start eating!</div>';
     document.getElementById('streakNum').textContent = '0';
     document.getElementById('streakTitle').textContent = 'meals tracked!';
     document.getElementById('healthTags').innerHTML = '';
