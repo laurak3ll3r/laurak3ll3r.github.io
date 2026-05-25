@@ -134,8 +134,12 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
       <div class="stat-box"><span class="val" id="s1-bites">—</span><span class="unit">bites taken</span></div>
       <div class="stat-box"><span class="val" id="s1-interval">—</span><span class="unit">avg between bites</span></div>
     </div>
+    <div class="context-box">
+      <span class="context-label">what did you eat?</span>
+      <textarea class="context-input" id="foodInput" rows="2" placeholder="e.g. pasta, chicken salad, soup..."></textarea>
+    </div>
     <div class="analysis-box">
-      <div class="analysis-label">small meal analysis</div>
+      <div class="analysis-label">meal analysis</div>
       <div class="analysis-text loading" id="s1-analysis">analysing your meal...</div>
     </div>
     <button class="btn-primary" onclick="goTo(2)"><span>How did your meal feel?</span><span>→</span></button>
@@ -152,10 +156,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
       <button class="feel-btn" onclick="selectFeel('distracted', this)"><span class="feel-emoji">😝</span><span class="feel-title">Distracted</span><span class="feel-sub">phone / screen</span></button>
       <button class="feel-btn" onclick="selectFeel('good', this)"><span class="feel-emoji">😊</span><span class="feel-title">Felt good</span><span class="feel-sub">enjoyed the meal</span></button>
       <button class="feel-btn" onclick="selectFeel('toofast', this)"><span class="feel-emoji">😮</span><span class="feel-title">Too fast</span><span class="feel-sub">no reason</span></button>
-    </div>
-    <div class="context-box">
-      <span class="context-label">what did you eat?</span>
-      <textarea class="context-input" id="foodInput" rows="2" placeholder="e.g. pasta, chicken salad, soup..."></textarea>
     </div>
     <div class="context-box">
       <span class="context-label">anything else? (optional)</span>
@@ -186,7 +186,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     <div class="table-bed">
       <div class="meals-scroll" id="mealsScroll">
         <div class="meals-inner" id="mealsInner">
-          <div class="empty-table">no meals yet — start eating</div>
+          <div class="empty-table">no meals yet... start eating!</div>
         </div>
       </div>
     </div>
@@ -202,7 +202,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
           <div class="stat-card-item"><span class="stat-card-val" id="scDuration">—</span><span class="stat-card-label">duration</span></div>
           <div class="stat-card-item"><span class="stat-card-val" id="scInterval">—</span><span class="stat-card-label">avg between</span></div>
         </div>
-        <div class="stat-card-tags" id="scTags"></div> 
+        <div class="stat-card-tags" id="scTags"></div>
         <div id="scPaceBar"></div>
       </div>
     </div>
@@ -231,7 +231,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
       <button class="nav-link" onclick="goTo(3)">← table</button>
     </div>
     <p class="page-sub">Helps us understand what a fast or slow meal really means for you.</p>
-
     <div class="profile-section">
       <span class="profile-section-title">Age range</span>
       <div class="chip-grid" id="chips-age">
@@ -242,7 +241,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
         <div class="chip" onclick="selectChip('age','50s+',this)">50s+</div>
       </div>
     </div>
-
     <div class="profile-section">
       <span class="profile-section-title">Biological sex</span>
       <div class="chip-grid" id="chips-sex">
@@ -251,7 +249,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
         <div class="chip" onclick="selectChip('sex','prefer not to say',this)">prefer not to say</div>
       </div>
     </div>
-
     <div class="profile-section">
       <span class="profile-section-title">General body size</span>
       <div class="chip-grid" id="chips-body">
@@ -260,7 +257,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
         <div class="chip" onclick="selectChip('body','large frame',this)">large frame</div>
       </div>
     </div>
-
     <div class="profile-section">
       <span class="profile-section-title">Activity level</span>
       <div class="chip-grid" id="chips-activity">
@@ -270,7 +266,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
         <div class="chip" onclick="selectChip('activity','athlete',this)">athlete</div>
       </div>
     </div>
-
     <div class="profile-section">
       <span class="profile-section-title">Typical meal size</span>
       <div class="chip-grid" id="chips-mealsize">
@@ -279,7 +274,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
         <div class="chip" onclick="selectChip('mealsize','large portions',this)">large portions</div>
       </div>
     </div>
-
     <div class="profile-section">
       <span class="profile-section-title">How fast do you usually eat?</span>
       <div class="chip-grid" id="chips-naturalspeed">
@@ -288,12 +282,10 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
         <div class="chip" onclick="selectChip('naturalspeed','naturally fast',this)">naturally fast</div>
       </div>
     </div>
-
     <div class="profile-section">
       <span class="profile-section-title">Any dietary notes? (optional)</span>
       <textarea class="context-input" id="dietaryNotes" rows="2" placeholder="e.g. vegetarian, food allergies, digestive issues..."></textarea>
     </div>
-
     <button class="btn-primary" onclick="saveProfile()"><span>Save profile</span><span>→</span></button>
     <p class="profile-saved" id="profileSaved">profile saved</p>
   </div>
@@ -303,14 +295,12 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 const WORKER_URL = 'https://black-dream-a9af.laurak3ller.workers.dev';
 const GIST_ID = '534ae267964caa7772a5ae532a013841';
 
-// global state — current meal from hardware, all saved meals, selected card index, selected feel button, saved user profile
 let currentMeal = null;
 let allMeals = JSON.parse(localStorage.getItem('table_meals') || '[]');
 let selectedMealIndex = null;
 let selectedFeel = null;
 let userProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
 
-// drag-to-scroll: lets user drag the placemat left/right with mouse
 function initDragScroll(el) {
   let isDown = false, startX, scrollLeft;
   el.addEventListener('mousedown', e => { isDown = true; el.classList.add('grabbing'); startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; });
@@ -319,36 +309,29 @@ function initDragScroll(el) {
   el.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - el.offsetLeft; el.scrollLeft = scrollLeft - (x - startX); });
 }
 
-// sends a prompt to the Cloudflare Worker which calls the Anthropic API and returns the text
 async function askAI(prompt) {
   try {
     const res = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
     const data = await res.json();
     if (data.error) return 'Error: ' + data.error;
     const raw = data.text || 'No response.';
-    // strip markdown formatting from AI response
     return raw.replace(/^#+\s*/gm, '').replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1').replace(/^[-*]\s+/gm, '').replace(/\n{2,}/g, ' ').trim();
   } catch(e) { return 'Error: ' + e.message; }
 }
 
-// builds a string summarising the user's profile to inject into AI prompts
 function buildProfileContext() {
   if (!userProfile || Object.keys(userProfile).length === 0) return '';
   const parts = [];
-  if (userProfile.age) parts.push(`age: ${userProfile.age}`);
-  if (userProfile.sex) parts.push(`biological sex: ${userProfile.sex}`);
-  if (userProfile.body) parts.push(`body frame: ${userProfile.body}`);
-  if (userProfile.activity) parts.push(`activity level: ${userProfile.activity}`);
-  if (userProfile.mealsize) parts.push(`typical meal size: ${userProfile.mealsize}`);
-  if (userProfile.naturalspeed) parts.push(`naturally eats: ${userProfile.naturalspeed}`);
-  if (userProfile.dietary) parts.push(`dietary notes: ${userProfile.dietary}`);
-  return parts.length > 0 ? ` User profile: ${parts.join(', ')}.` : '';
+  if (userProfile.age) parts.push('age: ' + userProfile.age);
+  if (userProfile.sex) parts.push('biological sex: ' + userProfile.sex);
+  if (userProfile.body) parts.push('body frame: ' + userProfile.body);
+  if (userProfile.activity) parts.push('activity level: ' + userProfile.activity);
+  if (userProfile.mealsize) parts.push('typical meal size: ' + userProfile.mealsize);
+  if (userProfile.naturalspeed) parts.push('naturally eats: ' + userProfile.naturalspeed);
+  if (userProfile.dietary) parts.push('dietary notes: ' + userProfile.dietary);
+  return parts.length > 0 ? ' User profile: ' + parts.join(', ') + '.' : '';
 }
 
-// converts bites per minute (pace) into a mood label based on research thresholds
-function getMoodFromPace() { return 'OK'; }                 // under 6 sec/bite — very fast
-
-// fallback emoji used when AI fails or meal has no saved emoji
 function getMoodEmoji() { return '🍽️'; }
 
 function renderPaceBar(mood) {
@@ -357,7 +340,6 @@ function renderPaceBar(mood) {
   return '<div class="pace-bar-wrap"><div class="pace-bar-label"><span>slow</span><span>fast</span></div><div class="pace-bar-track"><div class="pace-bar-fill" style="width:' + level.pct + '%;background:' + level.color + '"></div></div></div>';
 }
 
-// hides all screens and shows the requested one; triggers render/load functions as needed
 function goTo(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen' + n).classList.add('active');
@@ -365,7 +347,6 @@ function goTo(n) {
   if (n === 4) loadProfile();
 }
 
-// deletes all saved meals from localStorage and re-renders the empty table
 function clearTable() {
   if (confirm('Clear all meal history? This cannot be undone.')) {
     localStorage.removeItem('table_meals');
@@ -374,13 +355,11 @@ function clearTable() {
   }
 }
 
-// hides the stat card popup and resets the selected index
 function closeStatCard() {
   document.getElementById('statCard').classList.remove('visible');
   selectedMealIndex = null;
 }
 
-// opens the stat card for a meal when its emoji is clicked; clicking the same one again closes it
 function openStatCard(meal, index) {
   if (selectedMealIndex === index) { closeStatCard(); return; }
   selectedMealIndex = index;
@@ -388,25 +367,23 @@ function openStatCard(meal, index) {
   const interval = meal.bites > 0 ? Math.round(meal.duration / meal.bites) + 's' : '—';
   const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Unknown date';
   const moodKey = (meal.mood || '').replace(/[-\s]/g, '');
-  const emoji = meal.emoji || getMoodEmoji(meal.mood);
-  const explain = meal.emojiExplain || 'No explanation saved for this meal.';
   document.getElementById('scTitle').textContent = date;
+  document.getElementById('scMealSummary').textContent = meal.mealSummary || '';
   document.getElementById('scBites').textContent = meal.bites;
   document.getElementById('scDuration').textContent = duration;
   document.getElementById('scInterval').textContent = interval;
-  document.getElementById('scTags').innerHTML = `
-    <div class="stat-card-tag mood-${moodKey}">${meal.mood}</div>
-    ${meal.feel ? `<div class="stat-card-tag">felt: ${meal.feel}</div>` : ''}
-    ${meal.food ? `<div class="stat-card-tag">ate: ${meal.food}</div>` : ''}
-    ${meal.context ? `<div class="stat-card-tag">${meal.context}</div>` : ''}
-  `;
+  document.getElementById('scTags').innerHTML =
+    '<div class="stat-card-tag mood-' + moodKey + '">' + meal.mood + '</div>' +
+    (meal.feel ? '<div class="stat-card-tag">felt: ' + meal.feel + '</div>' : '') +
+    (meal.food ? '<div class="stat-card-tag">ate: ' + meal.food + '</div>' : '') +
+    (meal.food_weight_g ? '<div class="stat-card-tag">' + meal.food_weight_g + 'g</div>' : '') +
+    (meal.context ? '<div class="stat-card-tag">' + meal.context + '</div>' : '');
   document.getElementById('scPaceBar').innerHTML = renderPaceBar(meal.mood);
   document.getElementById('statCard').classList.add('visible');
   document.getElementById('statCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  document.getElementById('scMealSummary').textContent = meal.mealSummary || '';
 }
 
-// populates screen 1 with meal stats from the hardware and fires the first AI analysis
+// screen 1: populate stats, ask for food, then fire AI analysis using food + weight
 function setupScreen1(meal) {
   const duration = meal.duration < 60 ? meal.duration + 's' : (Math.round(meal.duration / 60 * 10) / 10) + 'm';
   const interval = meal.bites > 0 ? Math.round(meal.duration / meal.bites) : 0;
@@ -414,14 +391,33 @@ function setupScreen1(meal) {
   document.getElementById('s1-bites').textContent = meal.bites;
   document.getElementById('s1-interval').textContent = interval + 's';
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  const profileCtx = buildProfileContext();
-  askAI(`A person finished a meal: ${meal.bites} bites in ${meal.duration} seconds (${Math.round(meal.pace)} bites per minute).${profileCtx} You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Be specific about the type of food if known, since soup digests differently to steak. And consider their profile Warm and factual, no mention of weight or overeating. Don't write "Eating Pace & Digestion" at the start`).then(text => {
-    document.getElementById('s1-analysis').textContent = text;
-    document.getElementById('s1-analysis').classList.remove('loading');
+
+  // watch the food input — re-run analysis when user finishes typing
+  const foodEl = document.getElementById('foodInput');
+  let debounceTimer = null;
+  function runAnalysis() {
+    const food = foodEl.value.trim();
+    const weightNote = meal.food_weight_g ? ' The plate weighed ' + meal.food_weight_g + 'g.' : '';
+    const foodNote = food ? ' They ate: ' + food + '.' : '';
+    const profileCtx = buildProfileContext();
+    const secsPerBite = meal.bites > 0 ? (meal.duration / meal.bites).toFixed(1) : '?';
+    const el = document.getElementById('s1-analysis');
+    el.textContent = 'analysing...';
+    el.classList.add('loading');
+    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Consider the food type and plate weight if provided — 600g of steak requires more chewing than 300g of soup. Be specific and warm. No headers, no mention of weight loss.').then(text => {
+      el.textContent = text;
+      el.classList.remove('loading');
+    });
+  }
+  // run immediately on load
+  runAnalysis();
+  // re-run when food input changes (debounced)
+  foodEl.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(runAnalysis, 1200);
   });
 }
 
-// highlights the selected feel button and shows the analyse button; resets previous AI response
 function selectFeel(feel, btn) {
   selectedFeel = feel;
   document.querySelectorAll('.feel-btn').forEach(b => b.classList.remove('selected'));
@@ -431,7 +427,6 @@ function selectFeel(feel, btn) {
   document.getElementById('tableBtn').style.display = 'none';
 }
 
-// runs all three AI calls in sequence: digestion feedback → emoji → funny explanation
 function analyseFeel() {
   if (!selectedFeel) return;
   const feel = selectedFeel;
@@ -450,9 +445,13 @@ function analyseFeel() {
 
   const feelLabels = { rushed: 'rushed with no choice', distracted: 'distracted by phone or screen', good: 'good and enjoyed the meal', toofast: 'too fast for no particular reason' };
   const foodNote = food ? ' They ate: ' + food + '.' : '';
+  const weightNote = currentMeal.food_weight_g ? ' Plate weight: ' + currentMeal.food_weight_g + 'g.' : '';
   const contextNote = context ? ' Additional context: "' + context + '".' : '';
   const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite). They felt: "' + feelLabels[feel] + '".' + foodNote + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. take into account their profile (but stay kind), the actual numerical eating data, what they ate (since that can impact pace), and the context. Put the label on the very first line. Then on the next lines write 2 sentences: explain how this context affects digestion and what small habit they could try. Practical and warm.').then(text => {
+
+  // AI call 1: classify pace + digestion feedback
+  // food weight is used here so AI can judge whether this was genuinely fast for this food
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' They felt: "' + feelLabels[feel] + '".' + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. Consider: the seconds per bite, the plate weight (heavier meals generally need slower eating), the food type (soup vs steak vs salad), the person\'s profile, and the context. Put the label on the very first line alone. Then write 2 sentences: how this affects digestion and one small habit to try next time. Warm and practical.').then(text => {
     const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
     const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
@@ -468,32 +467,34 @@ function analyseFeel() {
     currentMeal.mood = mood;
     currentMeal.timestamp = Date.now();
 
-    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + contextNote + ' Choose exactly ONE food or drink emoji that best represents this meal. Reply with just the single emoji, nothing else. Actually think about it dont always pick pizza it should actually be thought out and make sense').then(function(emojiText) {
+    // AI call 2: pick emoji
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + weightNote + contextNote + ' Choose exactly ONE food or drink emoji that best represents this meal. Think carefully — consider what they ate, how much, and how they felt. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
 
-      askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + contextNote + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
-  currentMeal.mealSummary = summary.trim();
-        askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Make it satirical, like AI confidently inventing a ridiculous connection. Keep it light and self-aware.').then(function(explanation) {
-        currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
-        allMeals.push(Object.assign({}, currentMeal));
-        localStorage.setItem('table_meals', JSON.stringify(allMeals));
-        tableBtn.innerHTML = '<span>Your ' + e + ' is ready! click to see your table</span><span>→</span>';
-        tableBtn.style.display = 'flex';
+      // AI call 3: plain meal summary for the stat card
+      askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + weightNote + contextNote + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
+        currentMeal.mealSummary = summary.trim();
+
+        // AI call 4: funny satirical explanation for the emoji
+        askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Satirical, like AI confidently inventing a ridiculous connection. Light and self-aware.').then(function(explanation) {
+          currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
+          allMeals.push(Object.assign({}, currentMeal));
+          localStorage.setItem('table_meals', JSON.stringify(allMeals));
+          tableBtn.innerHTML = '<span>Your ' + e + ' is ready — see your table</span><span>→</span>';
+          tableBtn.style.display = 'flex';
+        });
       });
     });
   });
-  });
 }
 
-// builds the scrollable placemat with all saved meal emojis and fires the explanation/progress AI calls
 function renderTable() {
   const inner = document.getElementById('mealsInner');
   inner.innerHTML = '';
   closeStatCard();
 
-  // empty state
   if (allMeals.length === 0) {
     inner.innerHTML = '<div class="empty-table">no meals yet... start eating!</div>';
     document.getElementById('streakNum').textContent = '0';
@@ -507,77 +508,65 @@ function renderTable() {
     return;
   }
 
-  // update meal count and title
   const streak = allMeals.length;
   document.getElementById('streakNum').textContent = streak;
   document.getElementById('streakTitle').textContent = streak + ' meal' + (streak !== 1 ? 's' : '') + ' at the table!';
 
-  // count mindful/moderate/rushed meals for the summary tags
   const moodCounts = {};
-allMeals.forEach(m => {
-  if (m.mood) moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1;
-});
-document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
-  .map(([mood, count]) => '<div class="health-tag">' + count + ' ' + mood.toLowerCase() + '</div>')
-  .join('');
+  allMeals.forEach(m => { if (m.mood) moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1; });
+  document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
+    .map(function(entry) { return '<div class="health-tag">' + entry[1] + ' ' + entry[0].toLowerCase() + '</div>'; })
+    .join('');
 
-  // create one emoji slot per saved meal
   allMeals.forEach((meal, i) => {
     const isRecent = i === allMeals.length - 1;
-    const emoji = meal.emoji || getMoodEmoji(meal.mood);
+    const emoji = meal.emoji || getMoodEmoji();
     const slot = document.createElement('div');
     slot.className = 'meal-slot';
-    slot.style.animationDelay = `${i * 0.05}s`;
+    slot.style.animationDelay = i * 0.05 + 's';
     const date = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
     const duration = meal.duration < 60 ? meal.duration + 's' : (Math.round(meal.duration / 60 * 10) / 10) + 'm';
-    slot.innerHTML = `
-      <div class="tip">${date}<br>${meal.bites} bites · ${duration}<br>${meal.mood}${meal.food ? ' · ' + meal.food : ''}</div>
-      <span class="meal-emoji" style="animation-delay:${i * 0.05}s">${emoji}</span>
-      ${isRecent ? '<div class="recent-marker">most recent</div>' : ''}
-    `;
+    slot.innerHTML =
+      '<div class="tip">' + date + '<br>' + meal.bites + ' bites · ' + duration + '<br>' + (meal.mood || '') + (meal.food ? ' · ' + meal.food : '') + '</div>' +
+      '<span class="meal-emoji" style="animation-delay:' + i * 0.05 + 's">' + emoji + '</span>' +
+      (isRecent ? '<div class="recent-marker">most recent</div>' : '');
     slot.addEventListener('click', () => openStatCard(meal, i));
     inner.appendChild(slot);
   });
 
-  // auto-scroll to the most recent meal on the right
   setTimeout(() => {
     const scroll = document.getElementById('mealsScroll');
     scroll.scrollLeft = scroll.scrollWidth;
     initDragScroll(scroll);
   }, 100);
 
-  // populate the "most recent meal" explanation box
   const recentMeal = allMeals[allMeals.length - 1];
   if (recentMeal) {
     const emojiEl = document.getElementById('mealEmoji');
     const el = document.getElementById('mealExplanation');
-    const savedEmoji = recentMeal.emoji || getMoodEmoji(recentMeal.mood);
+    const savedEmoji = recentMeal.emoji || getMoodEmoji();
     emojiEl.textContent = savedEmoji;
     emojiEl.style.display = 'block';
 
-    // make sure the last placemat slot also shows the saved emoji
     const lastSlot = inner.querySelector('.meal-slot:last-child .meal-emoji');
     if (lastSlot) lastSlot.textContent = savedEmoji;
 
     if (recentMeal.emojiExplain) {
-      // strip the leading emoji character from the saved explanation before displaying
       el.textContent = recentMeal.emojiExplain.replace(/^\S+\s/, '');
       el.classList.remove('loading');
     } else {
-      askAI(`A ${savedEmoji} emoji represents a meal: ${recentMeal.bites} bites in ${recentMeal.duration} seconds, felt ${recentMeal.feel || 'neutral'}. In 1 sentence explain why this food or drink fits. make it satirical, like AI confidently inventing a ridiculous reason.`).then(text => {
+      askAI('A ' + savedEmoji + ' emoji represents a meal: ' + recentMeal.bites + ' bites in ' + recentMeal.duration + ' seconds, felt ' + (recentMeal.feel || 'neutral') + (recentMeal.food ? ', ate: ' + recentMeal.food : '') + '. In 1 sentence explain why this food fits — satirical, like AI confidently inventing a ridiculous reason.').then(text => {
         el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
         el.classList.remove('loading');
       });
     }
 
-    // progress section: only show after 2+ meals
     if (allMeals.length >= 2) {
-      const recent = allMeals.slice(-10);
-      const profileCtx = buildProfileContext();
       const last10 = allMeals.slice(-10);
-  const contexts = last10.filter(m => m.context).map(m => m.context).join(', ');
-  const foods = last10.filter(m => m.food).map(m => m.food).join(', ');
-  askAI('Person has tracked ' + allMeals.length + ' meals. Their last ' + last10.length + ' meal paces: ' + last10.map(m => m.mood).join(', ') + '.' + (contexts ? ' Contexts noted: ' + contexts + '.' : '') + (foods ? ' Foods eaten: ' + foods + '.' : '') + profileCtx + ' You are a nutritionist. In 2 sentences identify a specific pattern you notice. reference the actual contexts or foods if they correlate with faster or slower eating. Then give one small actionable suggestion. Warm and direct, no header.').then(text => {
+      const contexts = last10.filter(m => m.context).map(m => m.context).join(', ');
+      const foods = last10.filter(m => m.food).map(m => m.food).join(', ');
+      const profileCtx = buildProfileContext();
+      askAI('Person has tracked ' + allMeals.length + ' meals. Their last ' + last10.length + ' meal paces: ' + last10.map(m => m.mood).join(', ') + '.' + (contexts ? ' Contexts noted: ' + contexts + '.' : '') + (foods ? ' Foods eaten: ' + foods + '.' : '') + profileCtx + ' You are a nutritionist. In 2 sentences identify a specific pattern — reference actual contexts or foods if they correlate with pace. Then give one small actionable suggestion. Warm and direct, no header.').then(text => {
         document.getElementById('improvementText').textContent = text;
         document.getElementById('improvementText').classList.remove('loading');
       });
@@ -588,12 +577,11 @@ document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
   }
 }
 
-// highlights the previously saved chip selection when the profile screen is visited
 function loadProfile() {
   const fields = ['age', 'sex', 'body', 'activity', 'mealsize', 'naturalspeed'];
   fields.forEach(field => {
     if (userProfile[field]) {
-      document.querySelectorAll(`#chips-${field} .chip`).forEach(c => {
+      document.querySelectorAll('#chips-' + field + ' .chip').forEach(c => {
         if (c.textContent.trim() === userProfile[field]) c.classList.add('selected');
       });
     }
@@ -601,14 +589,12 @@ function loadProfile() {
   if (userProfile.dietary) document.getElementById('dietaryNotes').value = userProfile.dietary;
 }
 
-// saves the selected chip values and dietary notes to localStorage
 function selectChip(field, value, el) {
-  document.querySelectorAll(`#chips-${field} .chip`).forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('#chips-' + field + ' .chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   userProfile[field] = value;
 }
 
-// writes the full profile object to localStorage and briefly shows a confirmation message
 function saveProfile() {
   userProfile.dietary = document.getElementById('dietaryNotes').value.trim() || null;
   localStorage.setItem('user_profile', JSON.stringify(userProfile));
@@ -617,10 +603,9 @@ function saveProfile() {
   setTimeout(() => saved.style.display = 'none', 2000);
 }
 
-// on load: fetches the latest meal from the GitHub Gist; if bites > 0 shows meal summary, otherwise goes straight to table
 async function init() {
   try {
-    const res = await fetch(`https://api.github.com/gists/${GIST_ID}?t=` + Date.now());
+    const res = await fetch('https://api.github.com/gists/' + GIST_ID + '?t=' + Date.now());
     const data = await res.json();
     const content = data.files['meal_data.json'].content;
     currentMeal = JSON.parse(content);
