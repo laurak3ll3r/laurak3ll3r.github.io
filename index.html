@@ -404,7 +404,7 @@ function setupScreen1(meal) {
     const el = document.getElementById('s1-analysis');
     el.textContent = 'analysing...';
     el.classList.add('loading');
-    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Consider the food type and plate weight if provided — 600g of steak requires more chewing than 300g of soup. Be specific and warm. No headers, no mention of weight loss.').then(text => {
+    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Consider the food type and plate weight if provided: 600g of steak requires more chewing than 300g of soup. Be specific and warm. No headers, no mention of weight loss or overeating this is purely about pace.').then(text => {
       el.textContent = text;
       el.classList.remove('loading');
     });
