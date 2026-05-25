@@ -429,6 +429,7 @@ function selectFeel(feel, btn) {
 
 function analyseFeel() {
   if (!selectedFeel) return;
+  if (!currentMeal) { alert('No meal data found. Please start from the beginning.'); return; }
   const feel = selectedFeel;
   const feelResponseText = document.getElementById('feelResponseText');
   const tableBtn = document.getElementById('tableBtn');
