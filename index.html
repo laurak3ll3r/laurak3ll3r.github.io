@@ -542,7 +542,8 @@ function openStatCard(meal, index) {
     (meal.food ? '<div class="stat-card-tag">ate: ' + meal.food + '</div>' : '') +
     (meal.food_weight_g ? '<div class="stat-card-tag">' + meal.food_weight_g + 'g</div>' : '') +
     (meal.context ? '<div class="stat-card-tag">' + meal.context + '</div>' : '');
-  document.getElementById('scPaceBar').innerHTML = renderPaceBar(meal.mood);
+  console.log('mood value:', JSON.stringify(meal.mood));
+document.getElementById('scPaceBar').innerHTML = renderPaceBar(meal.mood);
   document.getElementById('statCard').classList.add('visible');
   document.getElementById('statCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
