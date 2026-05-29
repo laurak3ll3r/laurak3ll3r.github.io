@@ -417,21 +417,23 @@ function buildContextSummary() {
 function getMoodEmoji() { return '🍽️'; }
 
 function renderPaceBar(mood) {
-  const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
- const level = levels[(mood || '').toUpperCase()] || { pct: 50, color: '#8a8a3a' };
-  return '<div class="pace-bar-wrap"><div class="pace-bar-label"><span>slow</span><span>fast</span></div><div class="pace-bar-track"><div class="pace-bar-fill" style="width:' + level.pct + '%;background:' + level.color + '"></div></div></div>';
+  const secs = parseFloat(mood);
+  const pct = isNaN(secs) ? 50 : Math.max(5, Math.min(95, 100 - (secs / 30) * 100));
+  const color = pct < 35 ? '#3a6b32' : pct < 55 ? '#5a8a3a' : pct < 70 ? '#8a8a3a' : pct < 85 ? '#c87a2a' : '#c5462a';
+  return '<div class="pace-bar-wrap"><div class="pace-bar-label"><span>slow</span><span>fast</span></div><div class="pace-bar-track"><div class="pace-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div></div>';
 }
 
-function showPaceResult(mood) {
-  const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
- const level = levels[(mood || '').toUpperCase()] || { pct: 50, color: '#8a8a3a' };
-  document.getElementById('paceResultMood').textContent = mood;
-  document.getElementById('paceResultMood').style.color = level.color;
+function showPaceResult(secsPerBite) {
+  // scale: 0 sec/bite = far right (fast), 30+ sec/bite = far left (slow)
+  const pct = Math.max(5, Math.min(95, 100 - (secsPerBite / 30) * 100));
+  const color = pct < 35 ? '#3a6b32' : pct < 55 ? '#5a8a3a' : pct < 70 ? '#8a8a3a' : pct < 85 ? '#c87a2a' : '#c5462a';
+  document.getElementById('paceResultMood').textContent = secsPerBite.toFixed(1) + 's per bite';
+  document.getElementById('paceResultMood').style.color = color;
   const fill = document.getElementById('paceBarFill');
   fill.style.width = '0%';
-  fill.style.background = level.color;
+  fill.style.background = color;
   document.getElementById('paceResult').classList.add('visible');
-  setTimeout(() => { fill.style.width = level.pct + '%'; }, 100);
+  setTimeout(() => { fill.style.width = pct + '%'; }, 100);
 }
 
 function renderProgressChart() {
@@ -445,10 +447,11 @@ function renderProgressChart() {
   canvas.height = h * dpr;
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
-  const moodScore = { 'GREAT': 5, 'GOOD': 4, 'OK': 3, 'FAST-ISH': 2, 'TOO FAST': 1 };
-  const moodColor = { 'GREAT': '#3a6b32', 'GOOD': '#5a8a3a', 'OK': '#8a8a3a', 'FAST-ISH': '#c87a2a', 'TOO FAST': '#c5462a' };
-  const last10 = allMeals.slice(-10);
-  const scores = last10.map(m => moodScore[(m.mood || '').toUpperCase()] || 3);
+ const last10 = allMeals.slice(-10);
+const scores = last10.map(function(m) {
+  const secs = parseFloat(m.mood);
+  return isNaN(secs) ? 15 : Math.min(30, secs);
+});
   const pad = { t: 12, r: 12, b: 24, l: 52 };
   const chartW = w - pad.l - pad.r;
   const chartH = h - pad.t - pad.b;
@@ -470,8 +473,8 @@ function renderProgressChart() {
   ctx.textAlign = 'right';
   const yGreat = pad.t + chartH - ((5 - 1) / 4) * chartH + 3;
   const yTooFast = pad.t + chartH - ((1 - 1) / 4) * chartH + 3;
-  ctx.fillText('great', pad.l - 4, yGreat);
-  ctx.fillText('too fast', pad.l - 4, yTooFast);
+  cctx.fillText('slow', pad.l - 4, yGreat);
+  ctx.fillText('fast', pad.l - 4, yTooFast);
   // line
   ctx.beginPath();
   ctx.strokeStyle = '#c8bfaa';
@@ -490,7 +493,9 @@ function renderProgressChart() {
     const y = pad.t + chartH - ((s - 1) / 4) * chartH;
     ctx.beginPath();
     ctx.arc(x, y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = moodColor[(meal.mood || '').toUpperCase()] || '#8a8a3a';
+    const s = parseFloat(meal.mood);
+const p = isNaN(s) ? 50 : Math.max(5, Math.min(95, 100 - (s / 30) * 100));
+ctx.fillStyle = p < 35 ? '#3a6b32' : p < 55 ? '#5a8a3a' : p < 70 ? '#8a8a3a' : p < 85 ? '#c87a2a' : '#c5462a';
     ctx.fill();
   });
   // x labels
@@ -600,19 +605,19 @@ function analyseFeel() {
    const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
 const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
 const labelLine = lines.find(function(l) { return l.toUpperCase().startsWith('LABEL:'); });
-const mood = labelLine ? labelLine.replace(/^label:\s*/i, '').replace(/[^A-Z\-\s]/g, '').trim() : 'OK';
-const feedback = lines.filter(function(l) { return !l.toUpperCase().startsWith('LABEL:'); }).join(' ');
+const secsPerBite = currentMeal.bites > 0 ? currentMeal.duration / currentMeal.bites : 0;
+const feedback = text.trim();
+
+feelResponseText.textContent = feedback;
+feelResponseText.classList.remove('loading');
+showPaceResult(secsPerBite);
+
+currentMeal.feel = contextSelections.feeling || null;
+currentMeal.food = food || null;
+currentMeal.context = contextSummary || null;
+currentMeal.mood = secsPerBite.toFixed(1) + 's';
+currentMeal.timestamp = Date.now();
     
-    feelResponseText.textContent = feedback;
-    feelResponseText.classList.remove('loading');
-    showPaceResult(mood);
-
-    currentMeal.feel = contextSelections.feeling || null;
-    currentMeal.food = food || null;
-    currentMeal.context = contextSummary || null;
-    currentMeal.mood = mood;
-    currentMeal.timestamp = Date.now();
-
     askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE animal emoji that best represents this meal. Think carefully and be kind and gentle not offensive. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
