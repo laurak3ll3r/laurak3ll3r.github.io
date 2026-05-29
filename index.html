@@ -53,7 +53,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 .pace-result { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; display: none; }
 .pace-result.visible { display: block; }
 .pace-result-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
-.pace-result-mood { font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; color: var(--dark); margin-bottom: 14px; }
+.pace-result-mood { font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; margin-bottom: 14px; }
 .pace-bar-wrap { margin-bottom: 4px; }
 .pace-bar-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); margin-bottom: 6px; display: flex; justify-content: space-between; }
 .pace-bar-track { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
@@ -178,7 +178,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
         <div class="ctx-chip" onclick="toggleChip('location','dining table',this)">dining table</div>
         <div class="ctx-chip" onclick="toggleChip('location','sofa',this)">sofa</div>
         <div class="ctx-chip" onclick="toggleChip('location','desk',this)">desk</div>
-        <div class="ctx-chip" onclick="toggleChip('location','on the go',this)">on the go</div>
       </div>
     </div>
 
@@ -261,6 +260,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     </div>
     <div class="explanation-box">
       <h3>Your progress</h3>
+      <canvas id="progressChart" style="width:100%;height:120px;margin-bottom:12px;display:none;"></canvas>
       <p class="loading" id="improvementText">analysing your trend...</p>
     </div>
     <button class="btn-secondary" onclick="window.location.reload()">Done</button>
@@ -347,13 +347,9 @@ let currentMeal = null;
 let allMeals = JSON.parse(localStorage.getItem('table_meals') || '[]');
 let selectedMealIndex = null;
 let userProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
-
-// multi-select context chips — stored as object { rush: 'yes, no time', distraction: 'working', ... }
 let contextSelections = {};
 
 function toggleChip(group, value, el) {
-  // within rush, only one can be selected (single select)
-  // for others allow single select too for simplicity
   const groupEls = el.parentElement.querySelectorAll('.ctx-chip');
   groupEls.forEach(c => c.classList.remove('selected'));
   if (contextSelections[group] === value) {
@@ -362,7 +358,6 @@ function toggleChip(group, value, el) {
     el.classList.add('selected');
     contextSelections[group] = value;
   }
-  // show analyse button once at least one chip is selected
   const hasSelection = Object.keys(contextSelections).length > 0;
   document.getElementById('analyseBtn').style.display = hasSelection ? 'flex' : 'none';
 }
@@ -398,7 +393,6 @@ function buildProfileContext() {
   return parts.length > 0 ? ' User profile: ' + parts.join(', ') + '.' : '';
 }
 
-// build a readable summary of previous meals to give AI pattern context
 function buildMealHistory() {
   if (allMeals.length === 0) return '';
   const recent = allMeals.slice(-5);
@@ -435,12 +429,84 @@ function showPaceResult(mood) {
   const level = levels[mood] || { pct: 50, color: '#8a8a3a' };
   document.getElementById('paceResultMood').textContent = mood;
   document.getElementById('paceResultMood').style.color = level.color;
-  // animate bar after a short delay so the reveal feels intentional
   const fill = document.getElementById('paceBarFill');
   fill.style.width = '0%';
   fill.style.background = level.color;
   document.getElementById('paceResult').classList.add('visible');
   setTimeout(() => { fill.style.width = level.pct + '%'; }, 100);
+}
+
+function renderProgressChart() {
+  if (allMeals.length < 2) return;
+  const canvas = document.getElementById('progressChart');
+  canvas.style.display = 'block';
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.offsetWidth;
+  const h = 120;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const moodScore = { 'GREAT': 5, 'GOOD': 4, 'OK': 3, 'FAST-ISH': 2, 'TOO FAST': 1 };
+  const moodColor = { 'GREAT': '#3a6b32', 'GOOD': '#5a8a3a', 'OK': '#8a8a3a', 'FAST-ISH': '#c87a2a', 'TOO FAST': '#c5462a' };
+  const last10 = allMeals.slice(-10);
+  const scores = last10.map(m => moodScore[m.mood] || 3);
+  const pad = { t: 12, r: 12, b: 24, l: 12 };
+  const chartW = w - pad.l - pad.r;
+  const chartH = h - pad.t - pad.b;
+  const stepX = last10.length > 1 ? chartW / (last10.length - 1) : chartW;
+  ctx.clearRect(0, 0, w, h);
+  // gridlines
+  for (let i = 0; i < 5; i++) {
+    const y = pad.t + (i / 4) * chartH;
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+    ctx.lineWidth = 1;
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(w - pad.r, y);
+    ctx.stroke();
+  }
+  // y labels
+  const yLabels = ['great', '', '', '', 'too fast'];
+  ctx.fillStyle = '#c8bfaa';
+  ctx.font = '9px Courier New';
+  ctx.textAlign = 'right';
+  yLabels.forEach((label, i) => {
+    if (!label) return;
+    const y = pad.t + (i / 4) * chartH + 3;
+    ctx.fillText(label, pad.l + 38, y);
+  });
+  // line
+  ctx.beginPath();
+  ctx.strokeStyle = '#c8bfaa';
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = 'round';
+  scores.forEach((s, i) => {
+    const x = pad.l + i * stepX;
+    const y = pad.t + chartH - ((s - 1) / 4) * chartH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  // dots
+  scores.forEach((s, i) => {
+    const meal = last10[i];
+    const x = pad.l + i * stepX;
+    const y = pad.t + chartH - ((s - 1) / 4) * chartH;
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = moodColor[meal.mood] || '#8a8a3a';
+    ctx.fill();
+  });
+  // x labels
+  ctx.fillStyle = '#c8bfaa';
+  ctx.font = '9px Courier New';
+  ctx.textAlign = 'center';
+  last10.forEach((meal, i) => {
+    if (i !== 0 && i !== last10.length - 1 && last10.length > 5) return;
+    const x = pad.l + i * stepX;
+    const label = meal.timestamp ? new Date(meal.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
+    ctx.fillText(label, x, h - 4);
+  });
 }
 
 function goTo(n) {
@@ -492,7 +558,6 @@ function setupScreen1(meal) {
   document.getElementById('s1-bites').textContent = meal.bites;
   document.getElementById('s1-interval').textContent = interval + 's';
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-
   const foodEl = document.getElementById('foodInput');
   let debounceTimer = null;
   function runAnalysis() {
@@ -534,8 +599,7 @@ function analyseFeel() {
   const weightNote = currentMeal.food_weight_g ? ' Plate weight: ' + currentMeal.food_weight_g + 'g.' : '';
   const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
 
-  // main AI call: classification + feedback, informed by context chips + meal history
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. Consider: seconds per bite, plate weight, food type, the context (rush level, location, distraction), their profile, and whether this is a pattern from previous meals. Put the label on the very first line alone. Then write 2 sentences: how this specific context affected their digestion, and one small concrete habit to try next time that fits their situation. Warm and practical, no generic advice.').then(text => {
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. Consider: seconds per bite, plate weight, food type, rush level, location, distraction, their profile, and whether this matches a pattern from previous meals. Put the label on the very first line alone. Then write 2 sentences: how this specific context affected their digestion, and one small concrete habit to try next time that fits their situation. Warm and practical, no generic advice.').then(text => {
     const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
     const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
@@ -552,17 +616,14 @@ function analyseFeel() {
     currentMeal.mood = mood;
     currentMeal.timestamp = Date.now();
 
-    // emoji pick
     askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE food or drink emoji that best represents this meal. Think carefully. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
 
-      // meal summary for stat card
       askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '.' + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
         currentMeal.mealSummary = summary.trim();
 
-        // satirical emoji explanation
         askAI('You chose ' + e + ' to represent a meal at a ' + currentMeal.mood + ' pace.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this emoji fits. Satirical, self-aware, light.').then(function(explanation) {
           currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
           allMeals.push(Object.assign({}, currentMeal));
@@ -602,6 +663,8 @@ function renderTable() {
   document.getElementById('healthTags').innerHTML = Object.entries(moodCounts)
     .map(function(entry) { return '<div class="health-tag">' + entry[1] + ' ' + entry[0].toLowerCase() + '</div>'; })
     .join('');
+
+  renderProgressChart();
 
   allMeals.forEach((meal, i) => {
     const isRecent = i === allMeals.length - 1;
