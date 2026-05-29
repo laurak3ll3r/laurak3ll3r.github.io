@@ -599,8 +599,8 @@ function analyseFeel() {
   askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. Consider: seconds per bite, plate weight, food type, rush level, location, distraction, their profile, and whether this matches a pattern from previous meals. Put the label on the very first line alone. Then write 2 sentences: how this specific context affected their digestion, and one small concrete habit to try next time that fits their situation. Warm and practical, no generic advice.').then(text => {
     const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
-    const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
-    const mood = moodLine ? moodLine.toUpperCase() : 'OK';
+    const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase().replace(/['"]/g, '').trim()); });
+    const mood = moodLine ? moodLine.toUpperCase().replace(/['"]/g, '').trim() : 'OK';
     const feedback = lines.filter(function(l) { return !validMoods.includes(l.toUpperCase()); }).join(' ');
 
     feelResponseText.textContent = feedback;
