@@ -612,7 +612,7 @@ function analyseFeel() {
     currentMeal.context = contextSummary || null;
     currentMeal.timestamp = Date.now();
 
-    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE ANIMAL emoji that best represents how this meal felt. Be kind and gentle. Reply with just the single emoji, nothing else.').then(function(emojiText) {
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE ANIMAL emoji that best represents how this meal went. Consider mainly pace and context. Be kind and gentle. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
