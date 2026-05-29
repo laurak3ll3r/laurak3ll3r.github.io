@@ -473,7 +473,7 @@ const scores = last10.map(function(m) {
   ctx.textAlign = 'right';
   const yGreat = pad.t + chartH - ((5 - 1) / 4) * chartH + 3;
   const yTooFast = pad.t + chartH - ((1 - 1) / 4) * chartH + 3;
-  cctx.fillText('slow', pad.l - 4, yGreat);
+  ctx.fillText('slow', pad.l - 4, yGreat);
   ctx.fillText('fast', pad.l - 4, yTooFast);
   // line
   ctx.beginPath();
@@ -493,7 +493,8 @@ const scores = last10.map(function(m) {
     const y = pad.t + chartH - ((s - 1) / 4) * chartH;
     ctx.beginPath();
     ctx.arc(x, y, 4, 0, Math.PI * 2);
-    const s = parseFloat(meal.mood);
+    const speed = parseFloat(meal.mood);
+const p = isNaN(speed) ? 50 : Math.max(5, Math.min(95, 100 - (speed / 30) * 100));
 const p = isNaN(s) ? 50 : Math.max(5, Math.min(95, 100 - (s / 30) * 100));
 ctx.fillStyle = p < 35 ? '#3a6b32' : p < 55 ? '#5a8a3a' : p < 70 ? '#8a8a3a' : p < 85 ? '#c87a2a' : '#c5462a';
     ctx.fill();
@@ -754,10 +755,6 @@ function saveProfile() {
 }
 
 async function init() {
-  allMeals = allMeals.map(function(m) {
-    if (m.mood) m.mood = m.mood.replace(/[^A-Z\-\s]/g, '').trim();
-    return m;
-  });
   localStorage.setItem('table_meals', JSON.stringify(allMeals));
   try {
     const res = await fetch('https://api.github.com/gists/' + GIST_ID + '?t=' + Date.now());
