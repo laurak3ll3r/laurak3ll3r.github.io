@@ -46,14 +46,13 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 .ctx-chip { padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; font-family: 'Courier New', Courier, monospace; font-size: 0.72rem; color: var(--mid); cursor: pointer; transition: all 0.2s; user-select: none; }
 .ctx-chip:hover { border-color: var(--dark); color: var(--dark); }
 .ctx-chip.selected { background: var(--dark); color: var(--cream); border-color: var(--dark); }
-.feel-response { background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 24px; min-height: 70px; display: none; }
+.feel-response { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--dark); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 24px; min-height: 70px; display: none; }
 .feel-response.visible { display: block; }
-.feel-response-text { font-size: 0.78rem; line-height: 1.7; color: var(--dark); }
+.feel-response-text { font-size: 0.85rem; line-height: 1.8; color: var(--dark); }
 .feel-response-text.loading { color: var(--light); font-style: italic; }
 .pace-result { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; display: none; }
 .pace-result.visible { display: block; }
-.pace-result-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
-.pace-result-mood { font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; margin-bottom: 14px; }
+.pace-result-mood { font-family: 'Courier New', Courier, monospace; font-size: 2rem; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.02em; }
 .pace-bar-wrap { margin-bottom: 4px; }
 .pace-bar-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); margin-bottom: 6px; display: flex; justify-content: space-between; }
 .pace-bar-track { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
@@ -149,11 +148,11 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 <!-- SCREEN 2: CONTEXT -->
 <div class="screen" id="screen2">
   <div class="page">
-    <h1 class="page-title">Give us<br>the context</h1>
-    <p class="page-sub">Select all that apply — helps us understand the full picture.</p>
+    <h1 class="page-title">Let's be<br>honest.</h1>
+    <p class="page-sub">No judgment. (Mostly.)</p>
 
     <div class="context-box">
-      <span class="context-label">were you in a rush?</span>
+      <span class="context-label">Were you rushing?</span>
       <div class="chip-row">
         <div class="ctx-chip" onclick="toggleChip('rush','yes, no time',this)">yes, no time</div>
         <div class="ctx-chip" onclick="toggleChip('rush','a little',this)">a little</div>
@@ -162,7 +161,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     </div>
 
     <div class="context-box">
-      <span class="context-label">were you doing something else?</span>
+      <span class="context-label">Were you even paying attention?</span>
       <div class="chip-row">
         <div class="ctx-chip" onclick="toggleChip('distraction','on my phone',this)">on my phone</div>
         <div class="ctx-chip" onclick="toggleChip('distraction','watching something',this)">watching something</div>
@@ -172,7 +171,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     </div>
 
     <div class="context-box">
-      <span class="context-label">where did you eat?</span>
+      <span class="context-label">Where?</span>
       <div class="chip-row">
         <div class="ctx-chip" onclick="toggleChip('location','kitchen',this)">kitchen</div>
         <div class="ctx-chip" onclick="toggleChip('location','dining table',this)">dining table</div>
@@ -182,7 +181,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     </div>
 
     <div class="context-box">
-      <span class="context-label">how did it feel overall?</span>
+      <span class="context-label">Be honest.</span>
       <div class="chip-row">
         <div class="ctx-chip" onclick="toggleChip('feeling','enjoyed it',this)">enjoyed it</div>
         <div class="ctx-chip" onclick="toggleChip('feeling','ate too fast',this)">ate too fast</div>
@@ -193,18 +192,17 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     </div>
 
     <div class="context-box">
-      <span class="context-label">anything else? (optional)</span>
+      <span class="context-label">Anything else?</span>
       <textarea class="context-input" id="contextInput" rows="2" placeholder="e.g. first meal of the day, ate with friends..."></textarea>
     </div>
 
-    <button class="btn-primary" id="analyseBtn" onclick="analyseFeel()" style="display:none;margin-bottom:24px;"><span>Analyse my meal</span><span>→</span></button>
+    <button class="btn-primary" id="analyseBtn" onclick="analyseFeel()" style="display:none;margin-bottom:24px;"><span>OK, what does it mean?</span><span>→</span></button>
 
     <div class="feel-response" id="feelResponse">
       <div class="feel-response-text loading" id="feelResponseText">thinking...</div>
     </div>
 
     <div class="pace-result" id="paceResult">
-      <div class="pace-result-label">eating pace</div>
       <div class="pace-result-mood" id="paceResultMood">—</div>
       <div class="pace-bar-wrap">
         <div class="pace-bar-label"><span>slow</span><span>fast</span></div>
@@ -451,7 +449,7 @@ function renderProgressChart() {
   const moodColor = { 'GREAT': '#3a6b32', 'GOOD': '#5a8a3a', 'OK': '#8a8a3a', 'FAST-ISH': '#c87a2a', 'TOO FAST': '#c5462a' };
   const last10 = allMeals.slice(-10);
   const scores = last10.map(m => moodScore[m.mood] || 3);
-  const pad = { t: 12, r: 12, b: 24, l: 12 };
+  const pad = { t: 12, r: 12, b: 24, l: 52 };
   const chartW = w - pad.l - pad.r;
   const chartH = h - pad.t - pad.b;
   const stepX = last10.length > 1 ? chartW / (last10.length - 1) : chartW;
@@ -466,16 +464,14 @@ function renderProgressChart() {
     ctx.lineTo(w - pad.r, y);
     ctx.stroke();
   }
-  // y labels
-  const yLabels = ['great', '', '', '', 'too fast'];
+  // y labels aligned to actual score positions
   ctx.fillStyle = '#c8bfaa';
   ctx.font = '9px Courier New';
   ctx.textAlign = 'right';
-  yLabels.forEach((label, i) => {
-    if (!label) return;
-    const y = pad.t + (i / 4) * chartH + 3;
-    ctx.fillText(label, pad.l + 38, y);
-  });
+  const yGreat = pad.t + chartH - ((5 - 1) / 4) * chartH + 3;
+  const yTooFast = pad.t + chartH - ((1 - 1) / 4) * chartH + 3;
+  ctx.fillText('great', pad.l - 4, yGreat);
+  ctx.fillText('too fast', pad.l - 4, yTooFast);
   // line
   ctx.beginPath();
   ctx.strokeStyle = '#c8bfaa';
