@@ -625,7 +625,7 @@ currentMeal.context = contextSummary || null;
 currentMeal.mood = secsPerBite.toFixed(1) + 's';
 currentMeal.timestamp = Date.now();
     
-    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE animal emoji that best represents this meal. Think carefully and be kind and gentle not offensive. Reply with just the single emoji, nothing else.').then(function(emojiText) {
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE animal emoji that best represents this meal. Not the plate. Think carefully and be kind and gentle not offensive. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
