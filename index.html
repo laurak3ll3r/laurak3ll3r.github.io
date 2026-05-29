@@ -567,7 +567,7 @@ function setupScreen1(meal) {
     const el = document.getElementById('s1-analysis');
     el.textContent = 'analysing...';
     el.classList.add('loading');
-    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + spb + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Under 10sec is bad, 10-20 is average, 20 to 30 is good, over 30 excellent. Consider food type and plate weight. Make the tone vary depeding on whetehr it is "good" or "bad". Be specific and warm. No headers, no mention of weight loss.').then(function(text) {
+    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + spb + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Under 10sec is bad, 10-20 is average, 20 to 30 is good, over 30 excellent. Consider food type and plate weight. no need to mention the weight its just for you to know whether it was a big meal or not. Make the tone vary depeding on whetehr it is "good" or "bad". Be specific and warm. No headers, no mention of weight loss.').then(function(text) {
       el.textContent = text;
       el.classList.remove('loading');
     });
