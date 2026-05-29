@@ -567,7 +567,7 @@ function setupScreen1(meal) {
     const el = document.getElementById('s1-analysis');
     el.textContent = 'analysing...';
     el.classList.add('loading');
-    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + spb + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Consider food type and plate weight if provided. Be specific and warm. No headers, no mention of weight loss.').then(function(text) {
+    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + spb + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Consider food type and plate weight. Make the tone vary depeding on whetehr it is "good" or "bad". Be specific and warm. No headers, no mention of weight loss.').then(function(text) {
       el.textContent = text;
       el.classList.remove('loading');
     });
@@ -601,7 +601,7 @@ function analyseFeel() {
   showPaceResult(secsPerBite);
   currentMeal.mood = secsPerBite.toFixed(1) + 's';
 
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. Write 2 sentences: how this specific context affected their digestion, and one small concrete habit to try next time. Warm and practical, no headers.').then(function(text) {
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. Write 2 sentences: how this specific context affected their digestion and pace, and if needed, one small concrete habit to try next time. Warm and practical, no headers.').then(function(text) {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
 
