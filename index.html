@@ -37,23 +37,27 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 .analysis-text.loading { color: var(--light); font-style: italic; }
 .btn-primary { width: 100%; padding: 18px 24px; background: var(--dark); color: var(--cream); border: none; border-radius: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: background 0.2s, transform 0.1s; }
 .btn-primary:hover { background: #2c2c22; transform: translateY(-1px); }
-.feel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
-.feel-btn { background: var(--card-bg); border: 2px solid var(--border); border-radius: 12px; padding: 20px 16px; cursor: pointer; text-align: center; transition: all 0.2s; }
-.feel-btn:hover { border-color: var(--dark); transform: translateY(-2px); }
-.feel-btn.selected { border-color: var(--dark); background: var(--dark); color: var(--cream); }
-.feel-btn.selected .feel-sub { color: var(--light); }
-.feel-emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
-.feel-title { font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; display: block; margin-bottom: 2px; }
-.feel-sub { font-size: 0.65rem; color: var(--mid); display: block; }
-.context-box { margin-bottom: 24px; }
-.context-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; display: block; }
+.context-box { margin-bottom: 28px; }
+.context-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; display: block; }
 .context-input { width: 100%; padding: 14px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; color: var(--dark); resize: none; line-height: 1.6; outline: none; transition: border-color 0.2s; }
 .context-input:focus { border-color: var(--dark); }
 .context-input::placeholder { color: var(--light); }
-.feel-response { background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 32px; min-height: 70px; display: none; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.ctx-chip { padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; font-family: 'Courier New', Courier, monospace; font-size: 0.72rem; color: var(--mid); cursor: pointer; transition: all 0.2s; user-select: none; }
+.ctx-chip:hover { border-color: var(--dark); color: var(--dark); }
+.ctx-chip.selected { background: var(--dark); color: var(--cream); border-color: var(--dark); }
+.feel-response { background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 24px; min-height: 70px; display: none; }
 .feel-response.visible { display: block; }
 .feel-response-text { font-size: 0.78rem; line-height: 1.7; color: var(--dark); }
 .feel-response-text.loading { color: var(--light); font-style: italic; }
+.pace-result { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; display: none; }
+.pace-result.visible { display: block; }
+.pace-result-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+.pace-result-mood { font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; color: var(--dark); margin-bottom: 14px; }
+.pace-bar-wrap { margin-bottom: 4px; }
+.pace-bar-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); margin-bottom: 6px; display: flex; justify-content: space-between; }
+.pace-bar-track { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.pace-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); }
 .streak-bar { background: var(--dark); border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .streak-num { font-family: 'Courier New', Courier, monospace; font-size: 2rem; color: var(--cream); line-height: 1; }
 .streak-label { font-size: 0.6rem; color: var(--light); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
@@ -84,7 +88,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 .stat-card-item { text-align: center; }
 .stat-card-val { font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; color: var(--dark); display: block; line-height: 1; }
 .stat-card-label { font-size: 0.55rem; color: var(--mid); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; display: block; }
-.stat-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.stat-card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
 .stat-card-tag { background: var(--cream); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 0.62rem; color: var(--mid); }
 .mood-GREAT { border-color: #3a6b32 !important; color: #3a6b32 !important; background: #f0f8ec !important; }
 .mood-GOOD { border-color: #5a8a3a !important; color: #5a8a3a !important; background: #f4f8f0 !important; }
@@ -113,10 +117,6 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 #loadingScreen p { font-size: 0.72rem; color: var(--mid); letter-spacing: 0.1em; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--dark); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.pace-bar-wrap { margin-top: 14px; margin-bottom: 4px; }
-.pace-bar-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); margin-bottom: 6px; display: flex; justify-content: space-between; }
-.pace-bar-track { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
-.pace-bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
 </style>
 </head>
 <body>
@@ -146,25 +146,73 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
   </div>
 </div>
 
-<!-- SCREEN 2: HOW DID IT FEEL -->
+<!-- SCREEN 2: CONTEXT -->
 <div class="screen" id="screen2">
   <div class="page">
-    <h1 class="page-title">How did the<br>meal feel?</h1>
-    <p class="page-sub">This provides the context we need.</p>
-    <div class="feel-grid">
-      <button class="feel-btn" onclick="selectFeel('rushed', this)"><span class="feel-emoji">🏃</span><span class="feel-title">I was rushed</span><span class="feel-sub">no choice</span></button>
-      <button class="feel-btn" onclick="selectFeel('distracted', this)"><span class="feel-emoji">😝</span><span class="feel-title">Distracted</span><span class="feel-sub">phone / screen</span></button>
-      <button class="feel-btn" onclick="selectFeel('good', this)"><span class="feel-emoji">😊</span><span class="feel-title">Felt good</span><span class="feel-sub">enjoyed the meal</span></button>
-      <button class="feel-btn" onclick="selectFeel('toofast', this)"><span class="feel-emoji">😮</span><span class="feel-title">Too fast</span><span class="feel-sub">no reason</span></button>
+    <h1 class="page-title">Give us<br>the context</h1>
+    <p class="page-sub">Select all that apply — helps us understand the full picture.</p>
+
+    <div class="context-box">
+      <span class="context-label">were you in a rush?</span>
+      <div class="chip-row">
+        <div class="ctx-chip" onclick="toggleChip('rush','yes, no time',this)">yes, no time</div>
+        <div class="ctx-chip" onclick="toggleChip('rush','a little',this)">a little</div>
+        <div class="ctx-chip" onclick="toggleChip('rush','not at all',this)">not at all</div>
+      </div>
     </div>
+
+    <div class="context-box">
+      <span class="context-label">were you doing something else?</span>
+      <div class="chip-row">
+        <div class="ctx-chip" onclick="toggleChip('distraction','on my phone',this)">on my phone</div>
+        <div class="ctx-chip" onclick="toggleChip('distraction','watching something',this)">watching something</div>
+        <div class="ctx-chip" onclick="toggleChip('distraction','working',this)">working</div>
+        <div class="ctx-chip" onclick="toggleChip('distraction','just eating',this)">just eating</div>
+      </div>
+    </div>
+
+    <div class="context-box">
+      <span class="context-label">where did you eat?</span>
+      <div class="chip-row">
+        <div class="ctx-chip" onclick="toggleChip('location','kitchen',this)">kitchen</div>
+        <div class="ctx-chip" onclick="toggleChip('location','dining table',this)">dining table</div>
+        <div class="ctx-chip" onclick="toggleChip('location','sofa',this)">sofa</div>
+        <div class="ctx-chip" onclick="toggleChip('location','desk',this)">desk</div>
+        <div class="ctx-chip" onclick="toggleChip('location','on the go',this)">on the go</div>
+      </div>
+    </div>
+
+    <div class="context-box">
+      <span class="context-label">how did it feel overall?</span>
+      <div class="chip-row">
+        <div class="ctx-chip" onclick="toggleChip('feeling','enjoyed it',this)">enjoyed it</div>
+        <div class="ctx-chip" onclick="toggleChip('feeling','ate too fast',this)">ate too fast</div>
+        <div class="ctx-chip" onclick="toggleChip('feeling','wasn\'t hungry',this)">wasn't hungry</div>
+        <div class="ctx-chip" onclick="toggleChip('feeling','really hungry',this)">really hungry</div>
+        <div class="ctx-chip" onclick="toggleChip('feeling','stressed',this)">stressed</div>
+      </div>
+    </div>
+
     <div class="context-box">
       <span class="context-label">anything else? (optional)</span>
-      <textarea class="context-input" id="contextInput" rows="2" placeholder="e.g. eating at my desk, first meal of the day, really hungry..."></textarea>
+      <textarea class="context-input" id="contextInput" rows="2" placeholder="e.g. first meal of the day, ate with friends..."></textarea>
     </div>
+
     <button class="btn-primary" id="analyseBtn" onclick="analyseFeel()" style="display:none;margin-bottom:24px;"><span>Analyse my meal</span><span>→</span></button>
+
     <div class="feel-response" id="feelResponse">
       <div class="feel-response-text loading" id="feelResponseText">thinking...</div>
     </div>
+
+    <div class="pace-result" id="paceResult">
+      <div class="pace-result-label">eating pace</div>
+      <div class="pace-result-mood" id="paceResultMood">—</div>
+      <div class="pace-bar-wrap">
+        <div class="pace-bar-label"><span>slow</span><span>fast</span></div>
+        <div class="pace-bar-track"><div class="pace-bar-fill" id="paceBarFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
     <button class="btn-primary" id="tableBtn" onclick="goTo(3)" style="display:none"><span>See my table</span><span>→</span></button>
   </div>
 </div>
@@ -186,7 +234,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     <div class="table-bed">
       <div class="meals-scroll" id="mealsScroll">
         <div class="meals-inner" id="mealsInner">
-          <div class="empty-table">no meals yet... start eating!</div>
+          <div class="empty-table">no meals yet — start eating</div>
         </div>
       </div>
     </div>
@@ -298,8 +346,26 @@ const GIST_ID = '534ae267964caa7772a5ae532a013841';
 let currentMeal = null;
 let allMeals = JSON.parse(localStorage.getItem('table_meals') || '[]');
 let selectedMealIndex = null;
-let selectedFeel = null;
 let userProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+
+// multi-select context chips — stored as object { rush: 'yes, no time', distraction: 'working', ... }
+let contextSelections = {};
+
+function toggleChip(group, value, el) {
+  // within rush, only one can be selected (single select)
+  // for others allow single select too for simplicity
+  const groupEls = el.parentElement.querySelectorAll('.ctx-chip');
+  groupEls.forEach(c => c.classList.remove('selected'));
+  if (contextSelections[group] === value) {
+    delete contextSelections[group];
+  } else {
+    el.classList.add('selected');
+    contextSelections[group] = value;
+  }
+  // show analyse button once at least one chip is selected
+  const hasSelection = Object.keys(contextSelections).length > 0;
+  document.getElementById('analyseBtn').style.display = hasSelection ? 'flex' : 'none';
+}
 
 function initDragScroll(el) {
   let isDown = false, startX, scrollLeft;
@@ -332,12 +398,49 @@ function buildProfileContext() {
   return parts.length > 0 ? ' User profile: ' + parts.join(', ') + '.' : '';
 }
 
+// build a readable summary of previous meals to give AI pattern context
+function buildMealHistory() {
+  if (allMeals.length === 0) return '';
+  const recent = allMeals.slice(-5);
+  const summary = recent.map(function(m, i) {
+    const parts = ['meal ' + (i + 1) + ': ' + (m.mood || 'unknown') + ' pace'];
+    if (m.food) parts.push('ate ' + m.food);
+    if (m.context) parts.push(m.context);
+    return parts.join(', ');
+  }).join('; ');
+  return ' Previous meals: ' + summary + '.';
+}
+
+function buildContextSummary() {
+  const parts = [];
+  if (contextSelections.rush) parts.push('rush level: ' + contextSelections.rush);
+  if (contextSelections.distraction) parts.push('distraction: ' + contextSelections.distraction);
+  if (contextSelections.location) parts.push('location: ' + contextSelections.location);
+  if (contextSelections.feeling) parts.push('felt: ' + contextSelections.feeling);
+  const extra = document.getElementById('contextInput').value.trim();
+  if (extra) parts.push(extra);
+  return parts.join(', ');
+}
+
 function getMoodEmoji() { return '🍽️'; }
 
 function renderPaceBar(mood) {
   const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
   const level = levels[mood] || { pct: 50, color: '#8a8a3a' };
   return '<div class="pace-bar-wrap"><div class="pace-bar-label"><span>slow</span><span>fast</span></div><div class="pace-bar-track"><div class="pace-bar-fill" style="width:' + level.pct + '%;background:' + level.color + '"></div></div></div>';
+}
+
+function showPaceResult(mood) {
+  const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
+  const level = levels[mood] || { pct: 50, color: '#8a8a3a' };
+  document.getElementById('paceResultMood').textContent = mood;
+  document.getElementById('paceResultMood').style.color = level.color;
+  // animate bar after a short delay so the reveal feels intentional
+  const fill = document.getElementById('paceBarFill');
+  fill.style.width = '0%';
+  fill.style.background = level.color;
+  document.getElementById('paceResult').classList.add('visible');
+  setTimeout(() => { fill.style.width = level.pct + '%'; }, 100);
 }
 
 function goTo(n) {
@@ -373,8 +476,7 @@ function openStatCard(meal, index) {
   document.getElementById('scDuration').textContent = duration;
   document.getElementById('scInterval').textContent = interval;
   document.getElementById('scTags').innerHTML =
-    '<div class="stat-card-tag mood-' + moodKey + '">' + meal.mood + '</div>' +
-    (meal.feel ? '<div class="stat-card-tag">felt: ' + meal.feel + '</div>' : '') +
+    '<div class="stat-card-tag mood-' + moodKey + '">' + (meal.mood || '—') + '</div>' +
     (meal.food ? '<div class="stat-card-tag">ate: ' + meal.food + '</div>' : '') +
     (meal.food_weight_g ? '<div class="stat-card-tag">' + meal.food_weight_g + 'g</div>' : '') +
     (meal.context ? '<div class="stat-card-tag">' + meal.context + '</div>' : '');
@@ -383,7 +485,6 @@ function openStatCard(meal, index) {
   document.getElementById('statCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// screen 1: populate stats, ask for food, then fire AI analysis using food + weight
 function setupScreen1(meal) {
   const duration = meal.duration < 60 ? meal.duration + 's' : (Math.round(meal.duration / 60 * 10) / 10) + 'm';
   const interval = meal.bites > 0 ? Math.round(meal.duration / meal.bites) : 0;
@@ -392,7 +493,6 @@ function setupScreen1(meal) {
   document.getElementById('s1-interval').textContent = interval + 's';
   document.getElementById('mealTime').textContent = 'Today · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
-  // watch the food input — re-run analysis when user finishes typing
   const foodEl = document.getElementById('foodInput');
   let debounceTimer = null;
   function runAnalysis() {
@@ -404,55 +504,38 @@ function setupScreen1(meal) {
     const el = document.getElementById('s1-analysis');
     el.textContent = 'analysing...';
     el.classList.add('loading');
-    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Consider the food type and plate weight if provided: 600g of steak requires more chewing than 300g of soup. Be specific and warm. No headers, no mention of weight loss or overeating this is purely about pace.').then(text => {
+    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Consider food type and plate weight if provided. Be specific and warm. No headers, no mention of weight loss.').then(text => {
       el.textContent = text;
       el.classList.remove('loading');
     });
   }
-  // run immediately on load
   runAnalysis();
-  // re-run when food input changes (debounced)
-  foodEl.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(runAnalysis, 1200);
-  });
-}
-
-function selectFeel(feel, btn) {
-  selectedFeel = feel;
-  document.querySelectorAll('.feel-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('analyseBtn').style.display = 'flex';
-  document.getElementById('feelResponse').classList.remove('visible');
-  document.getElementById('tableBtn').style.display = 'none';
+  foodEl.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(runAnalysis, 1200); });
 }
 
 function analyseFeel() {
-  if (!selectedFeel) return;
-  if (!currentMeal) { alert('No meal data found. Please start from the beginning.'); return; }
-  const feel = selectedFeel;
+  if (!currentMeal) { alert('No meal data found.'); return; }
   const feelResponseText = document.getElementById('feelResponseText');
   const tableBtn = document.getElementById('tableBtn');
   const analyseBtn = document.getElementById('analyseBtn');
   const food = document.getElementById('foodInput').value.trim();
-  const context = document.getElementById('contextInput').value.trim();
+  const contextSummary = buildContextSummary();
   const profileCtx = buildProfileContext();
+  const mealHistory = buildMealHistory();
 
   document.getElementById('feelResponse').classList.add('visible');
   feelResponseText.classList.add('loading');
   feelResponseText.textContent = 'thinking...';
   analyseBtn.style.display = 'none';
   tableBtn.style.display = 'none';
+  document.getElementById('paceResult').classList.remove('visible');
 
-  const feelLabels = { rushed: 'rushed with no choice', distracted: 'distracted by phone or screen', good: 'good and enjoyed the meal', toofast: 'too fast for no particular reason' };
   const foodNote = food ? ' They ate: ' + food + '.' : '';
   const weightNote = currentMeal.food_weight_g ? ' Plate weight: ' + currentMeal.food_weight_g + 'g.' : '';
-  const contextNote = context ? ' Additional context: "' + context + '".' : '';
   const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
 
-  // AI call 1: classify pace + digestion feedback
-  // food weight is used here so AI can judge whether this was genuinely fast for this food
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' They felt: "' + feelLabels[feel] + '".' + contextNote + profileCtx + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. Consider: the seconds per bite, the plate weight (heavier meals generally need slower eating), the food type (soup vs steak vs salad), the person\'s profile, and the context. Put the label on the very first line alone. Then write 2 sentences: how this affects digestion and one small habit to try next time. Warm and practical.').then(text => {
+  // main AI call: classification + feedback, informed by context chips + meal history
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. Consider: seconds per bite, plate weight, food type, the context (rush level, location, distraction), their profile, and whether this is a pattern from previous meals. Put the label on the very first line alone. Then write 2 sentences: how this specific context affected their digestion, and one small concrete habit to try next time that fits their situation. Warm and practical, no generic advice.').then(text => {
     const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
     const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
     const moodLine = lines.find(function(l) { return validMoods.includes(l.toUpperCase()); });
@@ -461,25 +544,26 @@ function analyseFeel() {
 
     feelResponseText.textContent = feedback;
     feelResponseText.classList.remove('loading');
+    showPaceResult(mood);
 
-    currentMeal.feel = feel;
+    currentMeal.feel = contextSelections.feeling || null;
     currentMeal.food = food || null;
-    currentMeal.context = context || null;
+    currentMeal.context = contextSummary || null;
     currentMeal.mood = mood;
     currentMeal.timestamp = Date.now();
 
-    // AI call 2: pick emoji
-    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + weightNote + contextNote + ' Choose exactly ONE food or drink emoji that best represents this meal. Think carefully — consider what they ate, how much, and how they felt. Reply with just the single emoji, nothing else.').then(function(emojiText) {
+    // emoji pick
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE food or drink emoji that best represents this meal. Think carefully. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
 
-      // AI call 3: plain meal summary for the stat card
-      askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + ', felt: ' + feel + '.' + foodNote + weightNote + contextNote + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
+      // meal summary for stat card
+      askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '.' + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
         currentMeal.mealSummary = summary.trim();
 
-        // AI call 4: funny satirical explanation for the emoji
-        askAI('You chose ' + e + ' to represent a meal eaten at a ' + currentMeal.mood + ' pace where the person felt ' + feel + '.' + foodNote + contextNote + ' In one funny, overexaggerated sentence explain why this food fits. Satirical, like AI confidently inventing a ridiculous connection. Light and self-aware.').then(function(explanation) {
+        // satirical emoji explanation
+        askAI('You chose ' + e + ' to represent a meal at a ' + currentMeal.mood + ' pace.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this emoji fits. Satirical, self-aware, light.').then(function(explanation) {
           currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
           allMeals.push(Object.assign({}, currentMeal));
           localStorage.setItem('table_meals', JSON.stringify(allMeals));
@@ -497,7 +581,7 @@ function renderTable() {
   closeStatCard();
 
   if (allMeals.length === 0) {
-    inner.innerHTML = '<div class="empty-table">no meals yet... start eating!</div>';
+    inner.innerHTML = '<div class="empty-table">no meals yet — start eating</div>';
     document.getElementById('streakNum').textContent = '0';
     document.getElementById('streakTitle').textContent = 'meals tracked!';
     document.getElementById('healthTags').innerHTML = '';
@@ -556,7 +640,7 @@ function renderTable() {
       el.textContent = recentMeal.emojiExplain.replace(/^\S+\s/, '');
       el.classList.remove('loading');
     } else {
-      askAI('A ' + savedEmoji + ' emoji represents a meal: ' + recentMeal.bites + ' bites in ' + recentMeal.duration + ' seconds, felt ' + (recentMeal.feel || 'neutral') + (recentMeal.food ? ', ate: ' + recentMeal.food : '') + '. In 1 sentence explain why this food fits — satirical, like AI confidently inventing a ridiculous reason.').then(text => {
+      askAI('A ' + savedEmoji + ' emoji represents a meal: ' + recentMeal.bites + ' bites in ' + recentMeal.duration + ' seconds' + (recentMeal.food ? ', ate: ' + recentMeal.food : '') + '. In 1 sentence explain why this emoji fits — satirical, like AI confidently inventing a ridiculous reason.').then(text => {
         el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
         el.classList.remove('loading');
       });
@@ -564,10 +648,10 @@ function renderTable() {
 
     if (allMeals.length >= 2) {
       const last10 = allMeals.slice(-10);
-      const contexts = last10.filter(m => m.context).map(m => m.context).join(', ');
+      const contexts = last10.filter(m => m.context).map(m => m.context).join('; ');
       const foods = last10.filter(m => m.food).map(m => m.food).join(', ');
       const profileCtx = buildProfileContext();
-      askAI('Person has tracked ' + allMeals.length + ' meals. Their last ' + last10.length + ' meal paces: ' + last10.map(m => m.mood).join(', ') + '.' + (contexts ? ' Contexts noted: ' + contexts + '.' : '') + (foods ? ' Foods eaten: ' + foods + '.' : '') + profileCtx + ' You are a nutritionist. In 2 sentences identify a specific pattern — reference actual contexts or foods if they correlate with pace. Then give one small actionable suggestion. Warm and direct, no header.').then(text => {
+      askAI('Person has tracked ' + allMeals.length + ' meals. Their last ' + last10.length + ' meal paces: ' + last10.map(m => m.mood).join(', ') + '.' + (contexts ? ' Contexts: ' + contexts + '.' : '') + (foods ? ' Foods eaten: ' + foods + '.' : '') + profileCtx + ' You are a nutritionist. In 2 sentences identify a specific pattern — reference actual contexts or foods if they correlate with pace. Then give one small actionable suggestion. Warm and direct, no header.').then(text => {
         document.getElementById('improvementText').textContent = text;
         document.getElementById('improvementText').classList.remove('loading');
       });
