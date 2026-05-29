@@ -493,11 +493,17 @@ const scores = last10.map(function(m) {
     const y = pad.t + chartH - ((s - 1) / 4) * chartH;
     ctx.beginPath();
     ctx.arc(x, y, 4, 0, Math.PI * 2);
-    const speed = parseFloat(meal.mood);
-const p = isNaN(speed) ? 50 : Math.max(5, Math.min(95, 100 - (speed / 30) * 100));
-const p = isNaN(s) ? 50 : Math.max(5, Math.min(95, 100 - (s / 30) * 100));
-ctx.fillStyle = p < 35 ? '#3a6b32' : p < 55 ? '#5a8a3a' : p < 70 ? '#8a8a3a' : p < 85 ? '#c87a2a' : '#c5462a';
-    ctx.fill();
+   const speed = parseFloat(meal.mood);
+const pacePct = isNaN(speed)
+  ? 50
+  : Math.max(5, Math.min(95, 100 - (speed / 30) * 100));
+
+ctx.fillStyle =
+  pacePct < 35 ? '#3a6b32'
+  : pacePct < 55 ? '#5a8a3a'
+  : pacePct < 70 ? '#8a8a3a'
+  : pacePct < 85 ? '#c87a2a'
+  : '#c5462a';    ctx.fill();
   });
   // x labels
   ctx.fillStyle = '#c8bfaa';
