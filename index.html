@@ -154,7 +154,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     <div class="context-box">
       <span class="context-label">Were you rushing?</span>
       <div class="chip-row">
-        <div class="ctx-chip" onclick="toggleChip('rush','yes, no time',this)">yes, no time</div>
+        <div class="ctx-chip" onclick="toggleChip('rush','yes',this)">yes</div>
         <div class="ctx-chip" onclick="toggleChip('rush','a little',this)">a little</div>
         <div class="ctx-chip" onclick="toggleChip('rush','not at all',this)">not at all</div>
       </div>
@@ -231,7 +231,7 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
     <div class="table-bed">
       <div class="meals-scroll" id="mealsScroll">
         <div class="meals-inner" id="mealsInner">
-          <div class="empty-table">no meals yet — start eating</div>
+          <div class="empty-table">no meals yet! start eating</div>
         </div>
       </div>
     </div>
@@ -608,7 +608,7 @@ function analyseFeel() {
   const weightNote = currentMeal.food_weight_g ? ' Plate weight: ' + currentMeal.food_weight_g + 'g.' : '';
   const secsPerBite = currentMeal.bites > 0 ? (currentMeal.duration / currentMeal.bites).toFixed(1) : '?';
 
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. First, classify their eating pace as exactly one of: GREAT, GOOD, OK, FAST-ISH, or TOO FAST. Consider: seconds per bite, plate weight, food type, rush level, location, distraction, their profile, and whether this matches a pattern from previous meals. Put the label on the very first line alone. Then write 2 sentences: how this specific context affected their digestion, and one small concrete habit to try next time that fits their situation. Warm and practical, no generic advice.').then(text => {
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. First, classify their eating pace. Consider: seconds per bite, plate weight, food type, rush level, location, distraction, their profile, and whether this matches a pattern from previous meals. Put the label on the very first line alone. Then write 2 sentences: how this specific context affected their digestion, and one small concrete habit to try next time that fits their situation. Warm and practical, no generic advice.').then(text => {
    const lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
 const validMoods = ['GREAT', 'GOOD', 'OK', 'FAST-ISH', 'TOO FAST'];
 const labelLine = lines.find(function(l) { return l.toUpperCase().startsWith('LABEL:'); });
@@ -633,7 +633,7 @@ currentMeal.timestamp = Date.now();
       askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '.' + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
         currentMeal.mealSummary = summary.trim();
 
-        askAI('You chose ' + e + ' to represent a meal at a ' + currentMeal.mood + ' pace.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this emoji fits their meal: consider the pace mostly. Satirical, self-aware, funny but in a non-offensive way.').then(function(explanation) {
+        askAI('You chose ' + e + ' to represent a meal at a ' + currentMeal.mood + ' pace.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this emoji fits their meal: consider the pace mostly. Satirical, self-aware, funny but do not be offensive.').then(function(explanation) {
           currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
           allMeals.push(Object.assign({}, currentMeal));
           localStorage.setItem('table_meals', JSON.stringify(allMeals));
