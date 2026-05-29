@@ -418,13 +418,13 @@ function getMoodEmoji() { return '🍽️'; }
 
 function renderPaceBar(mood) {
   const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
-  const level = levels[mood] || { pct: 50, color: '#8a8a3a' };
+ const level = levels[(mood || '').toUpperCase()] || { pct: 50, color: '#8a8a3a' };
   return '<div class="pace-bar-wrap"><div class="pace-bar-label"><span>slow</span><span>fast</span></div><div class="pace-bar-track"><div class="pace-bar-fill" style="width:' + level.pct + '%;background:' + level.color + '"></div></div></div>';
 }
 
 function showPaceResult(mood) {
   const levels = { 'GREAT': { pct: 15, color: '#3a6b32' }, 'GOOD': { pct: 35, color: '#5a8a3a' }, 'OK': { pct: 55, color: '#8a8a3a' }, 'FAST-ISH': { pct: 75, color: '#c87a2a' }, 'TOO FAST': { pct: 95, color: '#c5462a' } };
-  const level = levels[mood] || { pct: 50, color: '#8a8a3a' };
+ const level = levels[(mood || '').toUpperCase()] || { pct: 50, color: '#8a8a3a' };
   document.getElementById('paceResultMood').textContent = mood;
   document.getElementById('paceResultMood').style.color = level.color;
   const fill = document.getElementById('paceBarFill');
@@ -448,7 +448,7 @@ function renderProgressChart() {
   const moodScore = { 'GREAT': 5, 'GOOD': 4, 'OK': 3, 'FAST-ISH': 2, 'TOO FAST': 1 };
   const moodColor = { 'GREAT': '#3a6b32', 'GOOD': '#5a8a3a', 'OK': '#8a8a3a', 'FAST-ISH': '#c87a2a', 'TOO FAST': '#c5462a' };
   const last10 = allMeals.slice(-10);
-  const scores = last10.map(m => moodScore[m.mood] || 3);
+  const scores = last10.map(m => moodScore[(m.mood || '').toUpperCase()] || 3);
   const pad = { t: 12, r: 12, b: 24, l: 52 };
   const chartW = w - pad.l - pad.r;
   const chartH = h - pad.t - pad.b;
@@ -490,7 +490,7 @@ function renderProgressChart() {
     const y = pad.t + chartH - ((s - 1) / 4) * chartH;
     ctx.beginPath();
     ctx.arc(x, y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = moodColor[meal.mood] || '#8a8a3a';
+    ctx.fillStyle = moodColor[(meal.mood || '').toUpperCase()] || '#8a8a3a';
     ctx.fill();
   });
   // x labels
@@ -612,7 +612,7 @@ function analyseFeel() {
     currentMeal.mood = mood;
     currentMeal.timestamp = Date.now();
 
-    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE food or drink emoji that best represents this meal. Think carefully. Reply with just the single emoji, nothing else.').then(function(emojiText) {
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds. Pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE animal emoji that best represents this meal. Think carefully. Reply with just the single emoji, nothing else.').then(function(emojiText) {
       const match = emojiText.match(/\p{Emoji_Presentation}/u);
       currentMeal.emoji = match ? match[0] : getMoodEmoji();
       const e = currentMeal.emoji;
@@ -620,7 +620,7 @@ function analyseFeel() {
       askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds, pace: ' + currentMeal.mood + '.' + foodNote + weightNote + ' Context: ' + contextSummary + '.' + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
         currentMeal.mealSummary = summary.trim();
 
-        askAI('You chose ' + e + ' to represent a meal at a ' + currentMeal.mood + ' pace.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this emoji fits. Satirical, self-aware, light.').then(function(explanation) {
+        askAI('You chose ' + e + ' to represent a meal at a ' + currentMeal.mood + ' pace.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this emoji fits their meal: consider the pace mostly. Satirical, self-aware, light.').then(function(explanation) {
           currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
           allMeals.push(Object.assign({}, currentMeal));
           localStorage.setItem('table_meals', JSON.stringify(allMeals));
