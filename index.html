@@ -8,7 +8,9 @@
 <style>
 :root {
   --cream: #faf8f4;
-  --dark: #3d2b6b;
+  --dark: #1c1a16;
+  --action: #3d2b6b;
+  --action-hover: #4a3580;
   --mid: #7a7060;
   --light: #c8bfaa;
   --accent: #8b3a2a;
@@ -35,17 +37,17 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 .analysis-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
 .analysis-text { font-size: 0.8rem; color: var(--dark); line-height: 1.7; }
 .analysis-text.loading { color: var(--light); font-style: italic; }
-.btn-primary { width: 100%; padding: 18px 24px; background: var(--dark); color: var(--cream); border: none; border-radius: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: background 0.2s, transform 0.1s; }
-.btn-primary:hover { background: #2c2c22; transform: translateY(-1px); }
+.btn-primary { width: 100%; padding: 18px 24px; background: var(--action); color: var(--cream); border: none; border-radius: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: background 0.2s, transform 0.1s; }
+.btn-primary:hover { background: var(--action-hover); transform: translateY(-1px); }
 .context-box { margin-bottom: 28px; }
 .context-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; display: block; }
 .context-input { width: 100%; padding: 14px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; color: var(--dark); resize: none; line-height: 1.6; outline: none; transition: border-color 0.2s; }
-.context-input:focus { border-color: var(--dark); }
+.context-input:focus { border-color: var(--action); }
 .context-input::placeholder { color: var(--light); }
 .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .ctx-chip { padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; font-family: 'Courier New', Courier, monospace; font-size: 0.72rem; color: var(--mid); cursor: pointer; transition: all 0.2s; user-select: none; }
-.ctx-chip:hover { border-color: var(--dark); color: var(--dark); }
-.ctx-chip.selected { background: var(--dark); color: var(--cream); border-color: var(--dark); }
+.ctx-chip:hover { border-color: var(--action); color: var(--action); }
+.ctx-chip.selected { background: var(--action); color: var(--cream); border-color: var(--action); }
 .feel-response { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--dark); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 24px; min-height: 70px; display: none; }
 .feel-response.visible { display: block; }
 .feel-response-text { font-size: 0.85rem; line-height: 1.8; color: var(--dark); }
@@ -57,11 +59,11 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 .pace-bar-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); margin-bottom: 6px; display: flex; justify-content: space-between; }
 .pace-bar-track { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
 .pace-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); }
-.streak-bar { background: var(--dark); border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.streak-bar { background: var(--action); border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .streak-num { font-family: 'Courier New', Courier, monospace; font-size: 2rem; color: var(--cream); line-height: 1; }
 .streak-label { font-size: 0.6rem; color: var(--light); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
 .health-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.health-tag { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 4px 12px; font-size: 0.62rem; color: var(--cream); }
+.health-tag { background: rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px; font-size: 0.62rem; color: var(--cream); }
 .table-bed { border-radius: 16px; overflow: visible; border: 1px solid var(--placemat-edge); box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 0; background: var(--placemat); }
 .meals-scroll { background: var(--placemat); overflow-x: auto; overflow-y: visible; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab; user-select: none; border-radius: 16px; }
 .meals-scroll::-webkit-scrollbar { display: none; }
@@ -94,22 +96,22 @@ body { background: var(--cream); font-family: 'Courier New', Courier, monospace;
 .explanation-box p { font-size: 0.75rem; line-height: 1.7; color: var(--mid); }
 .explanation-box p.loading { color: var(--light); font-style: italic; }
 .btn-secondary { width: 100%; padding: 18px 24px; background: var(--card-bg); color: var(--dark); border: 1px solid var(--border); border-radius: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
-.btn-secondary:hover { border-color: var(--dark); }
+.btn-secondary:hover { border-color: var(--action); color: var(--action); }
 .btn-danger { color: var(--accent); border-color: #f0c0b0; }
-.btn-danger:hover { border-color: var(--accent); background: #fff5f3; }
+.btn-danger:hover { border-color: var(--accent); background: #fff5f3; color: var(--accent); }
 .nav-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
 .nav-link { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); cursor: pointer; background: none; border: none; font-family: 'Courier New', Courier, monospace; padding-top: 8px; }
-.nav-link:hover { color: var(--dark); }
+.nav-link:hover { color: var(--action); }
 .profile-section { margin-bottom: 28px; }
 .profile-section-title { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; display: block; }
 .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { padding: 8px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; font-family: 'Courier New', Courier, monospace; font-size: 0.72rem; color: var(--mid); cursor: pointer; transition: all 0.2s; }
-.chip:hover { border-color: var(--dark); color: var(--dark); }
-.chip.selected { background: var(--dark); color: var(--cream); border-color: var(--dark); }
+.chip:hover { border-color: var(--action); color: var(--action); }
+.chip.selected { background: var(--action); color: var(--cream); border-color: var(--action); }
 .profile-saved { font-size: 0.7rem; color: var(--green); margin-top: 12px; display: none; text-align: center; }
 #loadingScreen { position: fixed; inset: 0; background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
 #loadingScreen p { font-size: 0.72rem; color: var(--mid); letter-spacing: 0.1em; }
-.spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--dark); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--action); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -333,7 +335,6 @@ let selectedMealIndex = null;
 let userProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
 let contextSelections = {};
 
-// converts seconds-per-bite number to a human label
 function secsToLabel(moodStr) {
   const s = parseFloat(moodStr);
   if (isNaN(s)) return moodStr || '—';
@@ -344,13 +345,24 @@ function secsToLabel(moodStr) {
   return 'too fast';
 }
 
-// converts seconds-per-bite to a 0-100 bar percentage (high secs = low pct = slow = left)
 function pctFromSecs(secs) {
   return Math.max(5, Math.min(95, 100 - (secs / 30) * 100));
 }
 
 function colorFromPct(pct) {
   return pct < 35 ? '#3a6b32' : pct < 55 ? '#5a8a3a' : pct < 70 ? '#8a8a3a' : pct < 85 ? '#c87a2a' : '#c5462a';
+}
+
+// fallback animal emoji if AI returns nothing parseable
+function getMoodEmoji() {
+  const animals = ['🐢','🦥','🐇','🐆','🦊','🦔','🐸','🦉','🐺','🦋','🐬','🦘','🐧','🦚','🦜'];
+  return animals[Math.floor(Math.random() * animals.length)];
+}
+
+// extract first emoji from AI response — uses Extended_Pictographic to catch all emoji including animals
+function extractEmoji(text) {
+  const match = text.match(/\p{Extended_Pictographic}/u);
+  return match ? match[0] : null;
 }
 
 function toggleChip(group, value, el) {
@@ -406,7 +418,7 @@ function buildMealHistory() {
   }).join('; ');
   return ' Previous meals: ' + summary + '.';
 }
-function getMoodEmoji() { return '🐾'; }
+
 function buildContextSummary() {
   const parts = [];
   if (contextSelections.rush) parts.push('rush level: ' + contextSelections.rush);
@@ -449,7 +461,6 @@ function renderProgressChart() {
   const c = canvas.getContext('2d');
   c.scale(dpr, dpr);
   const last10 = allMeals.slice(-10);
-  // scores = seconds per bite, capped at 30 for scale
   const scores = last10.map(function(m) {
     const secs = parseFloat(m.mood);
     return isNaN(secs) ? 15 : Math.min(30, secs);
@@ -459,7 +470,6 @@ function renderProgressChart() {
   const chartH = h - pad.t - pad.b;
   const stepX = last10.length > 1 ? chartW / (last10.length - 1) : chartW;
   c.clearRect(0, 0, w, h);
-  // gridlines
   for (let i = 0; i < 5; i++) {
     const y = pad.t + (i / 4) * chartH;
     c.beginPath();
@@ -469,13 +479,11 @@ function renderProgressChart() {
     c.lineTo(w - pad.r, y);
     c.stroke();
   }
-  // y labels: slow at top (high secs), fast at bottom (low secs)
   c.fillStyle = '#c8bfaa';
   c.font = '9px Courier New';
   c.textAlign = 'right';
   c.fillText('slow', pad.l - 4, pad.t + 3);
   c.fillText('fast', pad.l - 4, pad.t + chartH + 3);
-  // line — high secs = near top, low secs = near bottom
   c.beginPath();
   c.strokeStyle = '#c8bfaa';
   c.lineWidth = 1.5;
@@ -486,7 +494,6 @@ function renderProgressChart() {
     i === 0 ? c.moveTo(x, y) : c.lineTo(x, y);
   });
   c.stroke();
-  // coloured dots
   scores.forEach(function(score, i) {
     const x = pad.l + i * stepX;
     const y = pad.t + chartH - (score / 30) * chartH;
@@ -496,7 +503,6 @@ function renderProgressChart() {
     c.fillStyle = colorFromPct(pct);
     c.fill();
   });
-  // x date labels
   c.fillStyle = '#c8bfaa';
   c.font = '9px Courier New';
   c.textAlign = 'center';
@@ -567,7 +573,7 @@ function setupScreen1(meal) {
     const el = document.getElementById('s1-analysis');
     el.textContent = 'analysing...';
     el.classList.add('loading');
-    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + spb + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Under 10sec is bad, 10-20 is average, 20 to 30 is good, over 30 excellent. Consider food type and plate weight. no need to mention the weight its just for you to know whether it was a big meal or not. Make the tone vary depeding on whetehr it is "good" or "bad". Be specific and warm. No headers, no mention of weight loss.').then(function(text) {
+    askAI('A person finished a meal: ' + meal.bites + ' bites in ' + meal.duration + ' seconds (' + spb + ' seconds per bite).' + weightNote + foodNote + profileCtx + ' You are a nutritionist. In 2 short practical sentences describe what this eating pace means for their digestion. Under 10sec per bite is fast, 10-20 is average, 20-30 is good, over 30 excellent. Consider food type and plate weight — do not mention them explicitly. Vary tone based on whether it is good or bad. Be specific and warm. No headers, no mention of weight loss.').then(function(text) {
       el.textContent = text;
       el.classList.remove('loading');
     });
@@ -597,11 +603,10 @@ function analyseFeel() {
   const weightNote = currentMeal.food_weight_g ? ' Plate weight: ' + currentMeal.food_weight_g + 'g.' : '';
   const secsPerBite = currentMeal.bites > 0 ? currentMeal.duration / currentMeal.bites : 0;
 
-  // pace calculated directly from hardware data — no AI parsing
   showPaceResult(secsPerBite);
   currentMeal.mood = secsPerBite.toFixed(1) + 's';
 
-  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. Write 2 sentences: how this specific context affected their digestion and pace, and if needed, one small concrete habit to try next time. Warm and practical, no headers.').then(function(text) {
+  askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + weightNote + foodNote + ' Context: ' + contextSummary + '.' + profileCtx + mealHistory + ' You are a nutritionist. Write 2 sentences: how this specific context affected their digestion and pace, and if needed one small concrete habit to try next time. Warm and practical, no headers.').then(function(text) {
     feelResponseText.textContent = text;
     feelResponseText.classList.remove('loading');
 
@@ -610,16 +615,17 @@ function analyseFeel() {
     currentMeal.context = contextSummary || null;
     currentMeal.timestamp = Date.now();
 
-    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE ANIMAL emoji that best represents how this meal went, not the plate with the fork and knife. Consider mainly pace of the meal. Be kind and gentle. Reply with just the single emoji, nothing else. Dont always pick the most obvious one like turtle etc.').then(function(emojiText) {
-      const match = emojiText.match(/\p{Emoji_Presentation}/u);
-      currentMeal.emoji = match ? match[0] : getMoodEmoji();
+    // AI picks the animal emoji — use Extended_Pictographic to catch all emoji types
+    askAI('A person ate ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + foodNote + weightNote + ' Context: ' + contextSummary + '. Choose exactly ONE animal emoji that best represents how this meal went. Consider mainly the pace. Be creative and avoid obvious choices like turtle for slow or rabbit for fast. Do not choose the plate with fork and knife emoji. Reply with just the single emoji character, nothing else.').then(function(emojiText) {
+      const picked = extractEmoji(emojiText);
+      currentMeal.emoji = picked || getMoodEmoji();
       const e = currentMeal.emoji;
 
       askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + foodNote + weightNote + ' Context: ' + contextSummary + '.' + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
         currentMeal.mealSummary = summary.trim();
 
         askAI('You chose ' + e + ' to represent a meal eaten at ' + secsPerBite.toFixed(1) + ' seconds per bite.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this animal fits. Satirical, self-aware, non-offensive.').then(function(explanation) {
-          currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Emoji_Presentation}/gu, '').trim();
+          currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Extended_Pictographic}/gu, '').trim();
           allMeals.push(Object.assign({}, currentMeal));
           localStorage.setItem('table_meals', JSON.stringify(allMeals));
           tableBtn.innerHTML = '<span>Your ' + e + ' is ready — see your table</span><span>→</span>';
@@ -651,7 +657,6 @@ function renderTable() {
   document.getElementById('streakNum').textContent = allMeals.length;
   document.getElementById('streakTitle').textContent = allMeals.length + ' meal' + (allMeals.length !== 1 ? 's' : '') + ' at the table!';
 
-  // banner tags: convert seconds to labels and count them
   const labelCounts = {};
   allMeals.forEach(function(m) {
     if (m.mood) {
@@ -703,7 +708,7 @@ function renderTable() {
       el.classList.remove('loading');
     } else {
       askAI('A ' + savedEmoji + ' animal emoji represents a meal: ' + recentMeal.bites + ' bites in ' + recentMeal.duration + ' seconds' + (recentMeal.food ? ', ate: ' + recentMeal.food : '') + '. In 1 sentence explain why this animal fits — satirical, like AI confidently inventing a ridiculous reason.').then(function(text) {
-        el.textContent = text.replace(/\p{Emoji_Presentation}/gu, '').trim();
+        el.textContent = text.replace(/\p{Extended_Pictographic}/gu, '').trim();
         el.classList.remove('loading');
       });
     }
