@@ -123,11 +123,11 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
 <div class="screen" id="screen1">
   <div class="page">
     <p class="page-label">Meal complete</p>
-    <h1 class="page-title">Meal<br>recap:</h1>
-    <p class="page-sub" id="mealTime">Today</p>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
   <button class="nav-link" onclick="goTo(4)" style="padding-top:0;">profile →</button>
 </div>
+    <h1 class="page-title">Meal<br>recap:</h1>
+    <p class="page-sub" id="mealTime">Today</p>
     <div class="stat-grid">
       <div class="stat-box"><span class="val" id="s1-duration">—</span><span class="unit">meal duration</span></div>
       <div class="stat-box"><span class="val" id="s1-bites">—</span><span class="unit">bites taken</span></div>
@@ -213,7 +213,6 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
         <p class="page-label">Your table</p>
         <h1 class="page-title" id="streakTitle">meals tracked!</h1>
       </div>
-      <button class="nav-link" onclick="goTo(4)">profile →</button>
     </div>
     <div class="streak-bar">
       <div><div class="streak-num" id="streakNum">0</div><div class="streak-label">meals total</div></div>
@@ -265,7 +264,7 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
         <p class="page-label">Your profile</p>
         <h1 class="page-title">About you</h1>
       </div>
-      <button class="nav-link" onclick="goTo(3)">← table</button>
+      <button class="nav-link" onclick="goTo(1)">← back</button>
     </div>
     <p class="page-sub">Helps us understand what a fast or slow meal really means for you.</p>
     <div class="profile-section">
