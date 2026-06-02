@@ -145,8 +145,8 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
 <!-- SCREEN 2 -->
 <div class="screen" id="screen2">
   <div class="page">
-    <h1 class="page-title">Let's be<br>honest.</h1>
-    <p class="page-sub">No judgment. (Mostly.)</p>
+    <h1 class="page-title">What was<br>going on?</h1>
+    <p class="page-sub">Context may explain your pace.</p>
     <div class="context-box">
       <span class="context-label">Were you rushing?</span>
       <div class="chip-row">
@@ -156,7 +156,7 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
       </div>
     </div>
     <div class="context-box">
-      <span class="context-label">Were you even paying attention?</span>
+      <span class="context-label">Were you doing something else?</span>
       <div class="chip-row">
         <div class="ctx-chip" onclick="toggleChip('distraction','on my phone',this)">on my phone</div>
         <div class="ctx-chip" onclick="toggleChip('distraction','watching something',this)">watching something</div>
@@ -174,7 +174,7 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
       </div>
     </div>
     <div class="context-box">
-      <span class="context-label">Be honest.</span>
+      <span class="context-label">How did it feel?</span>
       <div class="chip-row">
         <div class="ctx-chip" onclick="toggleChip('feeling','enjoyed it',this)">enjoyed it</div>
         <div class="ctx-chip" onclick="toggleChip('feeling','ate too fast',this)">ate too fast</div>
@@ -187,7 +187,7 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
       <span class="context-label">Anything else?</span>
       <textarea class="context-input" id="contextInput" rows="2" placeholder="e.g. first meal of the day, ate with friends..."></textarea>
     </div>
-    <button class="btn-primary" id="analyseBtn" onclick="analyseFeel()" style="display:none;margin-bottom:24px;"><span>OK, what does it mean?</span><span>→</span></button>
+    <button class="btn-primary" id="analyseBtn" onclick="analyseFeel()" style="display:none;margin-bottom:24px;"><span>Analyse my meal</span><span>→</span></button>
     <div class="feel-response" id="feelResponse">
       <div class="feel-response-text loading" id="feelResponseText">thinking...</div>
     </div>
