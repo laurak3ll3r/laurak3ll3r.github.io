@@ -9,14 +9,14 @@
 :root {
   --cream: #f5f5f7;
   --dark: #1c1a16;
-  --action: #3d2b6b;
-  --action-hover: #4a3580;
+  --action: #292249;
+  --action-hover: #3d2b6b;
   --mid: #7a7060;
   --light: #c8bfaa;
   --accent: #8b3a2a;
   --green: #4a6b3a;
   --card-bg: #ffffff;
-  --border: #ece6da;
+  --action-border: #8076DE;
   --placemat: #ede6d8;
   --placemat-edge: #d4c8b4;
 }
@@ -42,12 +42,12 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
 .context-box { margin-bottom: 28px; }
 .context-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; display: block; }
 .context-input { width: 100%; padding: 14px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--dark); resize: none; line-height: 1.6; outline: none; transition: border-color 0.2s; }
-.context-input:focus { border-color: var(--action); }
+.context-input:focus { border-color: var(--action-border); }
 .context-input::placeholder { color: var(--light); }
 .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .ctx-chip { padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; color: var(--mid); cursor: pointer; transition: all 0.2s; user-select: none; }
-.ctx-chip:hover { border-color: var(--action); color: var(--action); }
-.ctx-chip.selected { background: var(--action); color: var(--cream); border-color: var(--action); }
+.ctx-chip:hover { border-color: var(--action-border); color: var(--action); }
+.ctx-chip.selected { background: var(--action); color: var(--cream); border-color: var(--action-border); }
 .feel-response { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--dark); border-radius: 0 10px 10px 0; padding: 16px 18px; margin-bottom: 24px; min-height: 70px; display: none; }
 .feel-response.visible { display: block; }
 .feel-response-text { font-size: 0.85rem; line-height: 1.8; color: var(--dark); }
@@ -96,7 +96,7 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
 .explanation-box p { font-size: 0.75rem; line-height: 1.7; color: var(--mid); }
 .explanation-box p.loading { color: var(--light); font-style: italic; }
 .btn-secondary { width: 100%; padding: 18px 24px; background: var(--card-bg); color: var(--dark); border: 1px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
-.btn-secondary:hover { border-color: var(--action); color: var(--action); }
+.btn-secondary:hover { border-color: var(--action-border); color: var(--action); }
 .btn-danger { color: var(--accent); border-color: #f0c0b0; }
 .btn-danger:hover { border-color: var(--accent); background: #fff5f3; color: var(--accent); }
 .nav-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
@@ -106,8 +106,8 @@ body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(
 .profile-section-title { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; display: block; }
 .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { padding: 8px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; color: var(--mid); cursor: pointer; transition: all 0.2s; }
-.chip:hover { border-color: var(--action); color: var(--action); }
-.chip.selected { background: var(--action); color: var(--cream); border-color: var(--action); }
+.chip:hover { border-color: var(--action-border); color: var(--action); }
+.chip.selected { background: var(--action); color: var(--cream); border-color: var(--action-border); }
 .profile-saved { font-size: 0.7rem; color: var(--green); margin-top: 12px; display: none; text-align: center; }
 #loadingScreen { position: fixed; inset: 0; background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
 #loadingScreen p { font-size: 0.72rem; color: var(--mid); letter-spacing: 0.1em; }
