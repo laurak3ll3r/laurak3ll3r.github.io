@@ -626,7 +626,7 @@ function analyseFeel() {
       askAI('A person had a meal: ' + currentMeal.bites + ' bites in ' + currentMeal.duration + ' seconds (' + secsPerBite.toFixed(1) + ' seconds per bite).' + foodNote + weightNote + ' Context: ' + contextSummary + '.' + profileCtx + ' In 2 short sentences give a plain overview. First: describe the meal and pace. Second: one specific observation about digestion or how they likely felt after. No headers.').then(function(summary) {
         currentMeal.mealSummary = summary.trim();
 
-        askAI('You chose ' + e + ' to represent a meal eaten at ' + secsPerBite.toFixed(1) + ' seconds per bite.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this animal fits. Satirical, self-aware, non-offensive.').then(function(explanation) {
+        askAI('You chose ' + e + ' to represent a meal eaten at ' + secsPerBite.toFixed(1) + ' seconds per bite.' + foodNote + ' Context: ' + contextSummary + '. In one funny overexaggerated sentence explain why this animal fits. Make fun of AI tendency to exaggerate and connect anything with anything. Satirical, self-aware, non-offensive.').then(function(explanation) {
           currentMeal.emojiExplain = e + ' ' + explanation.replace(/\p{Extended_Pictographic}/gu, '').trim();
           allMeals.push(Object.assign({}, currentMeal));
           localStorage.setItem('table_meals', JSON.stringify(allMeals));
